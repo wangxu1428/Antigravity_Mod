@@ -102,9 +102,9 @@ coverage/
 
 # v2.1.0 暂存树补充规则。与上文完全相同的模式已去掉。
 # 暂存树中的 `locales/` 改为 `/locales/`，只忽略仓库根下的 locales/，
-# 以便跟踪 plugins/hakimi-i18n/locales/。
+# 以便跟踪 plugins/builtin/hakimi-i18n/hakimi-i18n/locales/。
 
-# 用户运行态配置与已安装插件（plugins/config.default.json 仍跟踪）
+# 用户运行态配置与已安装插件（platform/config.default.json 仍跟踪）
 /UserData/
 config.json
 plugins/config.json
@@ -115,7 +115,7 @@ plugins/packages/
 
 # 备份、快照与被替换的归档
 plugins/backups/
-plugins/hakimi-i18n/backups/
+plugins/builtin/hakimi-i18n/hakimi-i18n/backups/
 displaced_*/
 *.bak_*
 *.orig

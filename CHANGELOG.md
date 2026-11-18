@@ -15,4 +15,5 @@
 
 ### Changed
 
+- 重组仓库目录：平台核心进入 `platform/`（`agm-plugin-host.js`、`config.default.json`、`mod_kit/`、`scripts/`）；内置插件进入 `plugins/builtin/<id>/`（`hakimi-i18n`、`ai-sidedock`）；索引分发插件进入 `plugins/optional/<id>/`（`agm-hello-guard`，原 `plugins/repo/`）。安装脚本仍把这些文件复制到用户机器上的原运行时路径（顶层 `plugins/*.js`、`plugins/hakimi-i18n/`、`plugins/repo/<id>/`、`mod_kit/`），只复制不删除，不覆盖 `UserData/`、运行态 `plugins/config.json`、`plugins/state/` 与已安装的 `plugins/packages/`。
 - 重写 `README.md`，说明项目定位、分发规则、目录和当前状态。

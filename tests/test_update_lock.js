@@ -1,4 +1,4 @@
-// tests/test_update_lock.js : Offline unit & harness verification for mod_kit/agm_locks.js (UL1-UL7)
+// tests/test_update_lock.js : Offline unit & harness verification for platform/mod_kit/agm_locks.js (UL1-UL7)
 // Relative paths from repository root; zero network or production disk writes.
 'use strict';
 
@@ -8,8 +8,8 @@ const path = require('path');
 const EventEmitter = require('events');
 
 const REPO_ROOT = path.resolve(__dirname, '..');
-const agmLocks = require(path.join(REPO_ROOT, 'mod_kit', 'agm_locks.js'));
-const templateYmlPath = path.join(REPO_ROOT, 'mod_kit', 'app-update.template.yml');
+const agmLocks = require(path.join(REPO_ROOT, 'platform', 'mod_kit', 'agm_locks.js'));
+const templateYmlPath = path.join(REPO_ROOT, 'platform', 'mod_kit', 'app-update.template.yml');
 
 const results = [];
 const L = {

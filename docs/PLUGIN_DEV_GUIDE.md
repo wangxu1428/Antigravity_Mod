@@ -7,17 +7,22 @@
 ## 1. 插件架构与用户数据隔离准则
 
 ### 1.1 双轨插件体系
+仓库源码和用户机器上的加载路径是两套布局。`platform/scripts/install-or-update.ps1` 把源码复制到历史运行时路径，宿主与 `platform/mod_kit/patch.js` 注入的 `hakimi:list-plugins` / `hakimi:list-packages` 仍只扫描运行时路径。
+
 1. **Web Worker 沙箱包插件（推荐，Package Plugins）**：
-   - 源包存放于 `plugins/repo/<pluginId>/`，安装后位于 `plugins/packages/<pluginId>/`。
+   - 仓库源码放在 `plugins/optional/<pluginId>/`。安装脚本把它复制到运行时 `plugins/repo/<pluginId>/`（只复制该 id，不删除 `plugins/repo/` 里的其他包）。
+   - 用户在插件中心安装后，副本位于运行时 `plugins/packages/<pluginId>/`。升级不删除这个目录。
    - 运行在独立的 Web Worker 沙箱线程中（无 DOM、无直接网络、无 Node/Electron 原生权限），所有宿主能力均通过 `ctx.api.*` 异步 RPC 调用，并受 `manifest.permissions` 强校验与超时熔断（默认 `2500ms`）保护。
 2. **传统主世界内置插件（Legacy Main-World Plugins）**：
-   - 存放于 `plugins/*.js` 顶层（如 `hakimi-i18n.js`、`ai-sidedock.js`），运行在渲染进程主世界，可通过 `window.HakimiPluginHost.register(id, pluginObj)` 注册，并可使用 `window.HakimiPluginHost.ui` 将自定义配置页或导航项嵌入 AGM Hub v2.1。
+   - 仓库源码放在 `plugins/builtin/<id>/`（当前为 `hakimi-i18n`、`ai-sidedock`）。安装脚本把 `<id>.js` 复制到运行时 `plugins/<id>.js`。`hakimi-i18n` 的模块目录复制到运行时 `plugins/hakimi-i18n/`。
+   - 宿主只注入运行时 `plugins/*.js` 顶层脚本。这些插件运行在渲染进程主世界，可通过 `window.HakimiPluginHost.register(id, pluginObj)` 注册，并可使用 `window.HakimiPluginHost.ui` 将自定义配置页或导航项嵌入 AGM Hub v2.1。
 
 ### 1.2 用户数据与平台升级生命周期隔离
-- **平台只读/可更新资产**：`mod_kit/`、`plugins/agm-plugin-host.js`、`plugins/hakimi-i18n.js`、`plugins/ai-sidedock.js`、`plugins/hakimi-i18n/`、`plugins/repo/`、`plugins/config.default.json`。
-- **用户数据保护区（已列入 `.gitignore`，平台升级严禁覆盖）**：
+- **仓库中的平台源码（可更新，安装时复制到运行时）**：`platform/mod_kit/`、`platform/agm-plugin-host.js`、`platform/config.default.json`、`plugins/builtin/`、`plugins/optional/`。
+- **运行时平台文件（复制覆盖的是这些路径，不是用户数据）**：`mod_kit/`、`plugins/agm-plugin-host.js`、`plugins/hakimi-i18n.js`、`plugins/ai-sidedock.js`、`plugins/hakimi-i18n/`、`plugins/repo/<随仓库分发的 id>/`、`plugins/config.default.json`。
+- **用户数据保护区（已列入 `.gitignore`，平台升级严禁覆盖或删除）**：
   - `UserData/`：便携版 Chromium / Electron 登录态、Cookie 与会话存储。
-  - `plugins/config.json`：内置插件运行态用户配置（首次安装时从 `plugins/config.default.json` 初始化）。
+  - `plugins/config.json`：内置插件运行态用户配置（首次安装时从运行时 `plugins/config.default.json` 初始化；模板的仓库路径是 `platform/config.default.json`）。
   - `plugins/state/registry.json`：宿主全局设置与插件启停注册表。
   - `plugins/state/configs/<pluginId>.json`：沙箱插件独立用户配置与私有 KV 存储（`{ "config": {...}, "storage": {...} }`）。
   - `plugins/state/logs/<pluginId>.log`：插件运行与权限审计日志。

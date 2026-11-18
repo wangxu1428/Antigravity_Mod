@@ -1,5 +1,5 @@
 // =============================================================================
-// Hakimi Mod Kit - JS Patcher (mod_kit/patch.js)
+// Hakimi Mod Kit - JS Patcher (platform/mod_kit/patch.js)
 // Accurately patches main.js, utils.js, and preload.js with zero escaping issues.
 // =============================================================================
 const fs = require('fs');

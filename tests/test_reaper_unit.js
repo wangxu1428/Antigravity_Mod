@@ -1,4 +1,4 @@
-// tests/test_reaper_unit.js : pure unit tests of mod_kit/agm_sidecar_reaper_core.js with mock deps (RU1-RU16)
+// tests/test_reaper_unit.js : pure unit tests of platform/mod_kit/agm_sidecar_reaper_core.js with mock deps (RU1-RU16)
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -24,7 +24,7 @@ const L = {
   },
 };
 
-const CORE_PATH = path.join(REPO_ROOT, 'mod_kit', 'agm_sidecar_reaper_core.js');
+const CORE_PATH = path.join(REPO_ROOT, 'platform', 'mod_kit', 'agm_sidecar_reaper_core.js');
 const CORE_SRC = fs.readFileSync(CORE_PATH, 'utf8');
 const createSidecarReaper = new Function(
   'require',

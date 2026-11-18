@@ -1,6 +1,6 @@
 ﻿# =============================================================================
 # Antigravity Mod (AGM) 官方纯净底座安全还原脚本 (初稿)
-# scripts/restore-official.ps1
+# platform/scripts/restore-official.ps1
 #
 # 核心安全准则：
 # 1. 彻底杜绝 $D / $d 等单字母大小写混用变量名（全部采用语义化长变量名）。

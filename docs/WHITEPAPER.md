@@ -136,7 +136,7 @@ Antigravity 2.32.1 顶栏高 35px（`-webkit-app-region: drag`），下方主内
 
 ## 六、重铸工具箱与灾难恢复机制
 
-所有自动化工具均采用纯相对路径收录在 `C:\Antigravity_Mod\mod_kit\`（含 `patch.js`、`repatch.ps1`、`repatch.bat`）：
+所有自动化工具在用户机器上仍位于 `C:\Antigravity_Mod\mod_kit\`（含 `patch.js`、`repatch.ps1`、`repatch.bat`）。仓库源码在 `platform/mod_kit/`，由安装脚本复制到该运行时目录，不改变应用内的相对路径：
 
 1. **秒级原厂恢复**：官方原始未修改备份保存于 `C:\Antigravity_Mod\resources\app.asar.bak`（大小：`5,656,861` 字节，SHA256：`5b493943...`），覆盖回 `app.asar` 即可在 1 秒内退回 100% 原厂状态。
 2. **版本升级一键重铸**：官方发布新版本覆盖 `app.asar` 后，双击运行 `mod_kit\repatch.bat` 即可从 `%~dp0` 动态计算相对路径并在 3 秒内完成重新切片与注入，`plugins/` 下的业务插件无需重写。
