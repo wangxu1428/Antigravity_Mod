@@ -2,7 +2,7 @@
 
 > **⚠️ 严正警告（禁止在生产环境直接执行）**
 >
-> 本目录（`scripts/legacy-rollback/`）收录的 `rollback.ps1` 与 `rollback.bat` 来自 `AGM_PLUGIN_01` 实验室阶段性快照回滚工具，**仅供研发归档与审计参考，严禁作为正式生产还原工具使用！**
+> 本目录（`platform/scripts/legacy-rollback/`）收录的 `rollback.ps1` 与 `rollback.bat` 来自 `AGM_PLUGIN_01` 实验室阶段性快照回滚工具，**仅供研发归档与审计参考，严禁作为正式生产还原工具使用！**
 
 ## 已知未修复缺陷记录
 
@@ -22,4 +22,4 @@
 
 ## 正式生产还原方式
 
-如需在用户环境中安全还原官方原版 `app.asar`，请使用上层目录中的 **`scripts/restore-official.ps1`**（该脚本已彻底杜绝单字母大小写混用变量，并严格保护 `UserData/` 与 `plugins/{config.json,state,packages}` 用户数据）。
+如需在用户环境中安全还原官方原版 `app.asar`，请使用上层目录中的 **`../restore-official.ps1`**（仓库路径 `platform/scripts/restore-official.ps1`；该脚本已彻底杜绝单字母大小写混用变量，并严格保护 `UserData/` 与 `plugins/{config.json,state,packages}` 用户数据）。

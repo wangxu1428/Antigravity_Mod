@@ -1,5 +1,5 @@
 // =============================================================================
-// AGM locks for Hakimi Mod Kit (mod_kit/agm_locks.js)
+// AGM locks for Hakimi Mod Kit (platform/mod_kit/agm_locks.js)
 //   AGM_UPDATE_LOCK    : updater.js / ipcHandlers.js  (all update entries -> blocked)
 //   AGM_SIDECAR_REAPER : languageServer.js           (session sidecar cleanup)
 //   app-update.yml     : updaterCacheDirName=antigravity-mod-updater, keep dead URL

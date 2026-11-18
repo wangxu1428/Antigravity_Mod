@@ -1,4 +1,4 @@
-// test_host_unit.js - Pure logic unit tests for plugins/agm-plugin-host.js (v2.1.0)
+// test_host_unit.js - Pure logic unit tests for platform/agm-plugin-host.js (v2.1.0)
 // Node built-ins only; relative paths from repository root.
 'use strict';
 
@@ -7,8 +7,8 @@ const fs = require('fs');
 const path = require('path');
 
 const REPO_ROOT = path.resolve(__dirname, '..');
-const HOST_PATH = path.join(REPO_ROOT, 'plugins', 'agm-plugin-host.js');
-const HELLO_MANIFEST_PATH = path.join(REPO_ROOT, 'plugins', 'repo', 'agm-hello-guard', 'manifest.json');
+const HOST_PATH = path.join(REPO_ROOT, 'platform', 'agm-plugin-host.js');
+const HELLO_MANIFEST_PATH = path.join(REPO_ROOT, 'plugins', 'optional', 'agm-hello-guard', 'manifest.json');
 const PROBE_MANIFEST_PATH = path.join(__dirname, 'fixtures', 'agm-fault-probe', 'manifest.json');
 
 const host = require(HOST_PATH);

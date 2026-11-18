@@ -29,7 +29,7 @@ docs(index): 添加插件索引模板
 ## 如何提交插件
 
 1. 从最新 `main` 建分支。
-2. 添加 `plugins/<id>/README.md`，写明用途、作者，以及兼容的平台版本范围。`<id>` 使用小写字母、数字、连字符或点，创建后不改。
+2. 添加 `plugins/optional/<id>/README.md`，写明用途、作者，以及兼容的平台版本范围。`<id>` 使用小写字母、数字、连字符或点，创建后不改。内置插件放在 `plugins/builtin/<id>/`，不通过这条索引流程提交。
 3. 准备该版本的发行包。包内不得包含下面的禁止内容。按 [index/README.md](index/README.md) 计算发行包文件的 SHA256。
 4. 在 [`index/plugins.json`](index/plugins.json) 的 `plugins` 数组追加一条。必填：`id`、`name`、`version`、`author`、`description`、`platformCompatibility`、`downloadUrl`、`sha256`。版本号遵循 [docs/versioning.md](docs/versioning.md)，且与发行包一致。
 5. 开向 `main` 的 Pull Request，写上插件 ID、版本、平台兼容范围和 SHA256。

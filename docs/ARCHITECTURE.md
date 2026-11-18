@@ -4,6 +4,7 @@
 - **目标环境**：`C:\Antigravity_Mod\`（便携隔离版）
 - **保护红线**：`%OFFICIAL_APP_DIR%\`、受保护进程 PID (`4268`, `15440`, `3580`)、`%USERPROFILE%\.gemini\`、`%APPDATA%\Antigravity`、`%LOCALAPPDATA%\antigravity-updater\`
 - **设计原则**：100% 复用既有 `HakimiPluginHost` 薄插座总线架构，保留 `AGM_UPDATE_LOCK`、`AGM_SIDECAR_REAPER`、`hakimi-i18n` 与 `ai-sidedock` 全部既有行为。
+- **仓库路径与运行时路径**：Git 源码在 `platform/`（宿主、`config.default.json`、`mod_kit/`、`scripts/`）、`plugins/builtin/<id>/` 与 `plugins/optional/<id>/`。下文带 `C:\Antigravity_Mod\` 的路径是安装后的运行时布局。安装脚本仍把源码复制到这些历史位置（顶层 `plugins\*.js`、`plugins\hakimi-i18n\`、`plugins\repo\`、`mod_kit\`），只复制、不删除，因此加载与扫描路径保持有效。用户数据（`UserData\`、`plugins\config.json`、`plugins\state\`、`plugins\packages\`）不在复制范围内。
 
 ---
 
@@ -52,12 +53,12 @@
      - **`C:\Antigravity_Mod\plugins\ai-sidedock.js`**：
        - 在 `ai-sidedock.js:815-822` 调用 `window.HakimiPluginHost.register('ai-sidedock', { name: 'AI Side-Dock Three-Titan', version: '1.1.0', init(cfg) { initSideDock(cfg); } })`。
        - `initSideDock` 开头（`ai-sidedock.js:512-518`）调用 `window.__hakimiSideDockTeardown()`；该函数定义于 `ai-sidedock.js:790-804`，负责停止拖拽、清除定时器、解绑 `window`/`resizer`/`trigger` 事件监听，同时复用已挂载的 `#hakimi-sidedock-root` 与 `<webview>` 节点以保持会话不断连（`ai-sidedock.js:544-565`）。
-     - **`C:\Antigravity_Mod\plugins\hakimi-i18n.js`（由 `plugins\hakimi-i18n\build.js` 打包生成）**：
+     - **`C:\Antigravity_Mod\plugins\hakimi-i18n.js`（由仓库源码 `plugins/builtin/hakimi-i18n/hakimi-i18n/build.js` 打包生成）**：
        - 顶层 IIFE 开头（`build.js:56-63`）立即检查并调用 `window.__hakimiI18nTeardown()`。
        - 在 `build.js:266-273`（产物 `hakimi-i18n.js:3335-3341`）调用 `window.HakimiPluginHost.register('hakimi-i18n', { name: 'Hakimi i18n Deep Localization Engine', version: '1.1.0', init(hostConfig) { initHakimiI18n(hostConfig); } })`。
-       - `window.__hakimiI18nTeardown` 定义于 `build.js:175-184`，调用 `domAdapter.stop()`（断开 `MutationObserver` 并还原 history/shadowDOM/title hook）与 `configUI.destroy()`（移除 `#hakimi-i18n-modal-overlay`、`#hakimi-i18n-trigger`、`#hakimi-i18n-style` 及 `Ctrl+Shift+L` 监听，`plugins\hakimi-i18n\ui\config-center.js:32-52`）。
+       - `window.__hakimiI18nTeardown` 定义于 `build.js:175-184`，调用 `domAdapter.stop()`（断开 `MutationObserver` 并还原 history/shadowDOM/title hook）与 `configUI.destroy()`（移除 `#hakimi-i18n-modal-overlay`、`#hakimi-i18n-trigger`、`#hakimi-i18n-style` 及 `Ctrl+Shift+L` 监听，`plugins/builtin/hakimi-i18n/hakimi-i18n/ui/config-center.js:32-52`）。
        - 暴露全局调试句柄 `window.__HAKIMI_I18N__`（含 `restoreEnglish()`, `toggleUI()`, `runLiveAudit()`，`build.js:248-257` / `hakimi-i18n.js:3316-3325`）。
-       - **DOM 免疫机制（`plugins\hakimi-i18n\core\sanitizer.js:30-33, 84-90` & `discovery.js:180-199`）**：任何带有 `data-ag-localization-skip="true"`、`data-immune="true"` 或 `translate="no"` 属性的 DOM 节点及其子树，均被 `hakimi-i18n` 完全豁免（不进行翻译替换，也不录入未翻译发现库）。
+       - **DOM 免疫机制（`plugins/builtin/hakimi-i18n/hakimi-i18n/core/sanitizer.js:30-33, 84-90` & `discovery.js:180-199`）**：任何带有 `data-ag-localization-skip="true"`、`data-immune="true"` 或 `translate="no"` 属性的 DOM 节点及其子树，均被 `hakimi-i18n` 完全豁免（不进行翻译替换，也不录入未翻译发现库）。
 
 ### 1.4 `plugins\config.json` 结构与插件物理目录
 - **`C:\Antigravity_Mod\plugins\config.json`（共 56 行）**：

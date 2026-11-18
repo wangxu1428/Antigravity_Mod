@@ -1,6 +1,10 @@
 ﻿# =============================================================================
 # Antigravity Mod (AGM) 非破坏式平台安装与升级脚本 (初稿)
-# scripts/install-or-update.ps1
+# platform/scripts/install-or-update.ps1
+#
+# 仓库源码在 platform/ 与 plugins/builtin|optional/。本脚本只复制到历史运行时路径
+# （plugins\*.js、plugins\hakimi-i18n\、plugins\repo\<id>\、mod_kit\），不删除、不覆盖
+# UserData\、plugins\config.json、plugins\state\、plugins\packages\。
 #
 # 核心安全准则：
 # 1. 严禁使用 $D / $d 等单字母大小写混用变量名。
@@ -23,7 +27,73 @@ $ErrorActionPreference = 'Stop'
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
 $ScriptsDir = $PSScriptRoot
-$RepoRootDir = Split-Path -Parent $ScriptsDir
+$PlatformDir = Split-Path -Parent $ScriptsDir
+$RepoRootDir = Split-Path -Parent $PlatformDir
+
+function Test-ProtectedDestination {
+    param(
+        [string]$AppRoot,
+        [string]$DestinationPath
+    )
+    $fullDestination = [System.IO.Path]::GetFullPath($DestinationPath)
+    $root = [System.IO.Path]::GetFullPath($AppRoot).TrimEnd('\')
+    $pluginsRoot = Join-Path $root 'plugins'
+    $protectedPaths = @(
+        (Join-Path $root 'UserData'),
+        (Join-Path $pluginsRoot 'config.json'),
+        (Join-Path $pluginsRoot 'state'),
+        (Join-Path $pluginsRoot 'packages')
+    )
+    foreach ($protectedPath in $protectedPaths) {
+        $fullProtected = [System.IO.Path]::GetFullPath($protectedPath).TrimEnd('\')
+        if ($fullDestination.Equals($fullProtected, [System.StringComparison]::OrdinalIgnoreCase)) {
+            return $true
+        }
+        if ($fullDestination.StartsWith($fullProtected + '\', [System.StringComparison]::OrdinalIgnoreCase)) {
+            return $true
+        }
+    }
+    return $false
+}
+
+function Copy-SourceTree {
+    param(
+        [string]$AppRoot,
+        [string]$SourceDir,
+        [string]$DestDir
+    )
+    $sourceItems = Get-ChildItem -LiteralPath $SourceDir -Recurse -File
+    foreach ($item in $sourceItems) {
+        $relPath = $item.FullName.Substring($SourceDir.Length).TrimStart('\', '/')
+        if ($relPath.StartsWith('backups\', [System.StringComparison]::OrdinalIgnoreCase) -or $relPath.StartsWith('backups/', [System.StringComparison]::OrdinalIgnoreCase)) {
+            continue
+        }
+        $targetItemPath = $DestDir
+        foreach ($part in ($relPath -split '[\\/]')) {
+            if (-not [string]::IsNullOrWhiteSpace($part)) {
+                $targetItemPath = Join-Path $targetItemPath $part
+            }
+        }
+        Copy-PlatformFile -AppRoot $AppRoot -SourcePath $item.FullName -DestinationPath $targetItemPath
+    }
+}
+
+function Copy-PlatformFile {
+    param(
+        [string]$AppRoot,
+        [string]$SourcePath,
+        [string]$DestinationPath
+    )
+    if (Test-ProtectedDestination -AppRoot $AppRoot -DestinationPath $DestinationPath) {
+        Write-Error "拒绝写入用户保护区: $DestinationPath"
+        exit 1
+    }
+    $destinationParent = Split-Path -Parent $DestinationPath
+    if (-not [string]::IsNullOrWhiteSpace($destinationParent)) {
+        New-Item -ItemType Directory -Force -Path $destinationParent | Out-Null
+    }
+    Copy-Item -LiteralPath $SourcePath -Destination $DestinationPath -Force
+}
 
 if ([string]::IsNullOrWhiteSpace($TargetAppDir)) {
     $TargetAppDir = 'C:\Antigravity_Mod'
@@ -71,12 +141,14 @@ Write-Host "  - Plugin State   : $ProtectedStateDir"
 Write-Host "  - Packages       : $ProtectedPackagesDir"
 
 if ($DryRun) {
-    Write-Host "[DryRun] 预检通过，未执行任何文件写入。" -ForegroundColor Green
+    Write-Host "[DryRun] 预检通过，未执行任何文件写入。运行时加载路径保持不变。" -ForegroundColor Green
     exit 0
 }
 
-# 4. 同步 mod_kit\ 核心重铸脚本
-$SourceModKitDir = Join-Path $RepoRootDir 'mod_kit'
+# 4. 同步 mod_kit\ 核心重铸脚本（安装到应用根下的 mod_kit，供 repatch 按相对路径找到 resources\）
+$SourceModKitDir = Join-Path $PlatformDir 'mod_kit'
+$SourceBuiltinDir = Join-Path (Join-Path $RepoRootDir 'plugins') 'builtin'
+$SourceOptionalDir = Join-Path (Join-Path $RepoRootDir 'plugins') 'optional'
 $TargetModKitDir = Join-Path $TargetAppDir 'mod_kit'
 New-Item -ItemType Directory -Force -Path $TargetModKitDir | Out-Null
 
@@ -84,7 +156,7 @@ $ModKitFiles = @('patch.js', 'agm_locks.js', 'agm_sidecar_reaper_core.js', 'repa
 foreach ($fileName in $ModKitFiles) {
     $srcFile = Join-Path $SourceModKitDir $fileName
     $dstFile = Join-Path $TargetModKitDir $fileName
-    Copy-Item -LiteralPath $srcFile -Destination $dstFile -Force
+    Copy-PlatformFile -AppRoot $TargetAppDir -SourcePath $srcFile -DestinationPath $dstFile
     Write-Host "已同步 mod_kit\$fileName" -ForegroundColor Gray
 }
 
@@ -104,36 +176,37 @@ if (Test-Path -LiteralPath $SourceUpdateYmlTemplate) {
 }
 
 # 5. 同步 plugins\ 平台核心文件（跳过 config.json、state\、packages\、backups\）
-$SourcePluginsDir = Join-Path $RepoRootDir 'plugins'
 New-Item -ItemType Directory -Force -Path $TargetPluginsDir | Out-Null
-New-Item -ItemType Directory -Force -Path $ProtectedStateDir | Out-Null
-New-Item -ItemType Directory -Force -Path $ProtectedPackagesDir | Out-Null
-
-$CorePluginFiles = @('agm-plugin-host.js', 'ai-sidedock.js', 'hakimi-i18n.js', 'config.default.json')
-foreach ($fileName in $CorePluginFiles) {
-    $srcFile = Join-Path $SourcePluginsDir $fileName
-    $dstFile = Join-Path $TargetPluginsDir $fileName
-    Copy-Item -LiteralPath $srcFile -Destination $dstFile -Force
-    Write-Host "已同步 plugins\$fileName" -ForegroundColor Gray
+if (!(Test-Path -LiteralPath $ProtectedStateDir)) {
+    New-Item -ItemType Directory -Force -Path $ProtectedStateDir | Out-Null
+}
+if (!(Test-Path -LiteralPath $ProtectedPackagesDir)) {
+    New-Item -ItemType Directory -Force -Path $ProtectedPackagesDir | Out-Null
 }
 
-# 同步 hakimi-i18n 模块化源码树与 plugins\repo 官方插件源目录
-$SubTreesToSync = @('hakimi-i18n', 'repo')
-foreach ($subTree in $SubTreesToSync) {
-    $srcSubDir = Join-Path $SourcePluginsDir $subTree
-    $dstSubDir = Join-Path $TargetPluginsDir $subTree
-    $sourceItems = Get-ChildItem -LiteralPath $srcSubDir -Recurse -File
-    foreach ($item in $sourceItems) {
-        $relPath = $item.FullName.Substring($srcSubDir.Length + 1)
-        if ($relPath.StartsWith('backups\', [System.StringComparison]::OrdinalIgnoreCase)) {
-            continue
-        }
-        $targetItemPath = Join-Path $dstSubDir $relPath
-        $targetParentDir = Split-Path -Parent $targetItemPath
-        New-Item -ItemType Directory -Force -Path $targetParentDir | Out-Null
-        Copy-Item -LiteralPath $item.FullName -Destination $targetItemPath -Force
-    }
-    Write-Host "已同步 plugins\$subTree\ 子树" -ForegroundColor Gray
+Copy-PlatformFile -AppRoot $TargetAppDir -SourcePath (Join-Path $PlatformDir 'agm-plugin-host.js') -DestinationPath (Join-Path $TargetPluginsDir 'agm-plugin-host.js')
+Write-Host "已同步 plugins\agm-plugin-host.js" -ForegroundColor Gray
+Copy-PlatformFile -AppRoot $TargetAppDir -SourcePath (Join-Path $PlatformDir 'config.default.json') -DestinationPath (Join-Path $TargetPluginsDir 'config.default.json')
+Write-Host "已同步 plugins\config.default.json" -ForegroundColor Gray
+
+foreach ($pluginId in @('hakimi-i18n', 'ai-sidedock')) {
+    $entryName = $pluginId + '.js'
+    $srcFile = Join-Path (Join-Path $SourceBuiltinDir $pluginId) $entryName
+    $dstFile = Join-Path $TargetPluginsDir $entryName
+    Copy-PlatformFile -AppRoot $TargetAppDir -SourcePath $srcFile -DestinationPath $dstFile
+    Write-Host "已同步 plugins\$entryName" -ForegroundColor Gray
+}
+
+# 同步 hakimi-i18n 模块化源码树。目标仍是运行时 plugins\hakimi-i18n\，不删除其中多出来的用户文件。
+$HakimiModuleDir = Join-Path (Join-Path $SourceBuiltinDir 'hakimi-i18n') 'hakimi-i18n'
+Copy-SourceTree -AppRoot $TargetAppDir -SourceDir $HakimiModuleDir -DestDir (Join-Path $TargetPluginsDir 'hakimi-i18n')
+Write-Host "已同步 plugins\hakimi-i18n\ 子树（不删除已有文件）" -ForegroundColor Gray
+
+# 可选插件复制到历史本地源 plugins\repo\<id>\。不删除 repo 里的其他 id，也不触碰 packages\。
+foreach ($optionalDir in @(Get-ChildItem -LiteralPath $SourceOptionalDir -Directory)) {
+    $repoDest = Join-Path (Join-Path $TargetPluginsDir 'repo') $optionalDir.Name
+    Copy-SourceTree -AppRoot $TargetAppDir -SourceDir $optionalDir.FullName -DestDir $repoDest
+    Write-Host "已同步 plugins\repo\$($optionalDir.Name)\ 子树（不删除已有文件）" -ForegroundColor Gray
 }
 
 # 6. 初始化运行态 plugins\config.json（仅当不存在时从 config.default.json 初始化，绝不覆盖已有配置）
@@ -148,7 +221,7 @@ if (!(Test-Path -LiteralPath $ProtectedRuntimeConfigPath)) {
 # 7. 同步便携启动脚本
 $SourceLauncherBat = Join-Path $ScriptsDir '启动爆改版.bat'
 if (Test-Path -LiteralPath $SourceLauncherBat) {
-    Copy-Item -LiteralPath $SourceLauncherBat -Destination (Join-Path $TargetAppDir '启动爆改版.bat') -Force
+    Copy-PlatformFile -AppRoot $TargetAppDir -SourcePath $SourceLauncherBat -DestinationPath (Join-Path $TargetAppDir '启动爆改版.bat')
 }
 
 # 8. 可选执行 repatch.ps1 重铸 resources\app.asar
