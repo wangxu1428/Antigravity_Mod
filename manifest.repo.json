@@ -1,0 +1,306 @@
+{
+    "schemaVersion":  1,
+    "repository":  "Antigravity_Mod",
+    "platform":  {
+                     "name":  "Antigravity Mod Plugin Platform",
+                     "platformVersion":  "2.1.0",
+                     "hostVersion":  "2.1.0",
+                     "hostSocketVersion":  "2.0.0",
+                     "i18nEngineVersion":  "1.1.0",
+                     "i18nDictVersion":  "1.14.0",
+                     "sidedockVersion":  "1.1.0",
+                     "compatibleAppVersion":  "2.32.x",
+                     "compatibleElectron":  "44.9.1",
+                     "userDataIsolationMode":  "gitignore-and-installer-protected",
+                     "protectedUserPaths":  [
+                                                "UserData/",
+                                                "plugins/config.json",
+                                                "plugins/state/",
+                                                "plugins/packages/"
+                                            ]
+                 },
+    "builtinPlugins":  [
+                           {
+                               "id":  "hakimi-i18n",
+                               "name":  "Hakimi i18n Deep Localization Engine",
+                               "version":  "1.1.0",
+                               "type":  "legacy-main-world",
+                               "entry":  "plugins/hakimi-i18n.js",
+                               "sha256":  "5305954C7D90D6A00458DAB9FA25D7A28A9DB31536AD5B585275FBCD8DFC7EE5"
+                           },
+                           {
+                               "id":  "ai-sidedock",
+                               "name":  "AI Side-Dock Three-Titan",
+                               "version":  "1.1.0",
+                               "type":  "legacy-main-world",
+                               "entry":  "plugins/ai-sidedock.js",
+                               "sha256":  "264640BD1C33BDF17C42E91FB0824C6986B29968010F8AA6EED0149EEBE829E2"
+                           }
+                       ],
+    "repoPlugins":  [
+                        {
+                            "id":  "agm-hello-guard",
+                            "name":  "AGM Hello Guard",
+                            "author":  "Hakimi Tech Lab",
+                            "version":  "1.0.0",
+                            "description":  "Safe sandboxed example plugin demonstrating configSchema, storage counter, toast UI, and permission denial.",
+                            "type":  "worker-sandbox-package",
+                            "path":  "plugins/repo/agm-hello-guard",
+                            "entry":  "index.js",
+                            "permissions":  [
+                                                "ui:toast",
+                                                "config:read",
+                                                "storage:read",
+                                                "storage:write"
+                                            ],
+                            "compatibility":  {
+                                                  "appVersion":  "\u003e=1.0.0",
+                                                  "hostVersion":  "\u003e=2.0.0"
+                                              },
+                            "files":  [
+                                          {
+                                              "path":  "plugins/repo/agm-hello-guard/manifest.json",
+                                              "size":  2002,
+                                              "sha256":  "CEFDAEA439438E12BDFF77D5184B0F48CDC0971CE30A387A643CE4DEA654A41B"
+                                          },
+                                          {
+                                              "path":  "plugins/repo/agm-hello-guard/index.js",
+                                              "size":  2472,
+                                              "sha256":  "799C35F12335F9C7B0BC579E3C5DD6DBE1C8A74A30D220F197E002B601DED5CA"
+                                          }
+                                      ]
+                        }
+                    ],
+    "files":  [
+                  {
+                      "path":  ".gitignore",
+                      "size":  1268,
+                      "sha256":  "950FBA057AC52C44CE764ABE862B9D683891C4627794DBD73600AAB3453E07C3"
+                  },
+                  {
+                      "path":  "docs/ARCHITECTURE.md",
+                      "size":  62357,
+                      "sha256":  "7D28E98B8B6EBD731138E306D384DF0160D31DE481DD13F49FB7464F4D2A42BC"
+                  },
+                  {
+                      "path":  "docs/PLUGIN_DEV_GUIDE.md",
+                      "size":  7607,
+                      "sha256":  "69AE25F42E49672111CBF97684BB610167925DBC8B3522CF916B0F0C44B4CCAA"
+                  },
+                  {
+                      "path":  "docs/WHITEPAPER.md",
+                      "size":  11451,
+                      "sha256":  "8F7742BEC7E6B92B164E378A453A363E4F7F455FAC0339D30A8A24445D9D9F81"
+                  },
+                  {
+                      "path":  "LICENSE",
+                      "size":  1085,
+                      "sha256":  "BABB2D197848644B954D20BB3ACA061747BE7899362F7BFB92A35E74314C5FA5"
+                  },
+                  {
+                      "path":  "mod_kit/agm_locks.js",
+                      "size":  10497,
+                      "sha256":  "F1589C2875ED2EF465BA668974AA1338D0537B5520064BED6DBD3F1F46CB58B1"
+                  },
+                  {
+                      "path":  "mod_kit/agm_sidecar_reaper_core.js",
+                      "size":  12491,
+                      "sha256":  "FEA5859A4E85D96B1B95D9B554A86F5061AEF5CB07B5B27021179D3B0E88EDAF"
+                  },
+                  {
+                      "path":  "mod_kit/app-update.template.yml",
+                      "size":  263,
+                      "sha256":  "DE77889AD4DA6C6FB8F1C904711710387C3A3CEF6C901AFE5A25908B37CDA151"
+                  },
+                  {
+                      "path":  "mod_kit/patch.js",
+                      "size":  38940,
+                      "sha256":  "CDED4C310AC22BE3EC385FCC567706D29D9B0D5978BBDFCF3F8B1C7D19506FFF"
+                  },
+                  {
+                      "path":  "mod_kit/repatch.bat",
+                      "size":  323,
+                      "sha256":  "8678730D9A527D9217FA207294C4D96CD70A71CCAECA09E28C400E7F95DB5082"
+                  },
+                  {
+                      "path":  "mod_kit/repatch.ps1",
+                      "size":  4151,
+                      "sha256":  "820758BD4FD3E783C2997AA76B628F2D4C3E945302E6E8C27BC1CDFF4C080F33"
+                  },
+                  {
+                      "path":  "plugins/agm-plugin-host.js",
+                      "size":  169138,
+                      "sha256":  "E685461A050AB6D7C839F9FA69810A5D6857583C3C904A0F1DC4B8DA2D171694"
+                  },
+                  {
+                      "path":  "plugins/ai-sidedock.js",
+                      "size":  31077,
+                      "sha256":  "264640BD1C33BDF17C42E91FB0824C6986B29968010F8AA6EED0149EEBE829E2"
+                  },
+                  {
+                      "path":  "plugins/config.default.json",
+                      "size":  852,
+                      "sha256":  "BC3DDECC66FCC88812BD510DF940C4221A49D1D40F7901C250B29DB57B765900"
+                  },
+                  {
+                      "path":  "plugins/hakimi-i18n.js",
+                      "size":  1991094,
+                      "sha256":  "5305954C7D90D6A00458DAB9FA25D7A28A9DB31536AD5B585275FBCD8DFC7EE5"
+                  },
+                  {
+                      "path":  "plugins/hakimi-i18n/adapters/dom-adapter.js",
+                      "size":  31184,
+                      "sha256":  "5C3D5EAB6A7DD41E5BE23B6B5F5657714DC925951E7AA5F6FCABA6619321D017"
+                  },
+                  {
+                      "path":  "plugins/hakimi-i18n/build.js",
+                      "size":  12099,
+                      "sha256":  "03DF08F4519A35229F30E8C26293CAD40A71DD21EAB10D9A6BB8E8FC7FCC4214"
+                  },
+                  {
+                      "path":  "plugins/hakimi-i18n/core/discovery.js",
+                      "size":  22452,
+                      "sha256":  "DFACA83D13B6E30AD8E8029E18815753CB807FA517C5D46D57C79745F6FC0F4B"
+                  },
+                  {
+                      "path":  "plugins/hakimi-i18n/core/engine.js",
+                      "size":  20903,
+                      "sha256":  "F76C5425DDAC096CD986C7BC501D82DBEFC7828773BCC0FFEC313C8745ACCFCC"
+                  },
+                  {
+                      "path":  "plugins/hakimi-i18n/core/sanitizer.js",
+                      "size":  11424,
+                      "sha256":  "FCE164276B8B34797EB3E22F4DBB5E4D4469FE1877361C6FB434D97D9B73DEA8"
+                  },
+                  {
+                      "path":  "plugins/hakimi-i18n/custom/exclusions.json",
+                      "size":  304,
+                      "sha256":  "124B6BE8AB27F6D7B69EC789CBC1AD19C3E1BDDDBF826E74D7720DBC21E505AF"
+                  },
+                  {
+                      "path":  "plugins/hakimi-i18n/custom/glossary.json",
+                      "size":  216,
+                      "sha256":  "12186B6644C3D6A6B251763D3100D0BDB83F714A41DFA376FFFF0289290B636B"
+                  },
+                  {
+                      "path":  "plugins/hakimi-i18n/custom/overrides.json",
+                      "size":  108,
+                      "sha256":  "6164EA97AFDD06D3E5CA3707D59F7F935EDBD7B03C7665CBC594AC3131205434"
+                  },
+                  {
+                      "path":  "plugins/hakimi-i18n/custom/untranslated.json",
+                      "size":  118,
+                      "sha256":  "014AAA579034D3EECC83C0D6BFC779EE2ACE7DB68D82950BCD92A3B0AC49625C"
+                  },
+                  {
+                      "path":  "plugins/hakimi-i18n/locales/zh-CN/dict-core.json",
+                      "size":  2707,
+                      "sha256":  "286BFC8F913521FC31A88C657DDCAFC4B68BE419111431EE917E1F53302CB83B"
+                  },
+                  {
+                      "path":  "plugins/hakimi-i18n/locales/zh-CN/dict-exact.json",
+                      "size":  1884991,
+                      "sha256":  "13E3CD098BAC1EAB59C0FECA59DBFA57F6D622E0F91895AD3FE4FE7E36D66A2F"
+                  },
+                  {
+                      "path":  "plugins/hakimi-i18n/locales/zh-CN/dict-menu.json",
+                      "size":  2423,
+                      "sha256":  "0F002E64E8D6C4C05AD3F7AC2ED379BE0271B71BF0AF281D7F99E08385EAEF5E"
+                  },
+                  {
+                      "path":  "plugins/hakimi-i18n/locales/zh-CN/dict-prefix.json",
+                      "size":  13596,
+                      "sha256":  "B02DF5FE7E0B1663E7661E2605CF22E33E7A731652E0ADA4789952FE0D3B3DF9"
+                  },
+                  {
+                      "path":  "plugins/hakimi-i18n/locales/zh-CN/dict-regex.json",
+                      "size":  10277,
+                      "sha256":  "206CE5E8FDCCB8DFB77D36D15C592F8AE9868DDD04AA3737EEA5F294CA39BC00"
+                  },
+                  {
+                      "path":  "plugins/hakimi-i18n/locales/zh-CN/dict-tray.json",
+                      "size":  117,
+                      "sha256":  "56D8BE5C1F075D072BCE7CC446A0E7B288E2CAFBAD6B6DDD59D7C7A6AF81ADF8"
+                  },
+                  {
+                      "path":  "plugins/hakimi-i18n/locales/zh-CN/meta.json",
+                      "size":  555,
+                      "sha256":  "F9376366BCFCACC322D5CA933D57B30E7B30C580C4EBB3A93E4D26F8D814F6CE"
+                  },
+                  {
+                      "path":  "plugins/hakimi-i18n/ui/config-center.js",
+                      "size":  64967,
+                      "sha256":  "21EE1564E3632EBB0C30F41A18AD86B0E71AD8776681D89D7D5EBF7CA845D3FF"
+                  },
+                  {
+                      "path":  "plugins/repo/agm-hello-guard/index.js",
+                      "size":  2472,
+                      "sha256":  "799C35F12335F9C7B0BC579E3C5DD6DBE1C8A74A30D220F197E002B601DED5CA"
+                  },
+                  {
+                      "path":  "plugins/repo/agm-hello-guard/manifest.json",
+                      "size":  2002,
+                      "sha256":  "CEFDAEA439438E12BDFF77D5184B0F48CDC0971CE30A387A643CE4DEA654A41B"
+                  },
+                  {
+                      "path":  "README.md",
+                      "size":  8309,
+                      "sha256":  "FC431664ECAEB60E4C5431C5AAB0AF7D206FE893EEE4278495E91A2BF300D4E4"
+                  },
+                  {
+                      "path":  "scripts/install-or-update.ps1",
+                      "size":  8366,
+                      "sha256":  "193BBC578F61BC4237B5AACCDDF89797714329DF1B5AFA7E3BC97A249E4D1BF2"
+                  },
+                  {
+                      "path":  "scripts/legacy-rollback/README.md",
+                      "size":  1695,
+                      "sha256":  "3399C23A8CD9D69F1C64991D32738C47EA08DBB6683B2FF94028C322BB03E1B3"
+                  },
+                  {
+                      "path":  "scripts/legacy-rollback/rollback.bat",
+                      "size":  178,
+                      "sha256":  "D579E7F3A36F82E3A017CEA83C7DC5BC8CE1A53492A96C5572D65B983F569420"
+                  },
+                  {
+                      "path":  "scripts/legacy-rollback/rollback.ps1",
+                      "size":  4321,
+                      "sha256":  "DCF4FB6F31EDB97B256988DFC4C9422175B9D6041CFE028FF169E3516B5CBBBA"
+                  },
+                  {
+                      "path":  "scripts/restore-official.ps1",
+                      "size":  4098,
+                      "sha256":  "48D4B66759F2DE79ADD781057E458CB82E27CF45387655FF052B1B525A520992"
+                  },
+                  {
+                      "path":  "scripts/启动爆改版.bat",
+                      "size":  611,
+                      "sha256":  "7B9C920417921DB092C1A2FBE7C734A170665E7FE8A3DE7D955C43E2DF408959"
+                  },
+                  {
+                      "path":  "tests/fixtures/agm-fault-probe/index.js",
+                      "size":  822,
+                      "sha256":  "A1CCCC260546173836408939698E2DCEEFCDC6D183C03AA7953D13A9664E56D1"
+                  },
+                  {
+                      "path":  "tests/fixtures/agm-fault-probe/manifest.json",
+                      "size":  1085,
+                      "sha256":  "EBBDFDCBDB09BAA44067E8074E1E307BB5E0315A6C839643B967A1882D395AC6"
+                  },
+                  {
+                      "path":  "tests/test_host_unit.js",
+                      "size":  12727,
+                      "sha256":  "E473BE43EE43793BF01548A12B263BCCDE0F4536F72CFBFCC74521D0AC886337"
+                  },
+                  {
+                      "path":  "tests/test_reaper_unit.js",
+                      "size":  15771,
+                      "sha256":  "F30464A9D01903C5F4DC8BD6DDC761A08664CEC13EE3D17B6072D4DDBE8DF019"
+                  },
+                  {
+                      "path":  "tests/test_update_lock.js",
+                      "size":  10697,
+                      "sha256":  "89DE8C5CB90995C06C3FD5117EA5096C2B0A79DE6EF494CAD16F7E7EA4F9CA55"
+                  }
+              ]
+}

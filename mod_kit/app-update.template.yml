@@ -1,0 +1,4 @@
+# AGM: auto-update disabled 2026-11-18 by user decision. Original url: https://antigravity-hub-auto-updater-974169037036.us-central1.run.app/manifest/
+provider: generic
+url: http://127.0.0.1:9/agm-update-disabled/
+updaterCacheDirName: antigravity-mod-updater

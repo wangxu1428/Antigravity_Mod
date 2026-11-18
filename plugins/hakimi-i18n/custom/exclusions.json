@@ -1,0 +1,21 @@
+{
+  "__description__": "永远保留英文的词条/标识符列表",
+  "terms": [
+    "Antigravity",
+    "OpenCodex",
+    "Gemini",
+    "ChatGPT",
+    "Grok",
+    "Claude",
+    "Electron",
+    "Node.js",
+    "Python",
+    "Git",
+    "JSON",
+    "API",
+    "URL",
+    "HTTP",
+    "HTTPS",
+    "WSL"
+  ]
+}

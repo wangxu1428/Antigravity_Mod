@@ -1,46 +1,114 @@
-# Antigravity_Mod
+# Antigravity_Mod (AGM Plugin Platform v2.1.0)
 
-Antigravity 独立插件平台与 AI 辅助安装工具。
+**Antigravity 独立插件平台、深度中文化引擎与非破坏式重铸工具箱**  
+*A non-invasive external plugin host, Web Worker sandbox gateway, deep localization engine, and portable repatch toolkit for Antigravity IDE.*
 
-Official public distribution repository for the Antigravity plugin platform and its plugins. A modified Antigravity executable is never distributed.
+---
 
-## 项目定位
+## 核心设计底线与数据安全声明 (Core Design Baselines)
 
-本仓库是 Antigravity_Mod 的**唯一官方发行仓库**，并且是公开仓库。这里统一管理并分发：
+1. **只发行插件平台源码，绝不发行官方二进制**：本仓库仅分发 `mod_kit/`（轻量级补丁注入器、自动更新锁、Sidecar 进程收割器）、`plugins/`（插件宿主 v2.1.0、内置插件源码与包、标准沙箱示例插件 `repo/`）、`scripts/`、`tests/` 与 `docs/`，**不含任何官方 `.exe`、`.dll`、`.pak`、`app.asar` 或 `node_modules`**。
+2. **平台与插件走统一仓库索引分发**：通过根目录 `manifest.repo.json` 统一记录平台/宿主版本、关键文件 SHA256 校验值以及 `plugins/repo/` 插件包列表。
+3. **用户数据与平台升级生命周期严格隔离**：**用户数据存放在平台目录之外（或平台树内被 gitignore 的运行态位置），平台升级不得丢失用户配置、插件数据和个人状态**。
+   - 仓库仅提供纯净脱敏模板 `plugins/config.default.json`；
+   - 运行态 `UserData/`、`plugins/config.json`、`plugins/state/`（含 `registry.json`、`configs/*.json`、`logs/*.log`）以及 `plugins/packages/`（用户已安装插件）均已被 `.gitignore` 严格排除并由安装/升级脚本设为只读保护区。
+4. **小更新热重载，大更新一键重铸**：
+   - 日常更新 `plugins/` 下的宿主（`agm-plugin-host.js`）、汉化词典（`hakimi-i18n.js`）、侧边舱（`ai-sidedock.js`）或沙箱插件包时，无需重新打包 `app.asar`，在客户端内按 **`Ctrl+R` / `F5`** 即可秒级热重载生效。
+   - 当官方客户端升级覆盖 `app.asar` 时，运行 `mod_kit/repatch.ps1`（或 `scripts/install-or-update.ps1`）即可从备份解包并重新注入底座插槽，全程保留用户配置与登录态。
 
-- 插件平台（含 AI 辅助安装工具）
-- 插件
-- 插件 API / 接口规范
-- 相关文档
+---
 
-插件只通过本仓库分发。收录入口是 [`index/plugins.json`](index/plugins.json)：每条记录包含插件 ID、版本、作者、说明、平台兼容范围、发行包下载地址和 SHA256。
+## 仓库目录结构 (Repository Layout)
 
-## 规则
+```text
+Antigravity_Mod/
+├── README.md                                  # 项目说明与数据隔离规范
+├── LICENSE                                    # MIT 开源许可证（平台，Copyright (c) 2026 wangxu1428；插件自选许可证）
+├── .gitignore                                 # 排除官方二进制与用户运行态数据保护区
+├── manifest.repo.json                         # 平台与本地插件源 SHA256 分发清单
+├── mod_kit/                                   # 平台底座补丁重铸工具箱
+│   ├── patch.js                               #   8 锚点预检 + 13 个受限 hakimi:* IPC 注入器
+│   ├── agm_locks.js                           #   AGM_UPDATE_LOCK (10 锚点) + AGM_SIDECAR_REAPER (4 锚点)
+│   ├── agm_sidecar_reaper_core.js             #   会话级 Sidecar 进程树快照与单 PID 收割核心
+│   ├── repatch.ps1                            #   非破坏式解包、注入、node --check 与重打包流水线
+│   ├── repatch.bat                            #   Windows 双击重铸批处理入口
+│   └── app-update.template.yml                #   自动更新封锁配置模板 (127.0.0.1:9 + 独立缓存目录)
+├── plugins/                                   # 插件平台宿主、内置插件与沙箱插件源
+│   ├── agm-plugin-host.js                     #   AGM Plugin Host v2.1.0 + AGM Hub 原生侧边栏与内嵌图层 UI
+│   ├── ai-sidedock.js                         #   AI Side-Dock 三巨头分屏侧边舱 (Gemini / ChatGPT / Grok)
+│   ├── hakimi-i18n.js                         #   Hakimi i18n 深度本地化引擎单文件构建产物 (v1.1.0)
+│   ├── config.default.json                    #   纯净默认配置模板 (首次安装时初始化为 config.json)
+│   ├── hakimi-i18n/                           #   Hakimi i18n 模块化源码、构建器 build.js 与 zh-CN 词典
+│   └── repo/                                  #   沙箱插件源仓库
+│       └── agm-hello-guard/                   #     Web Worker 沙箱标准示例插件 (v1.0.0)
+├── scripts/                                   # 安装、升级、还原与便携启动脚本
+│   ├── 启动爆改版.bat                           #   便携式启动入口 (--user-data-dir="%~dp0UserData"；远程调试端口默认关闭)
+│   ├── install-or-update.ps1                  #   非破坏式安装/升级脚本（初稿，保护用户数据区）
+│   ├── restore-official.ps1                   #   从 app.asar.bak 安全还原官方原版（初稿）
+│   └── legacy-rollback/                       #   实验室历史快照回滚脚本归档（含未修复 $D/$d 缺陷警告，禁用于生产）
+├── tests/                                     # 纯离线 Node.js 单元测试套件
+│   ├── test_host_unit.js                      #   宿主 SemVer / Manifest / Schema / 权限网关 15 项单测
+│   ├── test_update_lock.js                    #   自动更新锁 9 项离线注入与拦截单测 (UL1-UL7)
+│   ├── test_reaper_unit.js                    #   Sidecar 进程收割器 16 项离线单测 (RU1-RU16)
+│   └── fixtures/agm-fault-probe/              #   异常抛错与死循环超时隔离测试探针
+└── docs/                                      # 架构文档与开发手册
+    ├── ARCHITECTURE.md                        #   AGM 插件插座与管理中心详细架构设计说明
+    ├── WHITEPAPER.md                          #   技术架构与算法公式白皮书
+    └── PLUGIN_DEV_GUIDE.md                    #   Manifest v1、权限目录、configSchema 与 Worker API 开发指南
+```
 
-- 只分发插件平台及其插件。Antigravity 官方程序，以及任何修改版 Antigravity EXE，都不进入本仓库，也不通过本仓库分发。
-- 更新不得覆盖或删除用户数据。次版本更新必须让平台原地继续可用；主版本更新可以要求重新下载平台，但仍然不得动用户数据。详见 [docs/versioning.md](docs/versioning.md)。
-- 仓库公开。不要提交密钥、令牌、cookie、用户数据或个人信息。
+---
 
-## 目录
+## 快速使用与离线测试 (Quick Start & Offline Tests)
 
-| 路径 | 内容 |
-| --- | --- |
-| [`platform/`](platform/README.md) | 插件平台的说明与后续发行内容（当前无平台代码） |
-| [`plugins/`](plugins/README.md) | 各插件目录，`plugins/<id>/` |
-| [`plugin-api/`](plugin-api/README.md) | 插件 API / 接口规范（待开发者编写） |
-| [`docs/`](docs/README.md) | 文档，含版本策略 |
-| [`index/`](index/README.md) | 插件索引与字段说明 |
+### 1. 运行纯离线单元测试（无需客户端，零生产写盘）
+```bash
+node tests/test_host_unit.js
+node tests/test_reaper_unit.js
+node tests/test_update_lock.js
+```
 
-## 状态
+### 2. 重新打包汉化引擎单文件（可选）
+修改 `plugins/hakimi-i18n/` 下的源码或词典后，可执行：
+```bash
+node plugins/hakimi-i18n/build.js
+```
 
-早期搭建。目前只有仓库骨架：没有平台实现，没有已收录插件，插件 API 规范尚未编写。
+### 3. 客户端内快捷键
+- **`Ctrl+Shift+M`**（或点击左侧边栏 **「插件中心」** 导航项）：打开/关闭 AGM Hub 插件管理中心。
+- **`Ctrl+Shift+L`**：直接打开插件中心内嵌的「本地化配置」面板。
+- **`Ctrl+R` / `F5`**：零重启热重载全部外置插件与配置。
+- **`Ctrl+Shift+R`**：执行整页刷新。
+
+### 4. 远程调试端口（默认关闭 / Remote debugging port, off by default）
+
+公开发行的 `scripts/启动爆改版.bat` **默认不会**打开 Chromium 远程调试端口。如需调试，可用以下任一方式按需开启（命令行参数优先于环境变量）：
+
+```bat
+set AGM_DEBUG_PORT=9224
+启动爆改版.bat
+```
+
+或：
+
+```bat
+启动爆改版.bat --debug-port 9224
+```
+
+**风险：** 开启后，本机任意进程都可以连接到该调试端口，完全控制该应用，并读取会话、令牌等敏感数据。仅在需要调试时开启，切勿在共享或公用电脑上启用。
+
+**Risk:** When enabled, any local process can attach to the debugging port, take full control of the app, and read sessions/tokens. Enable only for debugging; never on shared machines.
+
+---
+
+## English Summary
+
+**Antigravity_Mod (AGM)** is an external plugin platform and localization suite for Antigravity IDE (compatible with v2.32.x / Electron 44.9.1).
+- **No Proprietary Binaries**: Only patch scripts (`mod_kit/`), the external plugin host (`plugins/agm-plugin-host.js` v2.1.0), built-in plugins, sandboxed plugin packages (`plugins/repo/`), tests, and documentation are distributed.
+- **Strict User Data Isolation**: **User data is stored outside the platform distribution directory (or in `.gitignore`-protected runtime paths within the installation tree); platform upgrades never overwrite or delete user configurations (`plugins/config.json`), plugin state (`plugins/state/`), installed packages (`plugins/packages/`), or browser profile data (`UserData/`).**
 
 ## 许可证
 
 插件平台以 [MIT 许可证](LICENSE) 授权。每个插件可以自选许可证，并应记录在插件索引的 `license` 字段中（建议使用 SPDX 标识符）。
 
 本项目为非官方项目，与 Antigravity 的制作者没有关联，亦未获其认可或背书，且不包含、不分发任何 Antigravity 官方程序文件。 This project is unofficial, not affiliated with or endorsed by the makers of Antigravity, and does not include or distribute any official Antigravity program files.
-
-## 参与
-
-分支与提交流程见 [CONTRIBUTING.md](CONTRIBUTING.md)。变更记录见 [CHANGELOG.md](CHANGELOG.md)。

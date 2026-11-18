@@ -7,6 +7,7 @@
 
 ### Added
 
+- 导入 v2.1.0 平台与插件（分支 `dev/v2.1.0-import`）：纳入 `mod_kit/`、`plugins/`（宿主 v2.1.0、内置插件与 `plugins/repo/`）、`scripts/`、`tests/`、`manifest.repo.json`，以及 `docs/ARCHITECTURE.md`、`docs/PLUGIN_DEV_GUIDE.md`、`docs/WHITEPAPER.md`。保留既有 `LICENSE`（MIT，Copyright (c) 2026 wangxu1428）。`README.md` 以导入稿为底，并保留平台 MIT、插件自选许可证与非官方 / 未关联声明。`.gitignore` 合并双方规则，并将 `locales/` 收窄为 `/locales/`，以跟踪 `plugins/hakimi-i18n/locales/`。
 - 建立公开仓库骨架：`platform/`、`plugins/`、`plugin-api/`、`docs/`、`index/`。
 - 增加贡献说明、版本策略、插件索引模板（仅一条示例）和 `.gitignore`。
 - 以 MIT 许可证发布插件平台（见根目录 `LICENSE`），并在 README 中加入非官方、未获背书、且不分发 Antigravity 官方程序文件的声明。

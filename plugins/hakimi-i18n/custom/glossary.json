@@ -1,0 +1,10 @@
+{
+  "__description__": "用户自定义专业术语表",
+  "terms": {
+    "Artifact": "制品",
+    "Subagent": "子智能体",
+    "Workflow": "工作流",
+    "Prompt": "提示词",
+    "Context": "上下文"
+  }
+}
