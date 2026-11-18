@@ -37,7 +37,9 @@ Official public distribution repository for the Antigravity plugin platform and 
 
 ## 许可证
 
-TODO：许可证尚未由仓库所有者决定，因此仓库中**没有** `LICENSE` 文件。在正式许可证加入之前，保留所有权利。请勿假定可以自由使用、修改或再分发。
+插件平台以 [MIT 许可证](LICENSE) 授权。每个插件可以自选许可证，并应记录在插件索引的 `license` 字段中（建议使用 SPDX 标识符）。
+
+本项目为非官方项目，与 Antigravity 的制作者没有关联，亦未获其认可或背书，且不包含、不分发任何 Antigravity 官方程序文件。 This project is unofficial, not affiliated with or endorsed by the makers of Antigravity, and does not include or distribute any official Antigravity program files.
 
 ## 参与
 

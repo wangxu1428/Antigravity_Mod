@@ -21,8 +21,11 @@
 | 平台兼容范围 | `platformCompatibility` | 相对**平台**版本的 semver 范围 |
 | 下载地址 | `downloadUrl` | 该版本发行包的 URL，对应下面的 SHA256 |
 | SHA256 | `sha256` | 发行包原始字节的 SHA256，64 位小写十六进制 |
+| 许可证 | `license` | 可选。该插件自身的许可证，建议使用 SPDX 标识符，例如 `MIT` |
 
 `platformCompatibility` 比较的是平台版本（标签 `platform-vX.Y.Z` 中的 `X.Y.Z`），使用 [node-semver](https://github.com/npm/node-semver) 范围语法，例如 `>=0.1.0 <1.0.0`。它不是 Antigravity 官方程序的版本号。
+
+可选字段 `license`：记录该插件自己的许可证，不填写并不表示采用平台的 MIT 许可证。示例条目为 `MIT`。
 
 可选字段 `example`：正式条目不得为 `true`。示范条目必须为 `true`，安装器必须忽略。
 

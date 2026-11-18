@@ -110,6 +110,12 @@
           "type": "string",
           "pattern": "^[a-f0-9]{64}$"
         },
+        "license": {
+          "description": "该插件自身的许可证，建议填写 SPDX 标识符（例如 MIT）。可选。",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
         "example": {
           "description": "true 表示模板示范，不是可安装插件。正式条目不得为 true。",
           "type": "boolean"

@@ -9,7 +9,9 @@
 
 - 建立公开仓库骨架：`platform/`、`plugins/`、`plugin-api/`、`docs/`、`index/`。
 - 增加贡献说明、版本策略、插件索引模板（仅一条示例）和 `.gitignore`。
+- 以 MIT 许可证发布插件平台（见根目录 `LICENSE`），并在 README 中加入非官方、未获背书、且不分发 Antigravity 官方程序文件的声明。
+- 插件索引增加可选字段 `license`（建议使用 SPDX 标识符）；示例条目为 `MIT`。
 
 ### Changed
 
-- 重写 `README.md`，说明项目定位、分发规则、目录和当前状态。许可证仍待仓库所有者决定。
+- 重写 `README.md`，说明项目定位、分发规则、目录和当前状态。
