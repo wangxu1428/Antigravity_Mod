@@ -1,0 +1,18 @@
+{
+  "$schema": "./plugins.schema.json",
+  "schemaVersion": 1,
+  "plugins": [],
+  "examples": [
+    {
+      "example": true,
+      "id": "example-plugin",
+      "name": "示例插件（请勿安装）",
+      "version": "0.0.0",
+      "author": "example",
+      "description": "【示例，不是真实插件】只用于展示索引字段。没有对应的发行包；下载地址是保留域名 example.invalid，SHA256 为占位全零。提交真实插件时向 plugins 追加新条目，不要把本条改成正式插件，也不要安装它。",
+      "platformCompatibility": ">=0.1.0 <1.0.0",
+      "downloadUrl": "https://example.invalid/antigravity-mod/plugins/example-plugin/example-plugin-v0.0.0.zip",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ]
+}
