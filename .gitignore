@@ -99,3 +99,45 @@ coverage/
 
 # 个人目录：路径中任意一级名为 02_Personal 的目录及其全部内容
 02_Personal/
+
+# v2.1.0 暂存树补充规则。与上文完全相同的模式已去掉。
+# 暂存树中的 `locales/` 改为 `/locales/`，只忽略仓库根下的 locales/，
+# 以便跟踪 plugins/hakimi-i18n/locales/。
+
+# 用户运行态配置与已安装插件（plugins/config.default.json 仍跟踪）
+/UserData/
+config.json
+plugins/config.json
+state/
+plugins/state/
+packages/
+plugins/packages/
+
+# 备份、快照与被替换的归档
+plugins/backups/
+plugins/hakimi-i18n/backups/
+displaced_*/
+*.bak_*
+*.orig
+
+# 官方 Electron / Chromium 资源的补充排除
+*.bin
+*.dat
+*.asar.*
+/locales/
+resources/
+
+# 依赖、日志、缓存与临时目录的补充排除
+GPUCache/
+Code Cache/
+DawnCache/
+*.tmp.*
+verify/
+evidence/
+sandbox/
+
+# 浏览器配置档与站点数据
+Cookies
+Cookies-journal
+Local State
+Preferences

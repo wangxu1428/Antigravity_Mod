@@ -1,0 +1,70 @@
+{
+  "manifestVersion": 1,
+  "id": "agm-hello-guard",
+  "name": "AGM Hello Guard",
+  "author": "Hakimi Tech Lab",
+  "version": "1.0.0",
+  "description": "Safe sandboxed example plugin demonstrating configSchema, storage counter, toast UI, and permission denial.",
+  "compatibility": {
+    "appVersion": ">=1.0.0",
+    "hostVersion": ">=2.0.0"
+  },
+  "entry": "index.js",
+  "permissions": [
+    "ui:toast",
+    "config:read",
+    "storage:read",
+    "storage:write"
+  ],
+  "actions": [
+    {
+      "id": "greet",
+      "label": "执行问候 (greet)",
+      "description": "读取配置、累加私有存储计数器并弹出 Toast 通知"
+    },
+    {
+      "id": "tryForbidden",
+      "label": "测试越权调用 (tryForbidden)",
+      "description": "故意调用未声明权限的 shell.launchDesktopGpt 验证网关拦截"
+    }
+  ],
+  "configSchema": {
+    "showToast": {
+      "type": "boolean",
+      "title": "启用 Toast 通知",
+      "description": "执行 greet 动作时是否弹出轻量通知",
+      "default": true
+    },
+    "greetingPrefix": {
+      "type": "string",
+      "title": "问候语前缀",
+      "description": "允许中文、英文、数字及 _!#- 空格，长度 2~32",
+      "default": "Hello Antigravity",
+      "required": true,
+      "minLength": 2,
+      "maxLength": 32,
+      "pattern": "^[\\u4e00-\\u9fa5A-Za-z0-9 _!#-]+$"
+    },
+    "stepSize": {
+      "type": "number",
+      "title": "计数步进值",
+      "description": "每次调用 greet 增加的整数步长 (1~100)",
+      "default": 1,
+      "required": true,
+      "min": 1,
+      "max": 100,
+      "integer": true
+    },
+    "tone": {
+      "type": "enum",
+      "title": "输出风格",
+      "description": "问候文本附加风格标签",
+      "default": "friendly",
+      "options": [
+        { "value": "friendly", "label": "友好 (friendly)" },
+        { "value": "formal", "label": "正式 (formal)" },
+        { "value": "concise", "label": "精简 (concise)" }
+      ]
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "id": "zh-CN",
+  "name": "简体中文 (Simplified Chinese)",
+  "version": "1.14.0",
+  "author": "QingniaoDawn (Upstream) & Hakimi i18n Team",
+  "description": "Antigravity_Mod 官方中文化词典资源",
+  "mentionCategories": [
+    "Rules",
+    "Conversation",
+    "PDF Document",
+    "MCP Resource",
+    "Browser Page",
+    "Browser Text",
+    "Directory",
+    "Git Commit",
+    "Git Diff"
+  ],
+  "stats": {
+    "exactCount": 20214,
+    "prefixCount": 86,
+    "regexCount": 106,
+    "coreCount": 117,
+    "menuCount": 74,
+    "trayCount": 3
+  }
+}

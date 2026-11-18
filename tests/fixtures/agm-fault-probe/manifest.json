@@ -1,0 +1,41 @@
+{
+  "manifestVersion": 1,
+  "id": "agm-fault-probe",
+  "name": "AGM Fault Probe (Test Only)",
+  "author": "Hakimi Tech Lab",
+  "version": "1.0.0",
+  "description": "Test-only fault isolation probe for sync throw, async rejection, and infinite loop timeout termination.",
+  "compatibility": {
+    "appVersion": ">=1.0.0",
+    "hostVersion": ">=2.0.0"
+  },
+  "entry": "index.js",
+  "permissions": [
+    "ui:toast"
+  ],
+  "actions": [
+    {
+      "id": "throwSync",
+      "label": "同步抛错 (throwSync)",
+      "description": "在 Worker 内同步抛出异常验证错误隔离"
+    },
+    {
+      "id": "rejectAsync",
+      "label": "异步拒绝 (rejectAsync)",
+      "description": "返回 Rejected Promise 验证异步异常捕获"
+    },
+    {
+      "id": "infiniteLoop",
+      "label": "死循环熔断 (infiniteLoop)",
+      "description": "执行 while(true){} 验证超时后 worker.terminate() 强杀"
+    }
+  ],
+  "configSchema": {
+    "probeLabel": {
+      "type": "string",
+      "title": "探针标签",
+      "default": "fault-probe",
+      "maxLength": 64
+    }
+  }
+}

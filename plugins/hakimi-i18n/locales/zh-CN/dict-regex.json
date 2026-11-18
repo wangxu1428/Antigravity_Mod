@@ -1,0 +1,426 @@
+[
+  {
+    "pattern": "^Permanently delete\\s+(.*?)\\s+including\\s+(\\d+)\\s+active\\s+conversations?$",
+    "replacement": "永久删除 $1，包括其中的 $2 个活跃会话"
+  },
+  {
+    "pattern": "^(\\d+)\\s+active\\s+conversations?$",
+    "replacement": "$1 个活跃会话"
+  },
+  {
+    "pattern": "^(>\\s*)?(\\d+)\\s+tools?\\s+enabled$",
+    "replacement": "$1已启用 $2 个工具"
+  },
+  {
+    "pattern": "^(\\d+)\\s+files?,\\s*(\\d+)\\s+search(?:es)?$",
+    "replacement": "$1 个文件，$2 次搜索"
+  },
+  {
+    "pattern": "^Ran (\\d+) commands?\\.?\\s*Working$",
+    "replacement": "已执行 $1 条命令，正在处理中"
+  },
+  {
+    "pattern": "^(Rules|Skills|Mcp Tools):\\s*([\\d,]+)\\s*tokens$",
+    "replacement": "$1: $2 tokens (提示词占用)"
+  },
+  {
+    "pattern": "^Send feedback as (.*)$",
+    "replacement": "以账号 $1 发送反馈"
+  },
+  {
+    "pattern": "^Plugin:\\s*(.*)$",
+    "replacement": "插件: $1"
+  },
+  {
+    "pattern": "^(?:>\\s*)?(\\d+)\\s+tools?\\s+enabled$",
+    "replacement": "已启用 $1 个工具"
+  },
+  {
+    "pattern": "^Show (\\d+) breakdown(s?)$",
+    "replacement": "查看 $1 项明细"
+  },
+  {
+    "pattern": "^See all \\((\\d+)\\)$",
+    "replacement": "查看全部 ($1)"
+  },
+  {
+    "pattern": "^(\\d+(?:\\.\\d+)?)% of the customization budget is available\\.$",
+    "replacement": "$1% 的自定义扩展配额可用。"
+  },
+  {
+    "pattern": "^(\\d+) agent(s?) running$",
+    "replacement": "$1 个智能体正在运行"
+  },
+  {
+    "pattern": "^No more older messages, showing (\\d+) of (\\d+)$",
+    "replacement": "已显示全部历史消息 (共 $2 条)"
+  },
+  {
+    "pattern": "^Load older messages, showing (\\d+) of (\\d+)$",
+    "replacement": "加载更早历史消息 (当前 $1 / 共 $2 条)"
+  },
+  {
+    "pattern": "^Select model, current: (.*)$",
+    "replacement": "选择模型，当前: $1"
+  },
+  {
+    "pattern": "^Worked for (.*)$",
+    "replacement": "耗时 $1"
+  },
+  {
+    "pattern": "^Thought for (.*)$",
+    "replacement": "思考用时 $1"
+  },
+  {
+    "pattern": "^Exploring (\\d+) files?, (\\d+) folders?$",
+    "replacement": "正在检索 $1 个文件，$2 个文件夹"
+  },
+  {
+    "pattern": "^(\\d+) files? changed$",
+    "replacement": "$1 个文件已修改"
+  },
+  {
+    "pattern": "^(\\d+) file(s?)$",
+    "replacement": "$1 个文件"
+  },
+  {
+    "pattern": "^(\\d+) command(s?)$",
+    "replacement": "$1 条命令"
+  },
+  {
+    "pattern": "^Skills (\\d+)$",
+    "replacement": "技能列表 ($1)"
+  },
+  {
+    "pattern": "^Rules (\\d+)$",
+    "replacement": "规则列表 ($1)"
+  },
+  {
+    "pattern": "^Plugins (\\d+)$",
+    "replacement": "插件列表 ($1)"
+  },
+  {
+    "pattern": "^(\\d+)m ago$",
+    "replacement": "$1 分钟前"
+  },
+  {
+    "pattern": "^(\\d+)h ago$",
+    "replacement": "$1 小时前"
+  },
+  {
+    "pattern": "^(\\d+)d ago$",
+    "replacement": "$1 天前"
+  },
+  {
+    "pattern": "^Thought for (.+)$",
+    "replacement": "思考了 $1"
+  },
+  {
+    "pattern": "^Worked for (.+)$",
+    "replacement": "工作了 $1"
+  },
+  {
+    "pattern": "^See all \\((.+)\\)$",
+    "replacement": "查看全部 ($1)"
+  },
+  {
+    "pattern": "^Fold lines ([0-9-]+)$",
+    "replacement": "折叠第 $1 行"
+  },
+  {
+    "pattern": "^(\\d+) (active )?conversations?$",
+    "replacement": "$1 个会话"
+  },
+  {
+    "pattern": "^Updated (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\\d+)$",
+    "replacement": "更新于 $1 $2"
+  },
+  {
+    "pattern": "^Select project, current: No Project$",
+    "replacement": "选择项目，当前：无项目"
+  },
+  {
+    "pattern": "^Select project, current: (.+)$",
+    "replacement": "选择项目，当前：$1"
+  },
+  {
+    "pattern": "^Choose model, current: (.+)$",
+    "replacement": "选择模型，当前：$1"
+  },
+  {
+    "pattern": "^Show more \\((\\d+)\\)",
+    "replacement": "显示更多（$1）"
+  },
+  {
+    "pattern": "^See all \\((\\d+)\\)",
+    "replacement": "查看全部（$1 个）"
+  },
+  {
+    "pattern": "^about (\\d+) seconds?$",
+    "replacement": "约 $1 秒"
+  },
+  {
+    "pattern": "^about (\\d+) minutes?$",
+    "replacement": "约 $1 分钟"
+  },
+  {
+    "pattern": "^about (\\d+) hours?$",
+    "replacement": "约 $1 小时"
+  },
+  {
+    "pattern": "^about (\\d+) days?$",
+    "replacement": "约 $1 天"
+  },
+  {
+    "pattern": "^about (\\d+) months?$",
+    "replacement": "约 $1 个月"
+  },
+  {
+    "pattern": "^about (\\d+) years?$",
+    "replacement": "约 $1 年"
+  },
+  {
+    "pattern": "^(\\d+) seconds? ago$",
+    "replacement": "$1 秒前"
+  },
+  {
+    "pattern": "^(\\d+) minutes? ago$",
+    "replacement": "$1 分钟前"
+  },
+  {
+    "pattern": "^(\\d+) hours? ago$",
+    "replacement": "$1 小时前"
+  },
+  {
+    "pattern": "^(\\d+) days? ago$",
+    "replacement": "$1 天前"
+  },
+  {
+    "pattern": "^(\\d+) months? ago$",
+    "replacement": "$1 个月前"
+  },
+  {
+    "pattern": "^(\\d+) years? ago$",
+    "replacement": "$1 年前"
+  },
+  {
+    "pattern": "^last month$",
+    "replacement": "上个月"
+  },
+  {
+    "pattern": "^last week$",
+    "replacement": "上周"
+  },
+  {
+    "pattern": "^last year$",
+    "replacement": "去年"
+  },
+  {
+    "pattern": "^next month$",
+    "replacement": "下个月"
+  },
+  {
+    "pattern": "^(\\d+) archived conversations?$",
+    "replacement": "$1 个已归档对话"
+  },
+  {
+    "pattern": "^(\\d+) active conversations?$",
+    "replacement": "$1 个活跃对话"
+  },
+  {
+    "pattern": "^(\\d+) (?:results|matches)$",
+    "replacement": "$1 条结果"
+  },
+  {
+    "pattern": "^0 results$",
+    "replacement": "0 条结果"
+  },
+  {
+    "pattern": "^(.+?) is now available on paid Pro and Ultra plans\\. Third-party model access will no longer be available on your current plan starting on (.+?)\\.$",
+    "replacement": "$1 现已在付费 Pro 与 Ultra 套餐中提供。自$2起，你当前套餐将不再提供第三方模型访问。"
+  },
+  {
+    "pattern": "^(.+?) will be removed from Antigravity on (.+?)\\.$",
+    "replacement": "$1 将于$2从 Antigravity 中移除。"
+  },
+  {
+    "pattern": "^(.+?) is currently available to Ultra and paid Pro plan subscribers\\.$",
+    "replacement": "$1 目前仅向 Ultra 与付费 Pro 套餐订阅者开放。"
+  },
+  {
+    "pattern": "^Individual quota reached\\. Please upgrade your subscription to increase your limits\\. Resets in (.+)\\.$",
+    "replacement": "个人配额已用完。请升级订阅以提高额度。$1后重置。"
+  },
+  {
+    "pattern": "(\\d+)h(\\d+)m(\\d+)s",
+    "replacement": "$1小时$2分$3秒"
+  },
+  {
+    "pattern": "^(\\d+)\\s*s ago$",
+    "replacement": "$1 秒前"
+  },
+  {
+    "pattern": "^(\\d+)\\s*m ago$",
+    "replacement": "$1 分钟前"
+  },
+  {
+    "pattern": "^(\\d+)\\s*h ago$",
+    "replacement": "$1 小时前"
+  },
+  {
+    "pattern": "^(\\d+)\\s*d ago$",
+    "replacement": "$1 天前"
+  },
+  {
+    "pattern": "^(\\d+)\\s*w ago$",
+    "replacement": "$1 周前"
+  },
+  {
+    "pattern": "^(\\d+)\\s*mo ago$",
+    "replacement": "$1 个月前"
+  },
+  {
+    "pattern": "^(\\d+)\\s*y ago$",
+    "replacement": "$1 年前"
+  },
+  {
+    "pattern": "^See (\\d+) more$",
+    "replacement": "再显示 $1 个"
+  },
+  {
+    "pattern": "^(?:You have|You\\'ve) used some of your weekly limit,?\\s*it will fully refresh in\\s*(.+?)\\.?$",
+    "replacement": "你已使用了部分每周额度，将在$1后完全恢复。"
+  },
+  {
+    "pattern": "^(?:You have|You\\'ve) used some of your daily limit,?\\s*it will fully refresh in\\s*(.+?)\\.?$",
+    "replacement": "你已使用了部分每日额度，将在$1后完全恢复。"
+  },
+  {
+    "pattern": "^(?:You have|You\\'ve) used some of your monthly limit,?\\s*it will fully refresh in\\s*(.+?)\\.?$",
+    "replacement": "你已使用了部分每月额度，将在$1后完全恢复。"
+  },
+  {
+    "pattern": "^Hey\\s+(.+?)[,.]*\\s*what should we build today\\?$",
+    "replacement": "你好，$1。今天想构建什么？"
+  },
+  {
+    "pattern": "^Welcome back,\\s*(.+?)[,.]*\\s*Where should we pick up\\?$",
+    "replacement": "欢迎回来，$1。要从哪里继续？"
+  },
+  {
+    "pattern": "^Good to see you,\\s*(.+?)[,.]*\\s*What'?s next\\?$",
+    "replacement": "很高兴见到你，$1。接下来做什么？"
+  },
+  {
+    "pattern": "^[Tt]he$",
+    "replacement": ""
+  },
+  {
+    "pattern": "^[Aa]n?$",
+    "replacement": ""
+  },
+  {
+    "pattern": "^[Tt]his$",
+    "replacement": "本"
+  },
+  {
+    "pattern": "^that$",
+    "replacement": "该"
+  },
+  {
+    "pattern": "^[Ii]t$",
+    "replacement": "它"
+  },
+  {
+    "pattern": "^is$",
+    "replacement": "是"
+  },
+  {
+    "pattern": "^are$",
+    "replacement": "是"
+  },
+  {
+    "pattern": "^was$",
+    "replacement": "是"
+  },
+  {
+    "pattern": "^of$",
+    "replacement": "的"
+  },
+  {
+    "pattern": "^to$",
+    "replacement": "到"
+  },
+  {
+    "pattern": "^by$",
+    "replacement": "由"
+  },
+  {
+    "pattern": "^for$",
+    "replacement": "为"
+  },
+  {
+    "pattern": "^with$",
+    "replacement": "与"
+  },
+  {
+    "pattern": "^or$",
+    "replacement": "或"
+  },
+  {
+    "pattern": "^in$",
+    "replacement": "在"
+  },
+  {
+    "pattern": "^at$",
+    "replacement": "在"
+  },
+  {
+    "pattern": "^(.+) \\(Experimental\\)$",
+    "replacement": "$1（实验性）"
+  },
+  {
+    "pattern": "^(.+) \\(Remote\\)$",
+    "replacement": "$1（远程）"
+  },
+  {
+    "pattern": "^(.+) on this computer$",
+    "replacement": "$1（这台电脑）"
+  },
+  {
+    "pattern": "^Detached at ([0-9a-f]{6,40})$",
+    "replacement": "分离于 $1"
+  },
+  {
+    "pattern": "^Keep: (.+)$",
+    "replacement": "保留：$1"
+  },
+  {
+    "pattern": "^Move to Group: (.+)$",
+    "replacement": "移动到分组：$1"
+  },
+  {
+    "pattern": "^Search Google for \"(.*)\"$",
+    "replacement": "用 Google 搜索“$1”"
+  },
+  {
+    "pattern": "^Send feedback as (.+)$",
+    "replacement": "以 $1 身份发送反馈"
+  },
+  {
+    "pattern": "^Open ((?:https?://)?[A-Za-z0-9.-]+\\.[A-Za-z]{2,}(?:/\\S*)?)$",
+    "replacement": "打开 $1"
+  },
+  {
+    "pattern": "^Delete Conversation$",
+    "replacement": "删除对话"
+  },
+  {
+    "pattern": "^Delete Project$",
+    "replacement": "删除项目"
+  },
+  {
+    "pattern": "^Delete Workspace$",
+    "replacement": "删除工作区"
+  }
+]

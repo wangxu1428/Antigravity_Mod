@@ -1,0 +1,48 @@
+{
+  "sidedock": {
+    "width": 450,
+    "collapsed": true,
+    "activeTab": "gemini"
+  },
+  "i18n": {
+    "enabled": true,
+    "language": "zh-CN",
+    "preset": "full",
+    "scope": {
+      "menu": true,
+      "settings": true,
+      "agent": true,
+      "models": true,
+      "requests": true,
+      "errors": true,
+      "native": true,
+      "plugins": true
+    },
+    "customOverrides": {},
+    "exclusions": [
+      "Antigravity",
+      "OpenCodex",
+      "Gemini",
+      "ChatGPT",
+      "Grok",
+      "Claude",
+      "Electron",
+      "Node.js",
+      "Python",
+      "Git",
+      "JSON",
+      "API",
+      "URL",
+      "HTTP",
+      "HTTPS",
+      "WSL"
+    ],
+    "glossary": {
+      "Artifact": "制品",
+      "Subagent": "子智能体",
+      "Workflow": "工作流",
+      "Prompt": "提示词",
+      "Context": "上下文"
+    }
+  }
+}
