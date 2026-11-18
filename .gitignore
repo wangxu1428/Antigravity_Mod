@@ -1,0 +1,101 @@
+# 可执行文件与打包壳。修改版 Antigravity EXE 永不入库、永不分发。
+*.exe
+*.EXE
+*.[eE][xX][eE]
+*.dll
+*.DLL
+*.[dD][lL][lL]
+*.msi
+*.MSI
+*.asar
+*.ASAR
+app.asar
+app.asar.unpacked/
+
+# Antigravity 官方程序文件（含常见 Electron 资源名）
+Antigravity.exe
+antigravity.exe
+Antigravity.dll
+antigravity.dll
+*.pak
+icudtl.dat
+snapshot_blob.bin
+v8_context_snapshot.bin
+chrome_100_percent.pak
+chrome_200_percent.pak
+
+# 用户数据。更新不得覆盖或删除这些数据，仓库也不保存它们。
+UserData/
+userdata/
+user-data/
+user_data/
+User Data/
+
+# 缓存、临时文件、日志
+.cache/
+cache/
+caches/
+Cache/
+tmp/
+temp/
+*.tmp
+*.temp
+*.log
+logs/
+
+# 备份与历史
+backup/
+backups/
+history/
+History/
+*.bak
+*.backup
+*~
+
+# 密钥、令牌、cookie、环境变量
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+*.token
+*.cookie
+cookies
+cookies.*
+token.json
+tokens.json
+*token*.json
+*token*.txt
+*token*.yml
+*token*.yaml
+*cookie*.json
+*cookie*.txt
+credentials.json
+credentials.*
+secrets.json
+secrets.*
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+
+# 操作系统杂项
+Thumbs.db
+thumbs.db
+ehthumbs.db
+Desktop.ini
+desktop.ini
+.DS_Store
+._*
+
+# 依赖与构建产物
+node_modules/
+dist/
+build/
+out/
+coverage/
+
+# 个人目录：路径中任意一级名为 02_Personal 的目录及其全部内容
+02_Personal/

@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/wangxu1428/Antigravity_Mod/blob/main/index/plugins.schema.json",
+  "title": "Antigravity_Mod 插件索引",
+  "description": "插件索引。plugins 为正式条目；examples 最多一条，且 example 必须为 true。安装器必须忽略 example 为 true 的条目。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "plugins"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "本文件所遵循的 JSON Schema 路径或 URL。"
+    },
+    "schemaVersion": {
+      "description": "索引文档结构版本，不是平台或插件的版本号。",
+      "type": "integer",
+      "const": 1
+    },
+    "plugins": {
+      "description": "已收录插件。不得包含 example 为 true 的条目。",
+      "type": "array",
+      "items": {
+        "allOf": [
+          { "$ref": "#/$defs/plugin" },
+          {
+            "properties": {
+              "example": { "const": false }
+            }
+          }
+        ]
+      }
+    },
+    "examples": {
+      "description": "格式示范。不是可安装插件。",
+      "type": "array",
+      "maxItems": 1,
+      "items": {
+        "allOf": [
+          { "$ref": "#/$defs/plugin" },
+          {
+            "required": ["example"],
+            "properties": {
+              "example": { "const": true }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "plugin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "version",
+        "author",
+        "description",
+        "platformCompatibility",
+        "downloadUrl",
+        "sha256"
+      ],
+      "properties": {
+        "id": {
+          "description": "稳定插件 ID，创建后不可更改。",
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)*$",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "name": {
+          "description": "展示名称。",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "version": {
+          "description": "该插件的语义化版本，不带 v 前缀。",
+          "type": "string",
+          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$"
+        },
+        "author": {
+          "description": "作者或团队名。",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "description": {
+          "description": "插件做什么。",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "platformCompatibility": {
+          "description": "相对平台版本的 semver 范围，例如 >=0.1.0 <1.0.0。",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "downloadUrl": {
+          "description": "该版本发行包的 URL，其字节必须与 sha256 一致。",
+          "type": "string",
+          "format": "uri",
+          "minLength": 1,
+          "maxLength": 2000
+        },
+        "sha256": {
+          "description": "发行包原始字节的 SHA256，小写十六进制。",
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "example": {
+          "description": "true 表示模板示范，不是可安装插件。正式条目不得为 true。",
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}
