@@ -123,38 +123,40 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\platform\scripts\install-o
 
 ### 4.1 工作原理
 
-`mod_kit\repatch.ps1` 支持默认相对路径运行，也支持可选参数 `-TargetAppDir`（别名 `-AppDir`）显式指定目标应用根目录：未传参时把脚本所在目录（`mod_kit\`）的**上一级目录**视作应用根目录 `$RootDir`，定位 `$RootDir\resources\app.asar` 与 `$RootDir\resources\app.asar.bak`。
+`mod_kit\repatch.ps1` 支持默认相对路径运行，也支持可选参数 `-TargetAppDir`（别名 `-AppDir`）显式指定目标应用根目录；另支持 `-OfficialAsarHashes`（或环境变量 `AGM_OFFICIAL_ASAR_SHA256`）扩展官方原版 SHA256 白名单。未传参时把脚本所在目录（`mod_kit\`）的**上一级目录**视作应用根目录 `$RootDir`，定位 `$RootDir\resources\app.asar` 与 `$RootDir\resources\app.asar.bak`。
 
 标准流程为：
-1. 核验 `resources\` 目录、`mod_kit\patch.js`、`node` 与 `asar`（或回退 `npx asar`）可用性，以及进程占用（若 `$RootDir\` 下有进程运行，列出 PID 并以 `exit 3` 中止）；
-2. 若 `resources\app.asar.bak` 不存在，则把当前的 `resources\app.asar` 复制一份为 `resources\app.asar.bak`；
+1. 核验 `resources\` 目录、`mod_kit\patch.js`、`node` 与 `asar`（或回退 `npx asar`）可用性；若目标 `app.asar` 存在且未创建 `.bak`，先校验其 SHA256 属于已知官方白名单（内置 `98A4308C...`）再原子生成 `app.asar.bak`，**非官方版本绝不写入 `.bak`**（以 `exit 4` 中止）；若 `.bak` 已存在则只读校验其 SHA256 属于官方白名单，绝不覆盖，若发现 `.bak` 已被污染则报警并以 `exit 4` 拒绝解包与还原；
+2. 通过 `Get-CimInstance Win32_Process` 检查 `$RootDir\` 下是否有运行中进程，若有则列出 PID 并以 `exit 3` 中止（绝不杀进程）；目标 `app.asar` 若被外部进程独占锁定则以 `exit 10` 安全退出；
 3. 若存在 `resources\app.asar.unpacked` 但缺失 `resources\app.asar.bak.unpacked`，先在临时区把 `.bak` 与 `app.asar.unpacked` 配对，再调用 `asar extract` 解包到 `%TEMP%\agm_rp_src_<时间戳>`，并显式校验 `$LASTEXITCODE`（非 `0` 立即中止）；
 4. 调用 `node mod_kit\patch.js "<TempSrc>" --update-yml "<RootDir>\resources\app-update.yml"`：先预检 **14 个 AGM 锁锚点**（`AGM_UPDATE_LOCK` + `AGM_SIDECAR_REAPER`）与 **8 个 Hakimi 锚点**，并校验 `app-update.yml` 指向 `127.0.0.1:9`，任一失败则以 `exit 2` 中止且不改写文件；随后对 6 个注入 JS 文件显式执行 `node --check`；
 5. 先调用 `asar pack ... --unpack "**/chrome-devtools-mcp/**"` 打包到隔离暂存区 `resources\.agm_repatch_tmp_<时间戳>\app.asar`（绝不直接写入目标 `app.asar`），显式校验 `$LASTEXITCODE`；
 6. 对暂存产物执行严格校验：文件存在且大小大于 `0`、`asar list` 可列出且包含全部 6 个关键注入文件（`dist/main.js`、`dist/utils.js`、`dist/preload.js`、`dist/updater.js`、`dist/ipcHandlers.js`、`dist/languageServer.js`）、记录 SHA256；
-7. 全部校验通过后，先将当前 `resources\app.asar` 备份为 `resources\app.asar.prev_<时间戳>`，再使用 `Move-Item` 原子替换目标 `resources\app.asar`，并再次核对目标 SHA256 等于暂存产物 SHA256；
-8. 任意步骤失败均会在 `finally` 自动清理临时目录、保持原 `resources\app.asar` 不变、以非 `0` 退出且绝不打印成功；成功与失败时均打印回滚命令参考（`restore-official.ps1` 或从 `.bak` / `.prev_` 还原）。
+7. 全部校验通过后，先按目标版本分别备份当前 `resources\app.asar`（官方原版备份为 `resources\app.asar.prev_<时间戳>`，已改装版备份为 `resources\app.asar.modded_prev_<时间戳>`，绝不写成 `.bak`），再使用同卷 `[System.IO.File]::Replace` 原子替换目标 `resources\app.asar`（不再使用先删后移的 `Move-Item -Force`）并再次核对目标 SHA256 等于暂存产物 SHA256；若生成了新的 `app.asar.unpacked` 则同步执行备份与 `[System.IO.Directory]::Move` 安全互换（失败时自动回滚原 `app.asar` 与 `app.asar.unpacked`）；
+8. 任意步骤失败（含文件被占用锁导致 `exit 10`）均会在 `finally` 自动清理临时目录（兼容 `>260` 字符长路径）、确保原 `resources\app.asar` 仍在且不被损坏、绝不打印成功，并按 `.bak` 可信状态输出回滚命令参考（若 `.bak` 已被污染则禁止推荐从 `.bak` 还原）。
 
-### 4.2 ⚠️ 重要警示：缺失 `app.asar.bak` 时的备份污染陷阱 (Caveat)
+### 4.2 ⚠️ 重要警示：防 `app.asar.bak` 污染门禁
 
-> **⚠️ CRITICAL CAVEAT：`app.asar.bak` 不存在时，`repatch.ps1` 会把“当前的 `app.asar`”直接复制成 `.bak`！**
+> **⚠️ CRITICAL GUARD：新版 `repatch.ps1` 与 `restore-official.ps1` 已内置官方原版 SHA256 白名单门禁（内置 Antigravity `2.32.1` 官方哈希 `98A4308C...`，可通过 `-OfficialAsarHashes` 或 `AGM_OFFICIAL_ASAR_SHA256` 扩展）：**
 >
-> - 如果当前 `<TargetAppDir>\resources\app.asar` **已经打过补丁**（例如你从别人打包好的目录复制过来，或者不小心删掉了原来的 `app.asar.bak`），那么首次运行 `repatch.ps1` 时生成的 `app.asar.bak` **并不是官方原厂纯净文件**，而是那份已改装过的 `app.asar`。
-> - 随后 `agm_locks.js` 的预检会检测到解包源码中已包含 `AGM_UPDATE_LOCK` / `AGM_SIDECAR_REAPER` 标记，直接报错 `input is already patched (expected a pristine app.asar.bak extract)` 并以 **`exit 2`** 中止构建。
-> - 如果你把一份已被污染的 `.bak` 交给 `restore-official.ps1`，还原出来的也不会是官方原版。
+> - **缺失 `app.asar.bak` 时**：脚本会先核验当前 `resources\app.asar` 的 SHA256 是否在官方白名单中。若是已改装版或未收录版本，脚本会打印 `[AGM][Repatch] ALARM` 并以 **`exit 4`** 中止，**绝不会把改装版写入 `app.asar.bak`**；
+> - **已有 `app.asar.bak` 时**：脚本会校验 `.bak` 的 SHA256。一旦检测到 `.bak` 已被污染（不在官方白名单内），`repatch.ps1` 与 `restore-official.ps1` 均会报警并以 **`exit 4`** 拒绝解包或拿它还原；
+> - **重复重铸时**：既有官方 `app.asar.bak` 绝不会被覆盖，本次替换前的已改装 `app.asar` 会单独备份为 `resources\app.asar.modded_prev_<时间戳>`。
 
 **安全操作建议**：
 1. 首次重铸前，先确认目标目录内的 `resources\app.asar` 来自官方原版安装包（可先核对哈希或先用 `-SkipRepatch` 安装后检查是否存在 `resources\app.asar.bak`）；
-2. 若官方客户端更新覆盖了 `app.asar`（变成新版官方原版），应先确认或更新纯净 `app.asar.bak` 再执行重铸；
-3. 若发现 `app.asar.bak` 已经丢失或已被污染，请从官方安装包重新提取纯净的 `resources\app.asar`，先保存为 `resources\app.asar.bak`（或放回 `resources\app.asar` 并删除被污染的 `.bak`），然后再运行 `repatch.ps1`。
+2. 若官方客户端更新覆盖了 `app.asar`（变成新版官方原版），应先确认或更新纯净 `app.asar.bak` 并（若为未收录的新官方版本）通过 `-OfficialAsarHashes` 传入其官方 SHA256 后再执行重铸；
+3. 若脚本报 `exit 4` 提示 `app.asar.bak` 缺失或已被污染，请从官方安装包重新提取纯净的 `resources\app.asar`，先保存为 `resources\app.asar.bak`（或放回 `resources\app.asar` 并删除被污染的 `.bak`），然后再运行 `repatch.ps1`。
 
 ### 4.3 `repatch.ps1` 实测验证结果
 
-- **实测日期与环境**：2026-11-19，在一次性隔离测试副本目录中基于官方 Antigravity `2.32.1` 纯净 `resources\app.asar`（SHA256 `98A4308C...`）完成加固版 `repatch.ps1` 5 项闭环实测（Windows PowerShell `5.1.19041.3803`、Node `v26.13.1`、`@electron/asar` `v4.3.2`），完整索引见 [`docs/WINDOWS_TEST_EVIDENCE.md`](WINDOWS_TEST_EVIDENCE.md)。
-- **用例 (a) 首次重铸（无 `.bak`）**：`PASS` — 自动创建与官方原始 `app.asar` SHA256 一致的 `app.asar.bak` 与替换前快照 `app.asar.prev_*`，临时区配对 `.unpacked` 解包成功，`patch.js`、`node --check` 与 `asar list` 6 文件校验通过，原子替换产出 `6F60316D...`（`exit 0`）。
-- **用例 (b) 重复重铸（已有 `.bak`）**：`PASS` — 仍从 `app.asar.bak` 解包重铸，`.bak` 的 SHA256 与修改时间保持不变，产出 `app.asar.prev_*` 并获得与首轮一致的输出哈希 `6F60316D...`（`exit 0`）。
-- **用例 (d) 备份污染陷阱复现（无 `.bak` 且输入为已改装 `app.asar`）**：`PASS` — `repatch.ps1` 按预期把已改装版复制为 `app.asar.bak`，随后 `agm_locks.js` 预检识别出已打补丁源码并以 `exit 2` 安全中止，原 `app.asar` 未被写坏且零临时文件残留。
-- **用例 (e) 打包失败原子保护（真实解包/补丁后模拟 `asar pack` 返回 `19`）**：`PASS` — 模拟打包失败并写入垃圾字节至暂存区，脚本按预期在校验前中止、清理临时目录、打印回滚命令并以 `exit 19` 退出，目标 `app.asar` SHA256 保持 `98A4308C...` 毫发未伤。
+- **实测日期与环境**：2026-11-19，在一次性隔离测试副本目录中基于官方 Antigravity `2.32.1` 纯净 `resources\app.asar`（SHA256 `98A4308C...`）完成加固版 `repatch.ps1` 全套闭环实测（Windows PowerShell `5.1.19041.3803`、Node `v26.13.1`、`@electron/asar` `v4.3.2`），完整索引见 [`docs/WINDOWS_TEST_EVIDENCE.md`](WINDOWS_TEST_EVIDENCE.md)。
+- **用例 (a) 首次重铸（无 `.bak`）**：`PASS` — 核验官方白名单后原子创建 `app.asar.bak` 与替换前原版快照 `app.asar.prev_*`，临时区配对 `.unpacked` 解包成功，`patch.js`、`node --check` 与 `asar list` 6 文件校验通过，`File.Replace` 原子替换产出 `6F60316D...`（`exit 0`）。
+- **用例 (b) 重复重铸（已有 `.bak`）**：`PASS` — 仍从 `app.asar.bak` 解包重铸，`.bak` 的 SHA256 与修改时间保持不变，改装版备份为 `app.asar.modded_prev_*` 并获得与首轮一致的输出哈希 `6F60316D...`（`exit 0`）。
+- **用例 (d) 防备份污染门禁（无 `.bak` 且输入为已改装 `app.asar`）**：`PASS` — 白名单门禁识别出非官方输入，打印 `ALARM` 并以 `exit 4` 拒绝生成 `.bak`，未写入任何文件且原 `app.asar` 不变。
+- **用例 (e) 打包失败原子保护（真实解包/补丁后模拟 `asar pack` 返回 `19`）**：`PASS` — 模拟打包失败并写入垃圾字节至暂存区，脚本在校验前中止、清理临时目录、打印回滚命令并以 `exit 19` 退出，目标 `app.asar` SHA256 保持 `98A4308C...` 毫发未伤。
+- **返工新增 `P0-1` 占用锁原子保护**：`PASS` — 在 `W\app` 的 `robocopy` 副本上分别以 `FileShare.None` 与 `FileShare.Read`（直达 `File.Replace` 步骤）锁定目标 `app.asar` 后运行 `repatch.ps1`，脚本均以 `exit 10` 失败退出且绝不输出成功，解锁后目标 `app.asar` 完好存在且 SHA256 与加锁前一致；离线单测同步覆盖 `app.asar.unpacked` 占用失败后的双向自动回滚。
+- **返工新增 `P0-2` 污染 `.bak` 报警与防覆写**：`PASS` — 连续 3 轮重铸后 `.bak` 仍为官方原版且改装版备份均落盘为 `app.asar.modded_prev_*`；人工污染 `.bak` 后，`repatch.ps1` 与 `restore-official.ps1` 均打印 `ALARM` 并以 `exit 4` 拒绝解包或还原。
 
 ---
 
@@ -174,10 +176,10 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\platform\scripts\restore-o
 
 ### 5.2 还原行为说明
 
-1. 检查 `<TargetAppDir>\resources\app.asar.bak` 是否存在（缺失则以 `exit 2` 退出）；
+1. 检查 `<TargetAppDir>\resources\app.asar.bak` 是否存在（缺失则以 `exit 2` 退出），并校验其 SHA256 属于官方白名单（支持 `-OfficialAsarHashes` / `AGM_OFFICIAL_ASAR_SHA256`；若 `.bak` 已被污染则打印 `ALARM` 并以 `exit 4` 拒绝还原）；
 2. 检查 `<TargetAppDir>\` 下是否有运行中进程（有则列出 PID 并以 `exit 3` 退出，绝不杀进程）；
 3. 将当前改装版 `resources\app.asar` 归档到 `<TargetAppDir>\displaced_mod_<时间戳>\app.asar.mod_patched`；
-4. 将 `resources\app.asar.bak` 复制回 `resources\app.asar`，并重新计算 SHA256 与 `.bak` 校验一致（不一致则以 `exit 4` 报错）；
+4. 先复制到同卷暂存文件并校验 SHA256 一致，再以 `[System.IO.File]::Replace` 原子还原至 `resources\app.asar`（若目标被占用则以 `exit 10` 安全退出并保留原文件），还原后重新计算 SHA256 与 `.bak` 校验一致（不一致则以 `exit 4` 报错）；
 5. **用户数据 100% 保留**：`UserData\`、`plugins\config.json`、`plugins\state\`、`plugins\packages\` 均不受影响。
 
 > **注意**：`restore-official.ps1` 只还原 `resources\app.asar`。如果你还需要恢复自动更新配置，请手动将 `<TargetAppDir>\resources\app-update.yml.bak_<时间戳>` 恢复为 `resources\app-update.yml`。同时请确保 `app.asar.bak` 本身是纯净原版（见第 4.2 节警示）。
@@ -216,4 +218,4 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\platform\scripts\restore-o
 2. **先 `-DryRun` / `-VerifyOnly`，再正式写入**。
 3. **不要修改或清理** `UserData\`、`plugins\config.json`、`plugins\state\`、`plugins\packages\`。
 4. **不要在目标目录仍有进程运行时强制杀进程**；提示用户先关闭客户端即可。
-5. **遇到 `repatch.ps1` 返回 `exit 2`**（锚点缺失或 `.bak` 已被污染）时立即停止，不要强行覆盖，先核验官方版本兼容性或补齐纯净 `app.asar.bak`。
+5. **遇到 `repatch.ps1` / `restore-official.ps1` 返回 `exit 2`、`exit 4` 或 `exit 10`**（锚点缺失、`.bak` 被污染/非官方、或文件被进程锁定）时立即停止，不要强行覆盖，先解除文件占用、核验官方版本兼容性或补齐纯净 `app.asar.bak`。
