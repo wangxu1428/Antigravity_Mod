@@ -2,7 +2,7 @@
 
 平台使用一套版本号，每个插件使用自己的一套版本号。两边都遵循[语义化版本](https://semver.org/lang/zh-CN/) `MAJOR.MINOR.PATCH`。写入索引的 `version` 不带 `v` 前缀，例如 `0.1.0`。标签名在版本号前加 `v`。
 
-尚未发布任何平台版本或插件版本。
+平台当前已发布首个公开测试版预发布（Pre-release）：`platform-v2.1.0`（对应 `main` 基线提交 `d9dad3f`）；尚未发布正式稳定版，也尚未发布任何独立插件版本（插件索引 [`index/plugins.json`](../index/plugins.json) 当前仍为空）。
 
 ## 版本号与用户数据
 

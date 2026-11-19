@@ -4,6 +4,7 @@
 
 - [安装、升级、还原与回滚指南（`INSTALL.md`）](INSTALL.md)
 - [v2.1.0 发布说明（`RELEASE_NOTES_2.1.0.md`）](RELEASE_NOTES_2.1.0.md)
+- [Windows 实测证据索引（`WINDOWS_TEST_EVIDENCE.md`）](WINDOWS_TEST_EVIDENCE.md)
 - [插件开发指南（`PLUGIN_DEV_GUIDE.md`）](PLUGIN_DEV_GUIDE.md)
 - [插件插座与管理中心架构设计（`ARCHITECTURE.md`）](ARCHITECTURE.md)
 - [技术架构与算法公式白皮书（`WHITEPAPER.md`）](WHITEPAPER.md)

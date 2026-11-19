@@ -113,10 +113,19 @@ function preflight(targetDir) {
     return files;
 }
 
+function getArgValue(argv, flag) {
+    if (!Array.isArray(argv)) return null;
+    const idx = argv.indexOf(flag);
+    if (idx >= 0 && idx + 1 < argv.length) return argv[idx + 1];
+    return null;
+}
+
 function apply(targetDir, argv) {
     const files = preflight(targetDir);
-    const yi = argv.indexOf('--update-yml');
-    if (yi >= 0) checkUpdateYml(argv[yi + 1]); // validate BEFORE writing any JS file
+    const ymlPath = getArgValue(argv, '--update-yml');
+    const ymlOutPath = getArgValue(argv, '--update-yml-out');
+    const checkYmlOnly = Array.isArray(argv) && argv.includes('--check-update-yml-only');
+    if (ymlPath) checkUpdateYml(ymlPath); // validate BEFORE writing any JS file
     for (const rel of Object.keys(files)) {
         let src = files[rel];
         for (const [r, name, re, rep] of ALL) {
@@ -127,8 +136,15 @@ function apply(targetDir, argv) {
         if (!src.includes(MARKERS[rel])) fatal(`${rel}: post-check failed, marker missing`);
         fs.writeFileSync(path.join(targetDir, ...rel.split('/')), src, 'utf8');
     }
-    const i = argv.indexOf('--update-yml');
-    if (i >= 0) lockUpdateYml(argv[i + 1]);
+    if (ymlPath) {
+        if (checkYmlOnly) {
+            checkUpdateYml(ymlPath);
+        } else if (ymlOutPath) {
+            lockUpdateYml(ymlPath, { outPath: ymlOutPath });
+        } else {
+            lockUpdateYml(ymlPath);
+        }
+    }
     return Object.keys(files).map((rel) => path.join(targetDir, ...rel.split('/')));
 }
 
@@ -140,11 +156,53 @@ function checkUpdateYml(ymlPath) {
     return y;
 }
 
-function lockUpdateYml(ymlPath) {
-    let y = checkUpdateYml(ymlPath);
-    y = y.replace(/^updaterCacheDirName:.*$/m, `updaterCacheDirName: ${MOD_CACHE_DIR}`);
-    fs.writeFileSync(ymlPath, y, 'utf8');
-    console.log(`[Patch][AGM] app-update.yml: updaterCacheDirName=${MOD_CACHE_DIR}, dead URL kept`);
+function computeLockedUpdateYml(rawContent) {
+    if (typeof rawContent !== 'string') fatal('app-update.yml content must be a string');
+    if (!DEAD_URL_RE.test(rawContent)) {
+        fatal('app-update.yml url is not the invalidated 127.0.0.1:9 address; refusing to build');
+    }
+    const cacheLineRe = /^(updaterCacheDirName:[ \t]*)([^\r\n#]*?)([ \t]*(?:#[^\r\n]*)?)(\r?)$/m;
+    const match = rawContent.match(cacheLineRe);
+    if (!match) fatal('app-update.yml has no updaterCacheDirName line');
+    const currentVal = match[2].trim();
+    if (currentVal === MOD_CACHE_DIR) {
+        return { changed: false, content: rawContent };
+    }
+    const updated = rawContent.replace(cacheLineRe, `$1${MOD_CACHE_DIR}$3$4`);
+    return { changed: true, content: updated };
 }
 
-module.exports = { preflight, apply, checkUpdateYml, lockUpdateYml, AgmBuildError, MOD_CACHE_DIR, ALL };
+function lockUpdateYml(ymlPath, opts = {}) {
+    const raw = checkUpdateYml(ymlPath);
+    const { changed, content } = computeLockedUpdateYml(raw);
+    const outPath = opts && opts.outPath ? String(opts.outPath) : null;
+    if (outPath) {
+        const tmpOut = `${outPath}.tmp.${process.pid}.${Date.now()}`;
+        fs.mkdirSync(path.dirname(outPath), { recursive: true });
+        try {
+            fs.writeFileSync(tmpOut, content, 'utf8');
+            fs.renameSync(tmpOut, outPath);
+        } catch (err) {
+            try { if (fs.existsSync(tmpOut)) fs.unlinkSync(tmpOut); } catch (_) {}
+            throw err;
+        }
+        console.log(`[Patch][AGM] app-update.yml: staged to ${outPath} (changed=${changed})`);
+        return { changed, outPath };
+    }
+    if (!changed) {
+        console.log('[Patch][AGM] app-update.yml: already locked (no-op, unchanged)');
+        return { changed: false, outPath: ymlPath };
+    }
+    const tmpPath = `${ymlPath}.tmp.${process.pid}.${Date.now()}`;
+    try {
+        fs.writeFileSync(tmpPath, content, 'utf8');
+        fs.renameSync(tmpPath, ymlPath);
+    } catch (err) {
+        try { if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath); } catch (_) {}
+        throw err;
+    }
+    console.log(`[Patch][AGM] app-update.yml: updaterCacheDirName=${MOD_CACHE_DIR}, dead URL kept`);
+    return { changed: true, outPath: ymlPath };
+}
+
+module.exports = { preflight, apply, checkUpdateYml, computeLockedUpdateYml, lockUpdateYml, AgmBuildError, MOD_CACHE_DIR, ALL };

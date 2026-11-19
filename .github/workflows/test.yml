@@ -28,3 +28,9 @@ jobs:
         run: node tests/test_reaper_unit.js
       - name: Update lock tests
         run: node tests/test_update_lock.js
+      - name: Repatch unit tests
+        run: node tests/test_repatch_unit.js
+      - name: Fault injection tests
+        run: node tests/test_fault_injection.js
+      - name: Manifest raw-byte integrity tests
+        run: node tests/test_manifest_integrity.js

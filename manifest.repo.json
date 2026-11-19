@@ -79,13 +79,13 @@
         },
         {
             "path": "docs/ARCHITECTURE.md",
-            "size": 53449,
-            "sha256": "56C79E9145D607DC7A2F9AD3C5BED017BAE4D5419600778531B8BB5BF5A5E058"
+            "size": 53988,
+            "sha256": "57D28BA51A0F3FB5B039F926A57B8BE2805B737C36F21BCBA3756DA0284A6CCB"
         },
         {
             "path": "docs/INSTALL.md",
-            "size": 17132,
-            "sha256": "A2D21765B2485C2106AB432E92AC24B0E033B62CEBC0549C41F249135A14113C"
+            "size": 27874,
+            "sha256": "A621C740261C3D5B0BEB9D968EA30FE587A7C1AF00FB8356E5F7F91CCE0AA29F"
         },
         {
             "path": "docs/PLUGIN_DEV_GUIDE.md",
@@ -109,8 +109,8 @@
         },
         {
             "path": "platform/mod_kit/agm_locks.js",
-            "size": 10506,
-            "sha256": "FF4A184830609B6F6E6704BD3444413888FDF2BA7DA7AA4079096E1A430C6C94"
+            "size": 12893,
+            "sha256": "DA12202342359C91BF910F93B0D4E961B252A9D318B127A414B484F135FA1922"
         },
         {
             "path": "platform/mod_kit/agm_sidecar_reaper_core.js",
@@ -119,8 +119,8 @@
         },
         {
             "path": "platform/mod_kit/app-update.template.yml",
-            "size": 263,
-            "sha256": "DE77889AD4DA6C6FB8F1C904711710387C3A3CEF6C901AFE5A25908B37CDA151"
+            "size": 259,
+            "sha256": "A582A08422E12E51B72C8CE9706D494CD112C565C252277410F3F759F84E9F87"
         },
         {
             "path": "platform/mod_kit/patch.js",
@@ -129,13 +129,13 @@
         },
         {
             "path": "platform/mod_kit/repatch.bat",
-            "size": 323,
-            "sha256": "8678730D9A527D9217FA207294C4D96CD70A71CCAECA09E28C400E7F95DB5082"
+            "size": 326,
+            "sha256": "AE4DA0831E5A93CCE70CDF7DA6398980619B5858FF1AEC0B6C7B78B36718E64F"
         },
         {
             "path": "platform/mod_kit/repatch.ps1",
-            "size": 4151,
-            "sha256": "820758BD4FD3E783C2997AA76B628F2D4C3E945302E6E8C27BC1CDFF4C080F33"
+            "size": 63149,
+            "sha256": "0D296B0003B15654D3E7C69CA2077CD3797B97E5ECDA40D7ABCF91AC18CC1C4D"
         },
         {
             "path": "platform/agm-plugin-host.js",
@@ -259,8 +259,8 @@
         },
         {
             "path": "platform/scripts/install-or-update.ps1",
-            "size": 11996,
-            "sha256": "5EC9CDBE0E91F039FA85FB9A16FE3880F34B93AFD8C2A6FE5B54030D1E807FBA"
+            "size": 28060,
+            "sha256": "DC32E5AC34FBB2C1E987B6CC7A74707B6EB2B20B111577FD8302A3F902BADBB2"
         },
         {
             "path": "platform/scripts/legacy-rollback/README.md",
@@ -269,8 +269,8 @@
         },
         {
             "path": "platform/scripts/legacy-rollback/rollback.bat",
-            "size": 178,
-            "sha256": "D579E7F3A36F82E3A017CEA83C7DC5BC8CE1A53492A96C5572D65B983F569420"
+            "size": 174,
+            "sha256": "0B11E83319F0C8487A6491F0452DCE9729049842458BD9CBAC4DD3261A7A2D5C"
         },
         {
             "path": "platform/scripts/legacy-rollback/rollback.ps1",
@@ -279,8 +279,8 @@
         },
         {
             "path": "platform/scripts/restore-official.ps1",
-            "size": 4098,
-            "sha256": "127F79D76DCD5255E8723B5DBF15E296F9CBC0FE6CD2205D8CDCC2A944B2EC96"
+            "size": 22537,
+            "sha256": "33D0E5DB783F3277CD2CB72B0DDE5FEBC21859ED197CD0E468C4E191EAD99DCA"
         },
         {
             "path": "platform/scripts/启动爆改版.bat",
@@ -309,8 +309,28 @@
         },
         {
             "path": "tests/test_update_lock.js",
-            "size": 10730,
-            "sha256": "6602C6FC8089E65399B6F085A1418EAE116ECACF66F40E84DBEA7A611D524120"
+            "size": 14198,
+            "sha256": "3392F026B23916404ACD05617CD2B171D9A7DBA9447348FE43B765AE91BE818F"
+        },
+        {
+            "path": "docs/WINDOWS_TEST_EVIDENCE.md",
+            "size": 34175,
+            "sha256": "C2393250386B99AEE7E685CA0DFAE94FC7C50314DE669868785F4291DAD3C695"
+        },
+        {
+            "path": "tests/test_repatch_unit.js",
+            "size": 32891,
+            "sha256": "6122870BF2B06027167886F358B9FC9C74251DA34D175B55D042A77F0C34B3F4"
+        },
+        {
+            "path": "tests/test_fault_injection.js",
+            "size": 65806,
+            "sha256": "AF731462011DD5AC7A326D250EF461C027DE18A1323F3AEEC76D478929FE74B4"
+        },
+        {
+            "path": "tests/test_manifest_integrity.js",
+            "size": 9237,
+            "sha256": "EF729CD43F6D6C9B16B6391E10B9EB7FC9C7ED16A7ADCFFEF10800D2D07BA07E"
         }
     ]
 }

@@ -13,11 +13,11 @@
 通过对 `C:\Antigravity_Mod\mod_kit\`、`C:\Antigravity_Mod\plugins\` 以及 `resources\app.asar` 解包后的 `dist\` 源码核验，现役插件系统架构如下：
 
 ### 1.1 补丁注入链路（`mod_kit\patch.js`、`mod_kit\agm_locks.js`、`mod_kit\repatch.ps1`）
-1. **重铸入口（`C:\Antigravity_Mod\mod_kit\repatch.ps1:48-87`）**：
-   - 先通过 `Get-CimInstance Win32_Process` 检查 `C:\Antigravity_Mod\` 下是否有运行中进程，若有则列出 PID 并以退出码 `3` 中止（绝不调用全局 `Stop-Process`，`repatch.ps1:48-55`）。
-   - 从纯净备份 `resources\app.asar.bak` 解包至 `%TEMP%\antigravity_repatch_src`（`repatch.ps1:66-70`）。
-   - 执行 `node "$PatcherJs" "$TempSrc" --update-yml (Join-Path $ResourcesDir "app-update.yml")`（`repatch.ps1:74`）。
-   - 重新打包 `resources\app.asar` 并保持 `--unpack "**/chrome-devtools-mcp/**"`（`repatch.ps1:82-86`）。
+1. **重铸入口（`C:\Antigravity_Mod\mod_kit\repatch.ps1`，支持可选 `-TargetAppDir`/`-AppDir`）**：
+   - 先核验 `resources\`、`patch.js`、`node`、`asar`（或回退 `npx asar`）及 `app.asar.bak`，再通过 `Get-CimInstance Win32_Process` 检查目标根目录下是否有运行中进程，若有则列出 PID 并以退出码 `3` 中止（绝不调用全局 `Stop-Process`）。
+   - 从纯净备份 `resources\app.asar.bak`（若存在 `app.asar.unpacked` 且缺失 `app.asar.bak.unpacked`，则在临时区配对后解包）解包至 `%TEMP%\agm_rp_src_<时间戳>`，并显式校验 `$LASTEXITCODE`。
+   - 执行 `node "$PatcherJs" "$TempSrc" --update-yml (Join-Path $ResourcesDir "app-update.yml")`，并对 6 个注入 JS 文件显式执行 `node --check`。
+   - 先打包至暂存目录 `resources\.agm_repatch_tmp_<时间戳>\app.asar`（保持 `--unpack "**/chrome-devtools-mcp/**"`）并校验 `$LASTEXITCODE`、非零大小、`asar list` 必含 6 个注入文件及 SHA256；全部通过后先备份 `resources\app.asar.prev_<时间戳>` 再以 `Move-Item` 原子替换并复验 SHA256。任意失败自动清理临时目录并保持原 `app.asar` 不变。
 2. **AGM 安全锁预检与注入（`C:\Antigravity_Mod\mod_kit\agm_locks.js:43-149` & `patch.js:21-31, 412-419`）**：
    - `agmLocks.preflight(targetDir)` 在写入任何文件前强校验 14 个正则锚点（`dist/updater.js` `U1`–`U7` 共 7 处、`dist/ipcHandlers.js` `I1`–`I3` 共 3 处、`dist/languageServer.js` `R1`–`R4` 共 4 处），每个锚点必须精确命中 1 次，否则以退出码 `2` 终止构建（`agm_locks.js:99-114`）。
    - `agmLocks.apply(targetDir, ...)` 注入 `AGM_UPDATE_LOCK` 与 `AGM_SIDECAR_REAPER`（读取 `mod_kit\agm_sidecar_reaper_core.js`），并将 `resources\app-update.yml` 的 `updaterCacheDirName` 锁定为 `antigravity-mod-updater`、保持死地址 `http://127.0.0.1:9/agm-update-disabled/`（`agm_locks.js:116-148`）。
