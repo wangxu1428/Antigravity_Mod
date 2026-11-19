@@ -196,8 +196,8 @@ function runAll() {
     { crBlobs, tplEntry, rbEntry }
   );
 
-  // MF4: Release archive (`git archive --format=tar HEAD`) byte match (+ disk byte match on non-Windows)
-  const tarBuf = execFileSync(gitExe, ['-C', REPO_ROOT, 'archive', '--format=tar', 'HEAD'], {
+  // MF4: Release archive (`git -c core.autocrlf=false archive --format=tar HEAD`, matching Linux/GitHub release archives) byte match (+ disk byte match on non-Windows)
+  const tarBuf = execFileSync(gitExe, ['-c', 'core.autocrlf=false', '-C', REPO_ROOT, 'archive', '--format=tar', 'HEAD'], {
     maxBuffer: 64 * 1024 * 1024,
   });
   const tarMap = parseTarArchive(tarBuf);

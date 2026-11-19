@@ -174,7 +174,7 @@
 
 ### 6.3 Manifest 原始字节一致性与纳入清单评估
 
-- **Blob 统一与原始字节复核**：修正前检查发现 Git 对象库中 `platform/mod_kit/app-update.template.yml`（263 字节）与 `platform/scripts/legacy-rollback/rollback.bat`（178 字节）存在 CRLF Blob，导致与按 LF 计算的 `manifest.repo.json`（259 / 174 字节）不一致。本轮已将该 2 个文件以纯 LF Blob 规范入库，全量清单实现 **100% 原始 Git Blob 与 `git archive` 零归一化逐字节一致**。
+- **Blob 统一与原始字节复核**：修正前检查发现 Git 对象库中 `platform/mod_kit/app-update.template.yml`（263 字节）与 `platform/scripts/legacy-rollback/rollback.bat`（178 字节）存在 CRLF Blob，导致与按 LF 计算的 `manifest.repo.json`（259 / 174 字节）不一致。本轮已将该 2 个文件以纯 LF Blob 规范入库，全量清单实现 **100% 原始 Git Blob 零归一化逐字节一致**。同时实测核验了 `.gitattributes`（仓库无此文件）与归档行为差异：在 `core.autocrlf=true` 的 Windows 主机上直接执行 `git archive` 会将文本 Blob 转回 CRLF（例如 `.gitignore` 2376 -> 2521 字节），而使用 Linux 发行环境或 `git -c core.autocrlf=false archive` 生成发行归档时，全部 52+4 条记录原始字节与 `manifest.repo.json` **100% 吻合**。
 - **是否将 `tests/test_repatch_unit.js`（及 R3 新增发行测试）纳入 Manifest 的评估结论**：**应当纳入**。理由：`tests/test_repatch_unit.js`、`tests/test_fault_injection.js`、`tests/test_manifest_integrity.js` 与 `docs/WINDOWS_TEST_EVIDENCE.md` 均通过 `git archive` 随发行仓库分发并直接参与 CI 与本地发行门禁校验（已有 `test_host_unit.js`、`test_reaper_unit.js`、`test_update_lock.js` 也均在 `manifest.repo.json` 内），纳入清单可保证测试门禁代码本身的完整性与可溯源性；而 `manifest.repo.json` 自身不可自引用（SHA256 无法包含自身）。
 - **自动恢复 vs 人工介入边界**：详见 [`docs/INSTALL.md`](INSTALL.md) 第 8 节对照表。
 - **热重载状态**：`client_h` 维持 **UNKNOWN**（不在本 PR 修复范围，未修改插件）。

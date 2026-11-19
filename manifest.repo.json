@@ -314,8 +314,8 @@
         },
         {
             "path": "docs/WINDOWS_TEST_EVIDENCE.md",
-            "size": 30951,
-            "sha256": "BC08820310DAAB8B8D8867D66ADF99495219C466B8C702AD01C898B4E7C5577D"
+            "size": 31338,
+            "sha256": "6F0A6B31C41B9CEE85E7C1DD85D0286867AD37CC9E6D591EE6D3A89376CF51B8"
         },
         {
             "path": "tests/test_repatch_unit.js",
@@ -329,8 +329,8 @@
         },
         {
             "path": "tests/test_manifest_integrity.js",
-            "size": 9145,
-            "sha256": "60FFD0EE4FD61C7DECCD774972DFCA1CB792D6F0C28A13BDA51E38ACC5037D0E"
+            "size": 9237,
+            "sha256": "EF729CD43F6D6C9B16B6391E10B9EB7FC9C7ED16A7ADCFFEF10800D2D07BA07E"
         }
     ]
 }
