@@ -60,13 +60,13 @@
             "files": [
                 {
                     "path": "plugins/optional/agm-hello-guard/manifest.json",
-                    "size": 2072,
-                    "sha256": "769DBBD39ADC80D15A2C27149B0DA1D18D34F9C760E0C7DBA3760C62FF3DA3FF"
+                    "size": 2002,
+                    "sha256": "CEFDAEA439438E12BDFF77D5184B0F48CDC0971CE30A387A643CE4DEA654A41B"
                 },
                 {
                     "path": "plugins/optional/agm-hello-guard/index.js",
-                    "size": 2544,
-                    "sha256": "7EA10C547171195603CC4E9B8257A9D879DF570F9262534E004F01DC3F436160"
+                    "size": 2472,
+                    "sha256": "799C35F12335F9C7B0BC579E3C5DD6DBE1C8A74A30D220F197E002B601DED5CA"
                 }
             ]
         }
@@ -74,13 +74,13 @@
     "files": [
         {
             "path": ".gitignore",
-            "size": 2521,
-            "sha256": "EC2C6C8144B9AC137B9404519378FB0CEA9EB2FFB3BF0E52B3CA912DADDF0D19"
+            "size": 2376,
+            "sha256": "0F882E4EA1E25618490CBFAD3612827AE6F1D99112842397926565A7FC23D5B2"
         },
         {
             "path": "docs/ARCHITECTURE.md",
-            "size": 53935,
-            "sha256": "77238B345BB36F1B8383589CBB0515B34C4D857413242840932252E0148E6C42"
+            "size": 53449,
+            "sha256": "56C79E9145D607DC7A2F9AD3C5BED017BAE4D5419600778531B8BB5BF5A5E058"
         },
         {
             "path": "docs/INSTALL.md",
@@ -89,8 +89,8 @@
         },
         {
             "path": "docs/PLUGIN_DEV_GUIDE.md",
-            "size": 8858,
-            "sha256": "E1A6A7B32D964B93F1E79FD6645BAF5B4FF8D8848DEC8AC1DED22F48407D0F83"
+            "size": 8674,
+            "sha256": "E28F4D52741ABBE2594AF5A67A0A11D802931E9FC6468A6F795068B668CC5FE0"
         },
         {
             "path": "docs/RELEASE_NOTES_2.1.0.md",
@@ -99,23 +99,23 @@
         },
         {
             "path": "docs/WHITEPAPER.md",
-            "size": 11718,
-            "sha256": "E94E022FE95756CA70A59994B55F1D0F027F5BA26C147EFA8C7964ED0AC82392"
+            "size": 11564,
+            "sha256": "7A8C298F3EFF1F6DF9C5233F5215ADF216D4649D5BB16C8F90D1BD864B491AC7"
         },
         {
             "path": "LICENSE",
-            "size": 1088,
-            "sha256": "DC02055631E61DEC2E9F181F02D534E4DC5FD1DE0921ED2CEE4C90F70F231E50"
+            "size": 1067,
+            "sha256": "4040FB5EA806B111F2CB9103B22D5ECB1C505A99E651AD374C5E525F5C513D95"
         },
         {
             "path": "platform/mod_kit/agm_locks.js",
-            "size": 10655,
-            "sha256": "1035C59F1057E25CD384A92259DA86D6D54F00094C26D1ED1CC52692B51A3221"
+            "size": 10506,
+            "sha256": "FF4A184830609B6F6E6704BD3444413888FDF2BA7DA7AA4079096E1A430C6C94"
         },
         {
             "path": "platform/mod_kit/agm_sidecar_reaper_core.js",
-            "size": 12702,
-            "sha256": "8DCD13C7EFBBFEFAE2B39C2E2186750247735BC8D102AFCAEBCBA78A5544B488"
+            "size": 12491,
+            "sha256": "FEA5859A4E85D96B1B95D9B554A86F5061AEF5CB07B5B27021179D3B0E88EDAF"
         },
         {
             "path": "platform/mod_kit/app-update.template.yml",
@@ -124,148 +124,148 @@
         },
         {
             "path": "platform/mod_kit/patch.js",
-            "size": 39827,
-            "sha256": "EA2080FF81870DE928689FC3F27BB001C463AA57AB40FC44E573C0E55FAAED19"
+            "size": 38949,
+            "sha256": "80D505E0E0E452D3371CD8450976EE5A551776DB8987A0411F1032B44AF11899"
         },
         {
             "path": "platform/mod_kit/repatch.bat",
-            "size": 333,
-            "sha256": "2D5DCEB9212139D40BE20A6E172B0D8B0E8078F319B6160526E0451B16BE44DA"
+            "size": 323,
+            "sha256": "8678730D9A527D9217FA207294C4D96CD70A71CCAECA09E28C400E7F95DB5082"
         },
         {
             "path": "platform/mod_kit/repatch.ps1",
-            "size": 4245,
-            "sha256": "F7EBAEF9A230C5A6F0C6E47C929EF61DE4C200E673B8FA9A2C225BBA5F395752"
+            "size": 4151,
+            "sha256": "820758BD4FD3E783C2997AA76B628F2D4C3E945302E6E8C27BC1CDFF4C080F33"
         },
         {
             "path": "platform/agm-plugin-host.js",
-            "size": 172670,
-            "sha256": "5A1D96854D1D3297C5FCF6CB2FF5D59C36CF7DD811D07C2E3E27CF5C2A209E75"
+            "size": 169138,
+            "sha256": "E685461A050AB6D7C839F9FA69810A5D6857583C3C904A0F1DC4B8DA2D171694"
         },
         {
             "path": "plugins/builtin/ai-sidedock/ai-sidedock.js",
-            "size": 31907,
-            "sha256": "4D7E94FFF173C165BD71E3EBDBC92001E0B03002B2EC64BC7565DDDAF132C380"
+            "size": 31077,
+            "sha256": "264640BD1C33BDF17C42E91FB0824C6986B29968010F8AA6EED0149EEBE829E2"
         },
         {
             "path": "platform/config.default.json",
-            "size": 900,
-            "sha256": "3324CAF5DE053155F855C4D9F359075D925381C93942A53C3E279E9E8CAC70BF"
+            "size": 852,
+            "sha256": "BC3DDECC66FCC88812BD510DF940C4221A49D1D40F7901C250B29DB57B765900"
         },
         {
             "path": "plugins/builtin/hakimi-i18n/hakimi-i18n.js",
-            "size": 1994608,
-            "sha256": "247F195980D82E9631B05BB6419A4E9F3FC5F75E52A3A0C7BA07AA08D711B9DD"
+            "size": 1991094,
+            "sha256": "5305954C7D90D6A00458DAB9FA25D7A28A9DB31536AD5B585275FBCD8DFC7EE5"
         },
         {
             "path": "plugins/builtin/hakimi-i18n/hakimi-i18n/adapters/dom-adapter.js",
-            "size": 31926,
-            "sha256": "3D640FD5BACDEC89260517036A692E1609A6DB4ECA604D49F25BC6FA8BB45686"
+            "size": 31184,
+            "sha256": "5C3D5EAB6A7DD41E5BE23B6B5F5657714DC925951E7AA5F6FCABA6619321D017"
         },
         {
             "path": "plugins/builtin/hakimi-i18n/hakimi-i18n/build.js",
-            "size": 12388,
-            "sha256": "F2C6BF5AB0CAB0E5640AFF0D3A6DECE7F91953ED93C25B45D3271299FB18FF22"
+            "size": 12099,
+            "sha256": "03DF08F4519A35229F30E8C26293CAD40A71DD21EAB10D9A6BB8E8FC7FCC4214"
         },
         {
             "path": "plugins/builtin/hakimi-i18n/hakimi-i18n/core/discovery.js",
-            "size": 22873,
-            "sha256": "1E7D8CAFC8D7B67ECD5F5A212E8ECCACE673CA639DECF2F0E088DC6C3E44D2FD"
+            "size": 22452,
+            "sha256": "DFACA83D13B6E30AD8E8029E18815753CB807FA517C5D46D57C79745F6FC0F4B"
         },
         {
             "path": "plugins/builtin/hakimi-i18n/hakimi-i18n/core/engine.js",
-            "size": 21395,
-            "sha256": "D18B5D82953ADF03AE78A5A7E713782A50969FA60F1388354012ED765034152D"
+            "size": 20903,
+            "sha256": "F76C5425DDAC096CD986C7BC501D82DBEFC7828773BCC0FFEC313C8745ACCFCC"
         },
         {
             "path": "plugins/builtin/hakimi-i18n/hakimi-i18n/core/sanitizer.js",
-            "size": 11690,
-            "sha256": "6E2A65009D439CE568757A06D4355281C3BEA9E73B6A4B241D774406C7E23484"
+            "size": 11424,
+            "sha256": "FCE164276B8B34797EB3E22F4DBB5E4D4469FE1877361C6FB434D97D9B73DEA8"
         },
         {
             "path": "plugins/builtin/hakimi-i18n/hakimi-i18n/custom/exclusions.json",
-            "size": 324,
-            "sha256": "4EA6446B301A775BB49C95945A2073911948DB8A64ECA28660FF3FF08191A66B"
+            "size": 304,
+            "sha256": "124B6BE8AB27F6D7B69EC789CBC1AD19C3E1BDDDBF826E74D7720DBC21E505AF"
         },
         {
             "path": "plugins/builtin/hakimi-i18n/hakimi-i18n/custom/glossary.json",
-            "size": 225,
-            "sha256": "74D698D1E3E1623DC003B456D75B73F57E770E4E95D7C23526D9C40C2A625DDF"
+            "size": 216,
+            "sha256": "12186B6644C3D6A6B251763D3100D0BDB83F714A41DFA376FFFF0289290B636B"
         },
         {
             "path": "plugins/builtin/hakimi-i18n/hakimi-i18n/custom/overrides.json",
-            "size": 111,
-            "sha256": "ABC26EC5641832793BDF3EC70694D30CF4F6745F5A669B00B560F334E0F81E4B"
+            "size": 108,
+            "sha256": "6164EA97AFDD06D3E5CA3707D59F7F935EDBD7B03C7665CBC594AC3131205434"
         },
         {
             "path": "plugins/builtin/hakimi-i18n/hakimi-i18n/custom/untranslated.json",
-            "size": 121,
-            "sha256": "E9CF728C03958BE8E1D8AC6671D944C0B7CB4A7E1E8C5D34A093230971A61046"
+            "size": 118,
+            "sha256": "014AAA579034D3EECC83C0D6BFC779EE2ACE7DB68D82950BCD92A3B0AC49625C"
         },
         {
             "path": "plugins/builtin/hakimi-i18n/hakimi-i18n/locales/zh-CN/dict-core.json",
-            "size": 2825,
-            "sha256": "BCE30628A80A843452DD3C655C65B87D5E917925A701A8922508C9DA7415FF74"
+            "size": 2707,
+            "sha256": "286BFC8F913521FC31A88C657DDCAFC4B68BE419111431EE917E1F53302CB83B"
         },
         {
             "path": "plugins/builtin/hakimi-i18n/hakimi-i18n/locales/zh-CN/dict-exact.json",
-            "size": 1905206,
-            "sha256": "B867C1694B0FF210495AA6F5C0E933CE62395D682EAAE018BC422B00B4D01018"
+            "size": 1884991,
+            "sha256": "13E3CD098BAC1EAB59C0FECA59DBFA57F6D622E0F91895AD3FE4FE7E36D66A2F"
         },
         {
             "path": "plugins/builtin/hakimi-i18n/hakimi-i18n/locales/zh-CN/dict-menu.json",
-            "size": 2498,
-            "sha256": "A4B2B3C0425DDE62260BD9194C67E5E79BC556D309DA80378663DFFE77099CB2"
+            "size": 2423,
+            "sha256": "0F002E64E8D6C4C05AD3F7AC2ED379BE0271B71BF0AF281D7F99E08385EAEF5E"
         },
         {
             "path": "plugins/builtin/hakimi-i18n/hakimi-i18n/locales/zh-CN/dict-prefix.json",
-            "size": 13683,
-            "sha256": "E5CBB08C620A11444AEB5236859B5F9F9295ADA9FAC7608A959A84346E0003B9"
+            "size": 13596,
+            "sha256": "B02DF5FE7E0B1663E7661E2605CF22E33E7A731652E0ADA4789952FE0D3B3DF9"
         },
         {
             "path": "plugins/builtin/hakimi-i18n/hakimi-i18n/locales/zh-CN/dict-regex.json",
-            "size": 10702,
-            "sha256": "DD3FC1979882D7D209204ED16C3A7697B65B0F3DDC3151101E85EE4072921EB9"
+            "size": 10277,
+            "sha256": "206CE5E8FDCCB8DFB77D36D15C592F8AE9868DDD04AA3737EEA5F294CA39BC00"
         },
         {
             "path": "plugins/builtin/hakimi-i18n/hakimi-i18n/locales/zh-CN/dict-tray.json",
-            "size": 121,
-            "sha256": "FA6F376A96FBC83ABAC0743F41C0314D505B7716DD8ED7A4832C080EB8225BF8"
+            "size": 117,
+            "sha256": "56D8BE5C1F075D072BCE7CC446A0E7B288E2CAFBAD6B6DDD59D7C7A6AF81ADF8"
         },
         {
             "path": "plugins/builtin/hakimi-i18n/hakimi-i18n/locales/zh-CN/meta.json",
-            "size": 580,
-            "sha256": "568B790966F7A5CC17E830D37C4A512E9065155FA99A1C08860CAFE010A9577F"
+            "size": 555,
+            "sha256": "F9376366BCFCACC322D5CA933D57B30E7B30C580C4EBB3A93E4D26F8D814F6CE"
         },
         {
             "path": "plugins/builtin/hakimi-i18n/hakimi-i18n/ui/config-center.js",
-            "size": 66339,
-            "sha256": "9A4A192A09CE1D729D0C80F18B406B398352EBBE47FBE8052FC16A13260508E0"
+            "size": 64967,
+            "sha256": "21EE1564E3632EBB0C30F41A18AD86B0E71AD8776681D89D7D5EBF7CA845D3FF"
         },
         {
             "path": "plugins/optional/agm-hello-guard/index.js",
-            "size": 2544,
-            "sha256": "7EA10C547171195603CC4E9B8257A9D879DF570F9262534E004F01DC3F436160"
+            "size": 2472,
+            "sha256": "799C35F12335F9C7B0BC579E3C5DD6DBE1C8A74A30D220F197E002B601DED5CA"
         },
         {
             "path": "plugins/optional/agm-hello-guard/manifest.json",
-            "size": 2072,
-            "sha256": "769DBBD39ADC80D15A2C27149B0DA1D18D34F9C760E0C7DBA3760C62FF3DA3FF"
+            "size": 2002,
+            "sha256": "CEFDAEA439438E12BDFF77D5184B0F48CDC0971CE30A387A643CE4DEA654A41B"
         },
         {
             "path": "README.md",
-            "size": 11837,
-            "sha256": "86C0FD884F6F9FF6565A93663E43FE19DC4F592A51D9DDF85AD04BC2F76BE8EB"
+            "size": 11691,
+            "sha256": "41F13F073FF4F0A98BD55E8F8AD73DDC2CB3B764B9E00F4735A69E1319DD87A8"
         },
         {
             "path": "platform/scripts/install-or-update.ps1",
-            "size": 12237,
-            "sha256": "D1C6AC498C063C94AE1220C227FB0D1FB8BB91CB14329D271F3C82CA3A24069F"
+            "size": 11996,
+            "sha256": "5EC9CDBE0E91F039FA85FB9A16FE3880F34B93AFD8C2A6FE5B54030D1E807FBA"
         },
         {
             "path": "platform/scripts/legacy-rollback/README.md",
-            "size": 1779,
-            "sha256": "5313CF8D7104FEF30A1365CA6223DB4C67BD1694E756DF372C2A7BCE1C7EBAF6"
+            "size": 1754,
+            "sha256": "6103DA84C5AB1CA7D2DE7C974938BD0C9B6FBBAAB66F16AE86FCE9B4960FCFDF"
         },
         {
             "path": "platform/scripts/legacy-rollback/rollback.bat",
@@ -274,43 +274,43 @@
         },
         {
             "path": "platform/scripts/legacy-rollback/rollback.ps1",
-            "size": 4357,
-            "sha256": "E903D9E4AC960DE29442372FC7BD6A9DDD0B740CC6E1524681C6D7CE29ECD4AD"
+            "size": 4321,
+            "sha256": "DCF4FB6F31EDB97B256988DFC4C9422175B9D6041CFE028FF169E3516B5CBBBA"
         },
         {
             "path": "platform/scripts/restore-official.ps1",
-            "size": 4183,
-            "sha256": "8774F6E8298A5F58784483873F42611CA13F4DAC324C1D6A6F0E328A140320AA"
+            "size": 4098,
+            "sha256": "127F79D76DCD5255E8723B5DBF15E296F9CBC0FE6CD2205D8CDCC2A944B2EC96"
         },
         {
             "path": "platform/scripts/启动爆改版.bat",
-            "size": 634,
-            "sha256": "1622CF9B6E3D704A76FAD89F7F9D95873E6A0E28295915DA4922D8DEDFBC7150"
+            "size": 611,
+            "sha256": "7B9C920417921DB092C1A2FBE7C734A170665E7FE8A3DE7D955C43E2DF408959"
         },
         {
             "path": "tests/fixtures/agm-fault-probe/index.js",
-            "size": 849,
-            "sha256": "3EB229D0884728CB451F75D9904C6A7A27D5486743A757A855F42FDAF45B312A"
+            "size": 822,
+            "sha256": "A1CCCC260546173836408939698E2DCEEFCDC6D183C03AA7953D13A9664E56D1"
         },
         {
             "path": "tests/fixtures/agm-fault-probe/manifest.json",
-            "size": 1126,
-            "sha256": "D9E3090ECD4BB3186879202C97444E9384B3DB76C93B399487012639E3AD208A"
+            "size": 1085,
+            "sha256": "EBBDFDCBDB09BAA44067E8074E1E307BB5E0315A6C839643B967A1882D395AC6"
         },
         {
             "path": "tests/test_host_unit.js",
-            "size": 13009,
-            "sha256": "B2B9B32677C087A7980E481921767895AEE6861771BAA2DFF96C77F8BFECAB6A"
+            "size": 12733,
+            "sha256": "D923DBC42E1A057F87CA445B56F0864150E2C471ABDE9C6C26B9928DD9A42CF0"
         },
         {
             "path": "tests/test_reaper_unit.js",
-            "size": 16192,
-            "sha256": "7B07CE34308D3A23C7FB6A9C1501473425FD3C3F657B135BB6757BEC4F988018"
+            "size": 15792,
+            "sha256": "759085D61277010C11C0590600FAF6E07EA9E74082E1AABFDABE9AA45C706EF4"
         },
         {
             "path": "tests/test_update_lock.js",
-            "size": 11029,
-            "sha256": "989B8ED09A1DD85DE323040370704927C9DAF6100143F2C91E5F4539669C42ED"
+            "size": 10730,
+            "sha256": "6602C6FC8089E65399B6F085A1418EAE116ECACF66F40E84DBEA7A611D524120"
         }
     ]
 }
