@@ -319,7 +319,7 @@ try {
     $TargetModKitDir = Join-Path $TargetAppDir 'mod_kit'
     New-Item -ItemType Directory -Force -Path $TargetModKitDir | Out-Null
 
-    $ModKitFiles = @('patch.js', 'agm_locks.js', 'agm_sidecar_reaper_core.js', 'repatch.ps1', 'repatch.bat', 'app-update.template.yml')
+    $ModKitFiles = @('patch.js', 'agm_ipc_auth.js', 'agm_locks.js', 'agm_sidecar_reaper_core.js', 'repatch.ps1', 'repatch.bat', 'app-update.template.yml')
     foreach ($fileName in $ModKitFiles) {
         $srcFile = Join-Path $SourceModKitDir $fileName
         if (Test-Path -LiteralPath $srcFile -PathType Leaf) {

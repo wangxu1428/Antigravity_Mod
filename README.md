@@ -35,6 +35,7 @@ Antigravity_Mod/
 │   ├── config.default.json                    #   纯净默认配置模板（不是运行态 config.json）
 │   ├── mod_kit/                               #   补丁重铸工具箱
 │   │   ├── patch.js                           #     8 锚点预检 + 13 个受限 hakimi:* IPC 注入器
+│   │   ├── agm_ipc_auth.js                    #     hakimi:* 主进程 IPC 调用方授权核心
 │   │   ├── agm_locks.js                       #     AGM_UPDATE_LOCK (10 锚点) + AGM_SIDECAR_REAPER (4 锚点)
 │   │   ├── agm_sidecar_reaper_core.js         #     会话级 Sidecar 进程树快照与单 PID 收割核心
 │   │   ├── repatch.ps1                        #     非破坏式解包、注入、node --check 与重打包流水线

@@ -12,6 +12,7 @@ const { spawnSync } = require('child_process');
 const REPO_ROOT = path.resolve(__dirname, '..');
 const PATCH_JS = path.join(REPO_ROOT, 'platform', 'mod_kit', 'patch.js');
 const AGM_LOCKS_JS = path.join(REPO_ROOT, 'platform', 'mod_kit', 'agm_locks.js');
+const AGM_IPC_AUTH_JS = path.join(REPO_ROOT, 'platform', 'mod_kit', 'agm_ipc_auth.js');
 const REAPER_CORE_JS = path.join(REPO_ROOT, 'platform', 'mod_kit', 'agm_sidecar_reaper_core.js');
 const TEMPLATE_YML = path.join(REPO_ROOT, 'platform', 'mod_kit', 'app-update.template.yml');
 const REPATCH_PS1 = path.join(REPO_ROOT, 'platform', 'mod_kit', 'repatch.ps1');
@@ -924,6 +925,7 @@ process.exit(2);
       fs.copyFileSync(REPATCH_PS1, path.join(modKit, 'repatch.ps1'));
       fs.copyFileSync(PATCH_JS, path.join(modKit, 'patch.js'));
       fs.copyFileSync(AGM_LOCKS_JS, path.join(modKit, 'agm_locks.js'));
+      fs.copyFileSync(AGM_IPC_AUTH_JS, path.join(modKit, 'agm_ipc_auth.js'));
       fs.copyFileSync(REAPER_CORE_JS, path.join(modKit, 'agm_sidecar_reaper_core.js'));
       fs.copyFileSync(TEMPLATE_YML, path.join(resDir, 'app-update.yml'));
 

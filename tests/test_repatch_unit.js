@@ -13,6 +13,7 @@ const REPATCH_PS1 = path.join(REPO_ROOT, 'platform', 'mod_kit', 'repatch.ps1');
 const RESTORE_PS1 = path.join(REPO_ROOT, 'platform', 'scripts', 'restore-official.ps1');
 const PATCH_JS = path.join(REPO_ROOT, 'platform', 'mod_kit', 'patch.js');
 const AGM_LOCKS_JS = path.join(REPO_ROOT, 'platform', 'mod_kit', 'agm_locks.js');
+const AGM_IPC_AUTH_JS = path.join(REPO_ROOT, 'platform', 'mod_kit', 'agm_ipc_auth.js');
 const REAPER_CORE_JS = path.join(REPO_ROOT, 'platform', 'mod_kit', 'agm_sidecar_reaper_core.js');
 const TEMPLATE_YML = path.join(REPO_ROOT, 'platform', 'mod_kit', 'app-update.template.yml');
 const OFFICIAL_2321_SHA256 = '5B493943E67E500638555315594D5B1ACBC7A02E6DAC3C786651921C1EE8519F';
@@ -263,6 +264,7 @@ function setupFakeApp(caseDir) {
   fs.copyFileSync(REPATCH_PS1, path.join(modKitDir, 'repatch.ps1'));
   fs.copyFileSync(PATCH_JS, path.join(modKitDir, 'patch.js'));
   fs.copyFileSync(AGM_LOCKS_JS, path.join(modKitDir, 'agm_locks.js'));
+  fs.copyFileSync(AGM_IPC_AUTH_JS, path.join(modKitDir, 'agm_ipc_auth.js'));
   fs.copyFileSync(REAPER_CORE_JS, path.join(modKitDir, 'agm_sidecar_reaper_core.js'));
   fs.copyFileSync(TEMPLATE_YML, path.join(resDir, 'app-update.yml'));
 

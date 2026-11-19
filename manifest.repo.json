@@ -98,8 +98,8 @@
         },
         {
             "path": "docs/INSTALL.md",
-            "size": 27882,
-            "sha256": "B920E2A44874FA7C81636E0C83DBD9B99484930DC3997F547A0808505CFB3C0F"
+            "size": 27902,
+            "sha256": "27F1E02DF9C4A7A26232FC5743447AE3E5BB02931F685535B04170D19D843B20"
         },
         {
             "path": "docs/PLUGIN_DEV_GUIDE.md",
@@ -283,13 +283,13 @@
         },
         {
             "path": "README.md",
-            "size": 11701,
-            "sha256": "DF1E658283C075193730B3374E6390F2C62B6D3071B48214116D93082591CC85"
+            "size": 11809,
+            "sha256": "A9A8566656379D360D8C1888AC45E91746943DA4764AFD0164A5674CEEB4692B"
         },
         {
             "path": "platform/scripts/install-or-update.ps1",
-            "size": 28060,
-            "sha256": "DC32E5AC34FBB2C1E987B6CC7A74707B6EB2B20B111577FD8302A3F902BADBB2"
+            "size": 28079,
+            "sha256": "BD9F8BD72C722A1513A43B27B4C7A2A86894AE73676DCD29ACC1C25A354C0395"
         },
         {
             "path": "platform/scripts/legacy-rollback/README.md",
@@ -353,13 +353,13 @@
         },
         {
             "path": "tests/test_repatch_unit.js",
-            "size": 32891,
-            "sha256": "6122870BF2B06027167886F358B9FC9C74251DA34D175B55D042A77F0C34B3F4"
+            "size": 33056,
+            "sha256": "15AE5E4E58EE497814193A31A412E57174885DC36E0DD6D0D2FC7A3B3C182F26"
         },
         {
             "path": "tests/test_fault_injection.js",
-            "size": 65806,
-            "sha256": "AF731462011DD5AC7A326D250EF461C027DE18A1323F3AEEC76D478929FE74B4"
+            "size": 65971,
+            "sha256": "47147DDB8B893FE6BB9DBA834DE542F59DEBC2B1C6C918DB223224839E0A780D"
         },
         {
             "path": "tests/test_manifest_integrity.js",
@@ -368,8 +368,8 @@
         },
         {
             "path": "tests/test_compat_233_unit.js",
-            "size": 40807,
-            "sha256": "6C3B55F45557A2EEEB0BA0EC47489A2B2666770B6EC0F1FCD5C137666D6779C3"
+            "size": 40973,
+            "sha256": "E7EF38C003935F8A03CEB85865039B2B97D4C34920F036CE2BB5C23E7A278873"
         },
         {
             "path": "tests/test_compat_versions_unit.js",

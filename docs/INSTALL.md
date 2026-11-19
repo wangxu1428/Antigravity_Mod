@@ -66,7 +66,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\platform\scripts\install-o
 
 脚本会依次完成：
 1. 校验 `<TargetAppDir>\resources\` 存在，并确认 `<TargetAppDir>\` 下没有运行中进程；记录当前 `resources\app-update.yml` 的存在性与 SHA256，并在同卷暂存区保留原配置备份；
-2. 同步 `platform/mod_kit/` 核心文件（`patch.js`、`agm_locks.js`、`agm_sidecar_reaper_core.js`、`repatch.ps1`、`repatch.bat`、`app-update.template.yml`）到 `<TargetAppDir>\mod_kit\`；
+2. 同步 `platform/mod_kit/` 核心文件（`patch.js`、`agm_ipc_auth.js`、`agm_locks.js`、`agm_sidecar_reaper_core.js`、`repatch.ps1`、`repatch.bat`、`app-update.template.yml`）到 `<TargetAppDir>\mod_kit\`；
 3. 同步 `platform/agm-plugin-host.js`、`platform/config.default.json`、内置插件（`hakimi-i18n`、`ai-sidedock`）与可选插件包（`agm-hello-guard`）到运行时 `plugins\` 布局；
 4. 若 `<TargetAppDir>\plugins\config.json` 不存在，则从 `config.default.json` 初始化一份；**若已存在则原样保留**；
 5. 复制 `platform/scripts/启动爆改版.bat` 到 `<TargetAppDir>\启动爆改版.bat`；
