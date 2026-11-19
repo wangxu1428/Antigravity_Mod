@@ -40,3 +40,5 @@ jobs:
         run: node tests/test_compat_233_unit.js
       - name: Compat version declaration tests
         run: node tests/test_compat_versions_unit.js
+      - name: IPC authorization security tests (SEC-01..18)
+        run: node tests/test_ipc_sec_unit.js

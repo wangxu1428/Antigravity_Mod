@@ -6,6 +6,20 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
+// --- AGM_IPC_SEC_GATE_V1: load the main-process authorization core before any write ---
+const agmIpcAuthPath = path.join(__dirname, 'agm_ipc_auth.js');
+let agmIpcAuthSource = '';
+try {
+    agmIpcAuthSource = fs.readFileSync(agmIpcAuthPath, 'utf8');
+} catch (e) {
+    console.error('[Patch][Hakimi] FATAL: authorization core missing: platform/mod_kit/agm_ipc_auth.js');
+    process.exit(2);
+}
+if (!agmIpcAuthSource.includes('AGM_IPC_SEC_GATE_V1') || !agmIpcAuthSource.includes('createIpcAuthorizer')) {
+    console.error('[Patch][Hakimi] FATAL: authorization core is incomplete or corrupted.');
+    process.exit(2);
+}
+
 const targetDir = process.argv[2];
 if (!targetDir || !fs.existsSync(targetDir)) {
     console.error('Usage: node patch.js <unpacked_temp_dir>');
@@ -122,6 +136,26 @@ if (mainJs.includes(lockTarget) && !mainJs.includes('Hakimi Portable UserData Lo
 // Session & IPC Management
 const schemesTarget = '(0, customScheme_1.registerCustomSchemes)();';
 const schemesReplacement = `// --- Hakimi Webview & Header Management ---
+// --- AGM_IPC_SEC_GATE_V1: main-process-only trusted window allow-list ---
+const __agmIpcAuth = (function () {
+    const module = { exports: {} };
+    const exports = module.exports;
+${agmIpcAuthSource}
+    return module.exports;
+})();
+const __agmIpcGate = __agmIpcAuth.createIpcAuthorizer({
+    logger: function (channel, reason) {
+        try {
+            console.warn('[Hakimi IPC] denied channel=' + channel + ' reason=' + reason);
+        } catch (_) {}
+    }
+});
+try {
+    __agmIpcGate.installCreateWindowHook(utils_1, 'utils.createWindow');
+} catch (err) {
+    console.error('[Hakimi IPC] authorization window hook failed');
+}
+// --- end AGM_IPC_SEC_GATE_V1 ---
 function configureHakimiSession(sess) {
     if (!sess || !sess.webRequest) return;
     try {
@@ -245,11 +279,14 @@ function registerHakimiIpcHandlers() {
         fs.renameSync(tmpPath, filePath);
     };
 
-    electron_1.ipcMain.handle('hakimi:get-plugins-dir', () => {
+    // AGM_IPC_SEC_GATE_V1: every hakimi:* handler goes through the single gate.
+    const secureHandle = (channel, handler) => __agmIpcGate.wrapHandle(electron_1.ipcMain, channel, handler);
+
+    secureHandle('hakimi:get-plugins-dir', () => {
         return getPluginsDir();
     });
 
-    electron_1.ipcMain.handle('hakimi:list-plugins', () => {
+    secureHandle('hakimi:list-plugins', () => {
         try {
             const pDir = getPluginsDir();
             if (!fs.existsSync(pDir)) {
@@ -266,7 +303,7 @@ function registerHakimiIpcHandlers() {
         }
     });
 
-    electron_1.ipcMain.handle('hakimi:read-plugin', (_event, filename) => {
+    secureHandle('hakimi:read-plugin', (_event, filename) => {
         try {
             const safeName = path.basename(filename);
             const pPath = path.join(getPluginsDir(), safeName);
@@ -280,7 +317,7 @@ function registerHakimiIpcHandlers() {
         }
     });
 
-    electron_1.ipcMain.handle('hakimi:read-config', () => {
+    secureHandle('hakimi:read-config', () => {
         try {
             const cfgPath = path.join(getPluginsDir(), 'config.json');
             if (fs.existsSync(cfgPath)) {
@@ -293,7 +330,7 @@ function registerHakimiIpcHandlers() {
         }
     });
 
-    electron_1.ipcMain.handle('hakimi:save-config', (_event, config) => {
+    secureHandle('hakimi:save-config', (_event, config) => {
         try {
             const pDir = getPluginsDir();
             if (!fs.existsSync(pDir)) {
@@ -313,7 +350,7 @@ function registerHakimiIpcHandlers() {
         }
     });
 
-    electron_1.ipcMain.handle('hakimi:launch-desktop-gpt', async () => {
+    secureHandle('hakimi:launch-desktop-gpt', async () => {
         const cp = require('child_process');
         const existsOrAlias = (p) => {
             try {
@@ -374,7 +411,7 @@ function registerHakimiIpcHandlers() {
     });
 
     // --- AGM Plugin Host v2 IPC Primitives (Confined to <exeDir>/plugins/{repo,packages,state}) ---
-    electron_1.ipcMain.handle('hakimi:get-host-info', () => {
+    secureHandle('hakimi:get-host-info', () => {
         return {
             appVersion: electron_1.app.getVersion(),
             electronVersion: process.versions.electron,
@@ -384,7 +421,7 @@ function registerHakimiIpcHandlers() {
         };
     });
 
-    electron_1.ipcMain.handle('hakimi:list-packages', (_event, source) => {
+    secureHandle('hakimi:list-packages', (_event, source) => {
         if (source !== 'repo' && source !== 'installed') {
             throw new Error('Invalid package source: ' + String(source));
         }
@@ -431,7 +468,7 @@ function registerHakimiIpcHandlers() {
         return results;
     });
 
-    electron_1.ipcMain.handle('hakimi:read-package-entry', (_event, pluginId, entryRel) => {
+    secureHandle('hakimi:read-package-entry', (_event, pluginId, entryRel) => {
         try {
             assertSafeId(pluginId);
             if (typeof entryRel !== 'string' || !entryRel.trim() || path.isAbsolute(entryRel) || entryRel.includes('..') || !entryRel.endsWith('.js')) {
@@ -456,7 +493,7 @@ function registerHakimiIpcHandlers() {
         }
     });
 
-    electron_1.ipcMain.handle('hakimi:install-package', (_event, pluginId) => {
+    secureHandle('hakimi:install-package', (_event, pluginId) => {
         let dstDir = null;
         let createdDst = false;
         try {
@@ -509,7 +546,7 @@ function registerHakimiIpcHandlers() {
         }
     });
 
-    electron_1.ipcMain.handle('hakimi:uninstall-package', (_event, pluginId) => {
+    secureHandle('hakimi:uninstall-package', (_event, pluginId) => {
         try {
             assertSafeId(pluginId);
             const pDir = getPluginsDir();
@@ -525,7 +562,7 @@ function registerHakimiIpcHandlers() {
         }
     });
 
-    electron_1.ipcMain.handle('hakimi:read-state', (_event, category, key) => {
+    secureHandle('hakimi:read-state', (_event, category, key) => {
         const pDir = getPluginsDir();
         const stateDir = resolveConfined(pDir, 'state');
         assertNoSymlinkChain(pDir, stateDir);
@@ -564,7 +601,7 @@ function registerHakimiIpcHandlers() {
         throw new Error('Invalid state category: ' + String(category));
     });
 
-    electron_1.ipcMain.handle('hakimi:write-state', (_event, category, key, data) => {
+    secureHandle('hakimi:write-state', (_event, category, key, data) => {
         const pDir = getPluginsDir();
         const stateDir = resolveConfined(pDir, 'state');
         const configsDir = resolveConfined(stateDir, 'configs');
@@ -844,6 +881,13 @@ const requiredPreloadMarkers = [
 ];
 const missingPost = [];
 for (const m of requiredMainMarkers) if (!mainJs.includes(m)) missingPost.push('main.js:' + m);
+if (!mainJs.includes('AGM_IPC_SEC_GATE_V1')) missingPost.push('main.js:AGM_IPC_SEC_GATE_V1');
+if (countRegex(mainJs, /secureHandle\('hakimi:/g) !== 13) {
+    missingPost.push('main.js:hakimi handlers behind secureHandle != 13 (found ' + countRegex(mainJs, /secureHandle\('hakimi:/g) + ')');
+}
+if (countRegex(mainJs, /electron_1\.ipcMain\.handle\('hakimi:/g) !== 0) {
+    missingPost.push('main.js:unwrapped hakimi handler remains');
+}
 if (!utilsJs.includes('webviewTag: true,')) missingPost.push('utils.js:webviewTag');
 if (!utilsJs.includes('devTools: true,')) missingPost.push('utils.js:devTools');
 for (const m of requiredPreloadMarkers) if (!preloadJs.includes(m)) missingPost.push('preload.js:' + m);

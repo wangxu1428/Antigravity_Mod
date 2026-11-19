@@ -83,8 +83,8 @@
         },
         {
             "path": ".github/workflows/test.yml",
-            "size": 1172,
-            "sha256": "41FDFDE117FFFBFF623D0FACEBDBE20B46266D71383BDE7C259CB64CB9F08B05"
+            "size": 1277,
+            "sha256": "38A2BD0F7567ADC4C1BD3E37EF10A9BB512FAC044088F6191E97A9644DB98643"
         },
         {
             "path": "docs/ARCHITECTURE.md",
@@ -112,6 +112,11 @@
             "sha256": "A69247E94A17D2BCE76B4D4D06E7045D09ACD2757FA573EEB47D9B6828C57A76"
         },
         {
+            "path": "docs/SECURITY_AUDIT_IPC_SEC_01.md",
+            "size": 8089,
+            "sha256": "8A9D397424DFDEDF7056EE058983356C506184ABBBB6B7B9CC635847604BBFB1"
+        },
+        {
             "path": "docs/WHITEPAPER.md",
             "size": 11564,
             "sha256": "7A8C298F3EFF1F6DF9C5233F5215ADF216D4649D5BB16C8F90D1BD864B491AC7"
@@ -132,6 +137,11 @@
             "sha256": "7946278633ACEC60ADFA14E08783BF1E308F07F067F2FD9A80DBBC4FA3676115"
         },
         {
+            "path": "platform/mod_kit/agm_ipc_auth.js",
+            "size": 12751,
+            "sha256": "F26B973C6642D1387C19FBD98D85260870C4A695C50EFF6D40BCE481F6613301"
+        },
+        {
             "path": "platform/mod_kit/agm_sidecar_reaper_core.js",
             "size": 12491,
             "sha256": "FEA5859A4E85D96B1B95D9B554A86F5061AEF5CB07B5B27021179D3B0E88EDAF"
@@ -143,8 +153,8 @@
         },
         {
             "path": "platform/mod_kit/patch.js",
-            "size": 38835,
-            "sha256": "C0EA793143497B5321FB8C6AA2CABE1AEDDDBE2A9959AE1182B07A220E2DEE2A"
+            "size": 40584,
+            "sha256": "3C7B98183061441A223F502949BBEB609F5039397FBF94C5F502771C5A8D3023"
         },
         {
             "path": "platform/mod_kit/repatch.bat",
@@ -365,6 +375,11 @@
             "path": "tests/test_compat_versions_unit.js",
             "size": 8779,
             "sha256": "70360E8FEF8946C340CAC8130847DEF575D2C7D05E0DDDCA374EC9BE4839A189"
+        },
+        {
+            "path": "tests/test_ipc_sec_unit.js",
+            "size": 40118,
+            "sha256": "5599D894A2BFF842901460C915DFD392D1250C83FE985AFA1922A29B105CB645"
         }
     ]
 }
