@@ -1,5 +1,5 @@
 ﻿# =============================================================================
-# Antigravity Mod (AGM) 非破坏式平台安装与升级脚本 (初稿)
+# Antigravity Mod (AGM) 非破坏式平台安装与升级脚本
 # platform/scripts/install-or-update.ps1
 #
 # 仓库源码在 platform/ 与 plugins/builtin|optional/。本脚本只复制到历史运行时路径

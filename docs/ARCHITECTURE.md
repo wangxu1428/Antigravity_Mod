@@ -1,8 +1,8 @@
-# AGM-PLUGIN-01 插件插座与管理中心 MVP 架构设计文档 (DESIGN.md)
+# Antigravity Mod (AGM) 插件插座与管理中心架构设计文档
 
-- **文档版本**：v1.0 (Task D1 Architecture & Detailed Engineering Design)
+- **文档版本**：v2.1.0（插件插座与管理中心架构设计）
 - **目标环境**：`C:\Antigravity_Mod\`（便携隔离版）
-- **保护红线**：`%OFFICIAL_APP_DIR%\`、受保护进程 PID (`4268`, `15440`, `3580`)、`%USERPROFILE%\.gemini\`、`%APPDATA%\Antigravity`、`%LOCALAPPDATA%\antigravity-updater\`
+- **隔离边界**：官方原版安装目录（`%OFFICIAL_APP_DIR%\`）及其运行中进程、`%USERPROFILE%\.gemini\`、`%APPDATA%\Antigravity`、`%LOCALAPPDATA%\antigravity-updater\`
 - **设计原则**：100% 复用既有 `HakimiPluginHost` 薄插座总线架构，保留 `AGM_UPDATE_LOCK`、`AGM_SIDECAR_REAPER`、`hakimi-i18n` 与 `ai-sidedock` 全部既有行为。
 - **仓库路径与运行时路径**：Git 源码在 `platform/`（宿主、`config.default.json`、`mod_kit/`、`scripts/`）、`plugins/builtin/<id>/` 与 `plugins/optional/<id>/`。下文带 `C:\Antigravity_Mod\` 的路径是安装后的运行时布局。安装脚本仍把源码复制到这些历史位置（顶层 `plugins\*.js`、`plugins\hakimi-i18n\`、`plugins\repo\`、`mod_kit\`），只复制、不删除，因此加载与扫描路径保持有效。用户数据（`UserData\`、`plugins\config.json`、`plugins\state\`、`plugins\packages\`）不在复制范围内。
 
@@ -10,7 +10,7 @@
 
 ## 1. 现役架构实现盘点（含精确 `file:line` 溯源）
 
-通过对 `C:\Antigravity_Mod\mod_kit\`、`C:\Antigravity_Mod\plugins\` 以及当前生产环境解包产物 `<TESTLAB_ROOT>\AGM_STABILITY_03\verify\asar_new\dist\` 的静态源码核验，现役插件系统架构如下：
+通过对 `C:\Antigravity_Mod\mod_kit\`、`C:\Antigravity_Mod\plugins\` 以及 `resources\app.asar` 解包后的 `dist\` 源码核验，现役插件系统架构如下：
 
 ### 1.1 补丁注入链路（`mod_kit\patch.js`、`mod_kit\agm_locks.js`、`mod_kit\repatch.ps1`）
 1. **重铸入口（`C:\Antigravity_Mod\mod_kit\repatch.ps1:48-87`）**：
@@ -21,33 +21,33 @@
 2. **AGM 安全锁预检与注入（`C:\Antigravity_Mod\mod_kit\agm_locks.js:43-149` & `patch.js:21-31, 412-419`）**：
    - `agmLocks.preflight(targetDir)` 在写入任何文件前强校验 14 个正则锚点（`dist/updater.js` `U1`–`U7` 共 7 处、`dist/ipcHandlers.js` `I1`–`I3` 共 3 处、`dist/languageServer.js` `R1`–`R4` 共 4 处），每个锚点必须精确命中 1 次，否则以退出码 `2` 终止构建（`agm_locks.js:99-114`）。
    - `agmLocks.apply(targetDir, ...)` 注入 `AGM_UPDATE_LOCK` 与 `AGM_SIDECAR_REAPER`（读取 `mod_kit\agm_sidecar_reaper_core.js`），并将 `resources\app-update.yml` 的 `updaterCacheDirName` 锁定为 `antigravity-mod-updater`、保持死地址 `http://127.0.0.1:9/agm-update-disabled/`（`agm_locks.js:116-148`）。
-3. **主进程注入（`C:\Antigravity_Mod\mod_kit\patch.js:36-266` -> `asar_new\dist\main.js`）**：
-   - **便携 UserData 锁**：在 `requestSingleInstanceLock()` 前将 `userData` 重定向至 `C:\Antigravity_Mod\UserData`（`patch.js:39-56`，运行时位于 `asar_new\dist\main.js:74-85`）。
-   - **Session 响应头清洗**：注入 `configureHakimiSession(sess)`，清洗 `User-Agent` 中的 `Electron/` 与 `Antigravity/` 标识，剥离 `X-Frame-Options` 及 CSP `frame-ancestors`（`patch.js:61-93`，运行时位于 `asar_new\dist\main.js:252-284`）。在 `app.on('session-created')`（`asar_new\dist\main.js:421-422`）及 `app.whenReady()`（针对 `defaultSession` 与 `persist:hakimi_gemini`、`persist:hakimi_gpt`、`persist:hakimi_grok`，`asar_new\dist\main.js:487-498`）中调用。
-   - **Hakimi IPC 处理器**：注入 `registerHakimiIpcHandlers()`（`patch.js:95-223`，运行时位于 `asar_new\dist\main.js:286-414`）。
-4. **窗口参数注入（`C:\Antigravity_Mod\mod_kit\patch.js:271-275` -> `asar_new\dist\utils.js`）**：
-   - 开启 `devTools: true`（`asar_new\dist\utils.js:559`）与 `webviewTag: true`（`asar_new\dist\utils.js:563`）。
+3. **主进程注入（`C:\Antigravity_Mod\mod_kit\patch.js:36-266` -> `dist\main.js`）**：
+   - **便携 UserData 锁**：在 `requestSingleInstanceLock()` 前将 `userData` 重定向至 `C:\Antigravity_Mod\UserData`（`patch.js:39-56`，注入后位于 `dist\main.js`）。
+   - **Session 响应头清洗**：注入 `configureHakimiSession(sess)`，清洗 `User-Agent` 中的 `Electron/` 与 `Antigravity/` 标识，剥离 `X-Frame-Options` 及 CSP `frame-ancestors`（`patch.js:61-93`，注入后位于 `dist\main.js`）。在 `app.on('session-created')` 及 `app.whenReady()`（针对 `defaultSession` 与 `persist:hakimi_gemini`、`persist:hakimi_gpt`、`persist:hakimi_grok`）中调用。
+   - **Hakimi IPC 处理器**：注入 `registerHakimiIpcHandlers()`（`patch.js:95-223`，注入后位于 `dist\main.js`）。
+4. **窗口参数注入（`C:\Antigravity_Mod\mod_kit\patch.js:271-275` -> `dist\utils.js`）**：
+   - 开启 `devTools: true` 与 `webviewTag: true`。
 
 ### 1.2 现役 IPC 通道与 Preload API
-| IPC 通道名称 (`ipcMain.handle`) | 源码位置 (`patch.js` / `asar_new\dist\main.js`) | Preload 映射 (`window.hakimiHost`) (`asar_new\dist\preload.js:440-450`) | 实际行为与路径安全机制 |
+| IPC 通道名称 (`ipcMain.handle`) | 源码位置 (`patch.js` / `dist\main.js`) | Preload 映射 (`window.hakimiHost`) (`dist\preload.js`) | 实际行为与路径安全机制 |
 |---|---|---|---|
-| `hakimi:get-plugins-dir` | `patch.js:98-100` / `main.js:289-291` | `getPluginsDir()` | 返回 `path.join(path.dirname(process.execPath), 'plugins')`（即 `C:\Antigravity_Mod\plugins`） |
-| `hakimi:list-plugins` | `patch.js:102-115` / `main.js:293-306` | `listPlugins()` | 若 `plugins\` 不存在则递归创建；通过 `fs.readdirSync(pDir)` 仅返回**顶层** `.endsWith('.js')` 文件列表（不扫描子目录） |
-| `hakimi:read-plugin` | `patch.js:117-129` / `main.js:308-320` | `readPlugin(name)` | 使用 `path.basename(filename)` 剥离目录路径防穿越，读取 `plugins\<safeName>` UTF-8 源码，不存在则返回 `null` |
-| `hakimi:read-config` | `patch.js:131-142` / `main.js:322-333` | `readConfig()` | 读取并解析 `plugins\config.json`，不存在或异常时返回 `{}` |
-| `hakimi:save-config` | `patch.js:144-162` / `main.js:335-353` | `saveConfig(cfg)` | 读取现有 `plugins\config.json`，执行顶层浅合并 `{ ...current, ...config }` 并以 2 空格缩进写回磁盘 |
-| `hakimi:launch-desktop-gpt` | `patch.js:164-222` / `main.js:355-413` | `launchDesktopGpt()` | 检索本地候选路径或通过 PowerShell `Get-StartApps` 拉起 ChatGPT 桌面端应用 |
+| `hakimi:get-plugins-dir` | `patch.js:98-100` / `dist\main.js` | `getPluginsDir()` | 返回 `path.join(path.dirname(process.execPath), 'plugins')`（即 `C:\Antigravity_Mod\plugins`） |
+| `hakimi:list-plugins` | `patch.js:102-115` / `dist\main.js` | `listPlugins()` | 若 `plugins\` 不存在则递归创建；通过 `fs.readdirSync(pDir)` 仅返回**顶层** `.endsWith('.js')` 文件列表（不扫描子目录） |
+| `hakimi:read-plugin` | `patch.js:117-129` / `dist\main.js` | `readPlugin(name)` | 使用 `path.basename(filename)` 剥离目录路径防穿越，读取 `plugins\<safeName>` UTF-8 源码，不存在则返回 `null` |
+| `hakimi:read-config` | `patch.js:131-142` / `dist\main.js` | `readConfig()` | 读取并解析 `plugins\config.json`，不存在或异常时返回 `{}` |
+| `hakimi:save-config` | `patch.js:144-162` / `dist\main.js` | `saveConfig(cfg)` | 读取现有 `plugins\config.json`，执行顶层浅合并 `{ ...current, ...config }` 并以 2 空格缩进写回磁盘 |
+| `hakimi:launch-desktop-gpt` | `patch.js:164-222` / `dist\main.js` | `launchDesktopGpt()` | 检索本地候选路径或通过 PowerShell `Get-StartApps` 拉起 ChatGPT 桌面端应用 |
 
 ### 1.3 加载器流程、注册/初始化/卸载契约与热重载
-1. **加载器启动（`patch.js:308-400` / `asar_new\dist\preload.js:659-749`）**：
-   - 仅在非远程窗口（`if (!isRemoteWindow)`）运行，由防重入锁 `let hakimiReloading = false` 保护（`preload.js:660-664`）。
-   - 在 `DOMContentLoaded`（或 `document.readyState !== 'loading'` 时立即）触发 `initHakimiHost(false)`（`preload.js:744-748`）。
-2. **`window.HakimiPluginHost` 注入与 `register` 契约（`preload.js:670-698`）**：
+1. **加载器启动（`patch.js:308-400` / `dist\preload.js`）**：
+   - 仅在非远程窗口（`if (!isRemoteWindow)`）运行，由防重入锁 `let hakimiReloading = false` 保护。
+   - 在 `DOMContentLoaded`（或 `document.readyState !== 'loading'` 时立即）触发 `initHakimiHost(false)`。
+2. **`window.HakimiPluginHost` 注入与 `register` 契约（`dist\preload.js`）**：
    - 先通过 `hakimi:read-config` 和 `hakimi:list-plugins` 获取 `config` 与顶层 `*.js` 文件列表。
-   - 通过 `webFrame.executeJavaScript(hostInitScript)` 向主世界（Main World）注入 `window.HakimiPluginHost`（`version: "1.1.0"`, `config`, `plugins: {}`, `register(name, pluginObj)`, `reloadPlugins()`, `reload()`）。
-   - **注册即同步初始化**：当插件调用 `window.HakimiPluginHost.register(name, pluginObj)` 时，宿主立即将 `pluginObj` 存入 `this.plugins[name]`，并**同步调用 `pluginObj.init(this.config)`**（外包 `try/catch`，`preload.js:679-685`）。
-   - 随后按 `files` 顺序循环调用 `hakimi:read-plugin` 并通过 `webFrame.executeJavaScript` 将每个插件包裹在 `(function() { try { ... } catch(err) { ... } })()` 中注入主世界执行（`preload.js:700-714`）。
-3. **Teardown（卸载清理）契约与热重载（`preload.js:722-742`）**：
+   - 通过 `webFrame.executeJavaScript(hostInitScript)` 向主世界（Main World）注入 `window.HakimiPluginHost`（`version: "1.1.0"`, `config`, `plugins: {}`, `register(name, pluginObj)`, `reloadPlugins()`, `reload()`；外部宿主加载后会进一步扩展至 `2.1.0`）。
+   - **注册即同步初始化**：当插件调用 `window.HakimiPluginHost.register(name, pluginObj)` 时，宿主立即将 `pluginObj` 存入 `this.plugins[name]`，并**同步调用 `pluginObj.init(this.config)`**（外包 `try/catch`）。
+   - 随后按 `files` 顺序循环调用 `hakimi:read-plugin` 并通过 `webFrame.executeJavaScript` 将每个插件包裹在 `(function() { try { ... } catch(err) { ... } })()` 中注入主世界执行。
+3. **Teardown（卸载清理）契约与热重载（`dist\preload.js`）**：
    - 宿主本身未定义统一的 `pluginObj.teardown()` 调用，而是拦截 `Ctrl+R` / `Cmd+R`（不带 Shift）、`F5` 以及 `window` 上的 `'hakimi:reload-plugins'` 自定义事件，重新调用 `initHakimiHost(true)`。
    - 现役两个插件均通过全局约定函数在自身重新执行或 `init` 时主动清理上一实例：
      - **`C:\Antigravity_Mod\plugins\ai-sidedock.js`**：
@@ -76,7 +76,7 @@
 
 ### 评估依据
 1. **薄插座 + 外部插件宿主与既有路线完全同构**：
-   - 既有架构（见 `docs\whitepaper.md` 第三章与 `docs\P1_BOT_01_audit_report.md` 方案 A）本身就是 **“`app.asar` 内置轻量级 IPC 薄插座 + `C:\Antigravity_Mod\plugins\` 外置热插拔脚本”**。
+   - 既有架构（见 `docs/WHITEPAPER.md` 第三章）本身就是 **“`app.asar` 内置轻量级 IPC 薄插座 + `C:\Antigravity_Mod\plugins\` 外置热插拔脚本”**。
    - 规格要求的“插件发现、安装、启停、生命周期、配置、权限校验、错误隔离、卸载”以及“真实可操作的插件中心（已安装/插件仓库/设置 + Schema 配置详情页）”，**完全无需推翻或重写既有路线**。
 2. **零破坏增量演进路径**：
    - **`app.asar` 薄插座层**：保留全部 6 个既有 `hakimi:*` IPC 通道与 `window.hakimiHost` 方法、保留 `window.HakimiPluginHost.register` 同步兼容契约、保留 `AGM_UPDATE_LOCK` 与 `AGM_SIDECAR_REAPER`，仅在 `registerHakimiIpcHandlers()` 中增量补充 7 个严格限制在 `C:\Antigravity_Mod\plugins\` 目录内的文件/包管理与状态读写原语，并为 Hakimi 补丁锚点补齐与 `agm_locks.js` 一致的“锚点缺失即失败退出（exit 2）”强校验。
@@ -330,7 +330,7 @@ stateDiagram-v2
      - `hakimi-i18n` 详情页提供 Schema 表单（`enabled` 开关、`language` 语言枚举、`preset` 预设枚举，保存时同步写回 `plugins\config.json` 的 `i18n` 段并刷新引擎）以及一键唤起原版 6 页签词典配置中心按钮（`window.__HAKIMI_I18N__.toggleUI()`）。
      - `ai-sidedock` 详情页提供 Schema 表单（`width` 宽度数字 `340~900`、`collapsed` 默认收起开关、`activeTab` 默认标签枚举 `gemini/gpt/grok`，保存时同步写回 `plugins\config.json` 的 `sidedock` 段并立即应用）。
 - **诚实禁止的操作**：
-  - **禁止卸载**：卸载按钮置灰并标注 `核心内置 (不可卸载)`，严格遵守红线 3（保持 `hakimi-i18n` 与 `ai-sidedock` 完好可用）。
+  - **禁止卸载**：卸载按钮置灰并标注 `核心内置 (不可卸载)`，以保持 `hakimi-i18n` 与 `ai-sidedock` 完好可用。
 
 ---
 
@@ -410,8 +410,8 @@ stateDiagram-v2
   - `onConfigChange(newCfg, ctx)`：配置保存或重载时立即用新配置刷新横幅。
   - `deactivate(ctx)`：记录清理日志并安全退出。
 
-#### 2. 异常隔离测试插件：`C:\Antigravity_Mod\plugins\repo\agm-fault-probe\`
-- **用途**：专用于验证规格第 8 条“异常隔离”（测试完成后从 `packages\` 卸载清理）。
+#### 2. 异常隔离测试探针：`tests/fixtures/agm-fault-probe/`（测试用 fixture）
+- **用途**：专用于验证插件沙箱“异常隔离”（位于仓库测试目录 `tests/fixtures/agm-fault-probe/`，不随 `plugins/optional/` 默认分发；若手工放入 `plugins\repo\` 进行实机测试，测试完成后应从 `packages\` 卸载清理）。
 - **`manifest.json`**：`id: "agm-fault-probe"`, `permissions: ["ui:toast"]`, `configSchema: { "faultMode": { "type": "enum", "default": "throw", "options": ["throw", "hang"] } }`。
 - **`actions`**：
   - `triggerSyncThrow`：在 Worker 内同步抛出 `throw new Error("AGM_FAULT_PROBE_SYNC_CRASH")`，验证宿主捕获异常、记录错误日志且不影响 IDE 与其他插件。
@@ -419,55 +419,59 @@ stateDiagram-v2
 
 ---
 
-### 3(i) 验证计划（严格映射 Spec 第 8 条与 `00_rules.md`）
+### 3(i) 验证方法与验收清单
 
-所有验证输出统一通过 `<TESTLAB_ROOT>\AGM_PLUGIN_01\tools\ev.ps1` 写入唯一证据目录 `<TESTLAB_ROOT>\AGM_PLUGIN_01\evidence\`，绝不覆写或编辑已有证据文件。
+建议按以下 4 个层次完成回归验证（不依赖任何私有实验室脚本）：
 
-| 验证阶段 / 证据编号 | 覆盖 Spec 第 8 条指标 | 具体验证方法与判定标准 (PASS Criteria) |
-|---|---|---|
-| **阶段 0：基线与回滚就绪**<br>`R00_baseline`<br>`B01_backup`<br>`B02_rollback_verify` | 修改前完整备份、记录 SHA256、准备可执行回滚、D 盘与受保护进程基线 | 1. 记录 `C:\Antigravity_Mod\` 目标文件与 `%OFFICIAL_APP_DIR%\` 保护文件 SHA256、核对受保护 PID (`4268`, `15440`, `3580`) 存活与启动时间、核对 `%LOCALAPPDATA%\antigravity-updater` 基线。<br>2. 完整备份目标文件至 `<TESTLAB_ROOT>\AGM_PLUGIN_01\backup\` 并生成 `manifest.tsv`。<br>3. 执行 `rollback.ps1 -VerifyOnly` 确认备份校验 100% 通过（`exit=0`）。 |
-| **阶段 1：补丁构建与静态核验**<br>`I01_install_host`<br>`I02_repatch`<br>`V01_static` | 薄插座 + 外部宿主落地、UpdateLock/Reaper/Hakimi 锚点完好、`node --check` | 1. 部署更新后的 `mod_kit\patch.js`、外部宿主 `plugins\agm-plugin-host.js` 及本地仓库包 `plugins\repo\agm-hello-guard\`、`plugins\repo\agm-fault-probe\`。<br>2. 运行 `mod_kit\repatch.ps1` 重铸 `resources\app.asar`。<br>3. 解包静态校验：14/14 AGM 锚点 + 8/8 Hakimi 锚点 + 13 个 `hakimi:*` IPC 通道全部命中，所有 JS 文件 `node --check` 语法检查 `exit=0`，`plugins\config.json` 哈希未变。 |
-| **阶段 2：实机周期 1（全生命周期 + 权限拒绝 + 异常隔离 + 真实截图）**<br>`V02_live_lifecycle` | 插件发现→安装→启用→调用→配置校验与保存→重载、权限拒绝、异常隔离、真实 UI 按钮驱动、预览图抓取、正常退出残留 0 | 1. 以 `--user-data-dir="C:\Antigravity_Mod\UserData" --remote-debugging-port=9325` 启动 `C:\Antigravity_Mod\Antigravity.exe`（规避被陈旧套接字占用的 9224 端口）。<br>2. 通过 CDP (`127.0.0.1:9325`) 驱动真实 DOM 按钮：<br>   - 点击 `#agm-plugin-center-trigger` 打开插件中心，切换到“插件仓库”页签，核验“远程仓库：未接入”标识存在且无伪造数据，发现 `agm-hello-guard`。<br>   - 点击 `agm-hello-guard` 的“安装”按钮 -> 核验 `plugins\packages\agm-hello-guard\manifest.json` 落盘。<br>   - 切换到“已安装”页签，测试搜索框过滤，点击 `agm-hello-guard` 的“启用”开关 -> 状态变为 `ACTIVE`。<br>   - 点击“详情与配置”进入详情页，点击 `执行问候调用 (runGreeting)` 按钮 -> 核验调用返回 `{ ok: true, count: 5 }` 且顶部横幅更新。<br>   - **权限拒绝实测**：点击 `测试未授权权限 (testDeniedPermission)` 按钮 -> 核验宿主拦截 `shell:launchDesktopGpt`，返回 `E_PERMISSION_DENIED`，越权计数 `=1`，`state\logs\agm-hello-guard.log` 含 `[PermissionDenied]`。<br>   - **Schema 校验与配置保存实测**：先填入非法值（空文本、`maxLogCount=999`）点击“保存配置” -> 核验表单显示字段错误提示且未写盘；再填入合法值（`enableBanner=true`, `greetingPrefix="Hakimi MVP Verified"`, `maxLogCount=10`, `themeStyle="emerald-green"`）点击“保存配置” -> 核验 `state\configs\agm-hello-guard.json` 落盘。<br>   - **热重载配置持久化实测**：点击“重载”按钮 -> 核验重载后配置保持 `"Hakimi MVP Verified"` / `10` / `"emerald-green"`，再次调用计数变为 `15`。<br>   - **CDP 真实截图**：调用 CDP `Page.captureScreenshot` 抓取插件中心实机界面保存至 `<TESTLAB_ROOT>\AGM_PLUGIN_01\verify\AGM_PLUGIN_01_preview.png`。<br>   - **异常隔离实测**：安装并启用 `agm-fault-probe`，先后点击 `triggerSyncThrow` 与 `triggerInfiniteLoop` -> 核验死循环在 `~2500ms` 被 `worker.terminate()` 熔断、状态变为 `ERROR`，随后立即调用 `agm-hello-guard` 仍 100% 正常响应；卸载 `agm-fault-probe`。<br>3. 调用 `CloseMainWindow()` 正常关闭 IDE，等待 10 秒核验 `C:\Antigravity_Mod\` 残留进程数 `= 0`，`[AGM][Reaper]` 与 `[AGM][UpdateLock]` 日志正常。 |
-| **阶段 3：实机周期 2（跨 IDE 重启持久化 + 禁用与卸载 + 正常退出）**<br>`V03_restart_persist` | 配置与状态跨 IDE 重启持久化、禁用→卸载闭环、IDE 正常退出残留 0 | 1. 再次以 `--remote-debugging-port=9325` 启动 Mod。<br>2. 通过 CDP 打开插件中心：核验 `agm-hello-guard` 在重启后自动恢复 `ACTIVE` 状态，打开详情页核验 4 项配置（`"Hakimi MVP Verified"`, `10`, `"emerald-green"`, `true`）及私有存储（`invokeCount=15`）跨重启完整保持。<br>3. 通过 UI 按钮点击 `禁用` -> 核验状态变为 `DISABLED`；点击 `卸载` -> 核验 `plugins\packages\agm-hello-guard` 目录被物理删除，插件回到“插件仓库”待安装状态。<br>4. （可选收尾）在仓库页签再次点击“安装”并“启用” `agm-hello-guard`，使交付态保有可直接体验的已启用示例插件。<br>5. 调用 `CloseMainWindow()` 正常退出，等待 10 秒核验残留进程 `= 0`。 |
-| **阶段 4：回滚实测与最终红线复核**<br>`V04_rollback_test`<br>`V05_redline_final` | 回滚有效、D 盘保护、受保护 PID 完好、共享缓存未变 | 1. 执行 `rollback.ps1` 真实回滚 -> 核验所有被修改文件 SHA256 100% 恢复至 `R00_baseline` 基线值；随后重新应用生产补丁与宿主文件并通过 `V01_static` 核验。<br>2. 执行最终红线检查 `V05_redline_final`：核验 D 盘 `Antigravity.exe` / `app.asar` / `app-update.yml` 哈希未变、PID `4268`/`15440`/`3580` 存活且 `StartTime` 未变、`%LOCALAPPDATA%\antigravity-updater` 未变、`plugins\config.json` 哈希未变、`C:\Antigravity_Mod\` 残留进程 `= 0`。 |
+1. **纯离线 Node.js 单元测试（零写入应用目录）**：
+   - `node tests/test_host_unit.js`：校验宿主 SemVer 范围解析、`manifest.json` 校验、`configSchema` 默认值与类型校验、权限网关校验。
+   - `node tests/test_reaper_unit.js`：校验 Sidecar 进程树快照与单 PID 收割逻辑（RU1–RU16）。
+   - `node tests/test_update_lock.js`：校验 `AGM_UPDATE_LOCK` 与 `AGM_SIDECAR_REAPER` 离线注入及预检拦截（UL1–UL7）。
+2. **补丁构建与静态检查**：
+   - 运行 `mod_kit\repatch.ps1` 时，`agm_locks.js` 与 `patch.js` 会先在内存中预检 14 个 AGM 锚点 + 8 个 Hakimi 锚点；任一缺失或重复即以 `exit 2` 中止，不写坏目标文件。
+   - 补丁注入后对 `dist/main.js`、`dist/preload.js`、`dist/utils.js`、`dist/updater.js`、`dist/ipcHandlers.js`、`dist/languageServer.js` 执行 `node --check` 语法校验，并确认 13 个 `hakimi:*` IPC 通道完整注入。
+   - 破坏锚点的负向样本必须触发 `exit 2` 拒绝写入。
+3. **插件中心全链路功能验收清单**：
+   - **发现与安装**：在「插件仓库」核验远程仓库状态显示「未接入」且无伪造数据；安装 `agm-hello-guard` 后验证 `plugins\packages\agm-hello-guard\manifest.json` 落盘。
+   - **生命周期与调用**：启用后状态变为 `ACTIVE`，调用 `runGreeting` 返回预期计数与横幅反馈。
+   - **权限拦截**：调用未声明权限的 `testDeniedPermission`，验证宿主返回 `E_PERMISSION_DENIED` 并在 `plugins\state\logs\agm-hello-guard.log` 记录 `[PermissionDenied]`。
+   - **Schema 校验与持久化**：非法表单输入（如空文本或超限数字）不写盘并展示字段错误；合法值保存后写入 `plugins\state\configs\agm-hello-guard.json`，重载与重启客户端后仍保持。
+   - **异常隔离**：使用 `tests/fixtures/agm-fault-probe/` 测试 `triggerSyncThrow` 与 `triggerInfiniteLoop`（超时约 `2500 ms` 后触发 `worker.terminate()` 并进入 `ERROR` 状态），验证主界面与其余插件仍正常响应。
+   - **禁用、卸载与正常退出**：禁用后状态变为 `DISABLED`，卸载后删除 `plugins\packages\<id>`；正常关闭客户端后等待数秒核验目标目录下残留进程数为 `0`。
+4. **安装、还原与回滚校验**：
+   - 参见 [`docs/INSTALL.md`](INSTALL.md) 执行 `install-or-update.ps1 -DryRun` 预检、隔离副本安装/升级验证，以及 `restore-official.ps1 -VerifyOnly` 与正式还原校验，确认 `UserData\` 与 `plugins\{config.json,state,packages}` 完好无损。
 
 ---
 
 ### 3(j) 精确文件变更清单与回滚影响分析
 
-#### 1. `app.asar` 内部变更（由 `C:\Antigravity_Mod\mod_kit\patch.js` 自动注入并打包）
+#### 1. `app.asar` 内部变更（由 `mod_kit\patch.js` 自动注入并打包）
 | 路径 (`app.asar` 内部) | 变更性质 | 说明 |
 |---|---|---|
 | `dist/main.js` | 增量修改 | 在 `registerHakimiIpcHandlers()` 中保留原有 6 个 IPC 通道，新增 7 个限制在 `plugins\` 内的包/状态管理 IPC 通道，并在 `hakimi:list-plugins` 中置顶 `agm-plugin-host.js`。 |
 | `dist/preload.js` | 增量修改 | 在 `window.hakimiHost` 中暴露新增的 7 个方法；在 `initHakimiHost` 中预读取 `registry` 与 `hostInfo` 注入 `window.HakimiPluginHost.__bootContext`。 |
 | `dist/utils.js`、`dist/updater.js`、`dist/ipcHandlers.js`、`dist/languageServer.js` | 保持不变 | 既有 `webviewTag`/`devTools`、`AGM_UPDATE_LOCK`（10 处锚点）、`AGM_SIDECAR_REAPER`（4 处锚点）保持 100% 原样。 |
 
-#### 2. `app.asar` 外部变更（位于 `C:\Antigravity_Mod\`）
-| 绝对路径 | 变更类型 | 说明 |
+#### 2. `app.asar` 外部变更（运行时位于 `<应用目录>\`）
+| 运行时路径 | 变更类型 | 说明 |
 |---|---|---|
-| `C:\Antigravity_Mod\mod_kit\patch.js` | 修改 | 增加 Hakimi 8 处锚点强校验（缺失即 `exit 2`）及 7 个新 IPC / Preload 桥接代码注入。 |
-| `C:\Antigravity_Mod\resources\app.asar` | 重建 | 由 `mod_kit\repatch.ps1` 基于 `app.asar.bak` + 新 `patch.js` 重新打包生成。 |
-| `C:\Antigravity_Mod\plugins\agm-plugin-host.js` | 新增 | 外部插件宿主核心（Web Worker 沙箱、权限网关、Schema 校验器、生命周期状态机）+ 插件管理中心 UI。 |
-| `C:\Antigravity_Mod\plugins\repo\agm-hello-guard\manifest.json` | 新增 | 安全示例插件 Manifest（含 4 类 `configSchema` 字段与权限声明）。 |
-| `C:\Antigravity_Mod\plugins\repo\agm-hello-guard\index.js` | 新增 | 安全示例插件 Worker 入口脚本（含正常调用与越权测试动作）。 |
-| `C:\Antigravity_Mod\plugins\repo\agm-fault-probe\manifest.json` | 新增（测试期） | 异常隔离与死循环熔断测试插件 Manifest（实测后可移除或保留在 `repo\`）。 |
-| `C:\Antigravity_Mod\plugins\repo\agm-fault-probe\index.js` | 新增（测试期） | 异常隔离与死循环熔断测试插件入口脚本。 |
-| `C:\Antigravity_Mod\plugins\packages\agm-hello-guard\*` | 运行时生成 | 通过插件中心 UI 点击“安装”后从 `plugins\repo\agm-hello-guard` 安装生成。 |
-| `C:\Antigravity_Mod\plugins\state\registry.json` | 运行时生成 | 持久化插件启停状态与宿主设置。 |
-| `C:\Antigravity_Mod\plugins\state\configs\agm-hello-guard.json` | 运行时生成 | 持久化 `agm-hello-guard` 的配置与私有存储。 |
-| `C:\Antigravity_Mod\plugins\state\logs\*.log` | 运行时生成 | 各插件持久化运行与权限审计日志。 |
+| `mod_kit\patch.js` | 修改 | 增加 Hakimi 8 处锚点强校验（缺失即 `exit 2`）及 7 个新 IPC / Preload 桥接代码注入。 |
+| `resources\app.asar` | 重建 | 由 `mod_kit\repatch.ps1` 基于 `app.asar.bak` + 新 `patch.js` 重新打包生成。 |
+| `plugins\agm-plugin-host.js` | 新增 | 外部插件宿主核心（Web Worker 沙箱、权限网关、Schema 校验器、生命周期状态机）+ 插件管理中心 UI。 |
+| `plugins\repo\agm-hello-guard\manifest.json` | 新增 | 安全示例插件 Manifest（由仓库 `plugins/optional/agm-hello-guard/` 同步，含 4 类 `configSchema` 字段与权限声明）。 |
+| `plugins\repo\agm-hello-guard\index.js` | 新增 | 安全示例插件 Worker 入口脚本（含正常调用与越权测试动作）。 |
+| `plugins\packages\agm-hello-guard\*` | 运行时生成 | 通过插件中心 UI 点击“安装”后从 `plugins\repo\agm-hello-guard` 安装生成。 |
+| `plugins\state\registry.json` | 运行时生成 | 持久化插件启停状态与宿主设置。 |
+| `plugins\state\configs\agm-hello-guard.json` | 运行时生成 | 持久化 `agm-hello-guard` 的配置与私有存储。 |
+| `plugins\state\logs\*.log` | 运行时生成 | 各插件持久化运行与权限审计日志。 |
 
-#### 3. 明确不触碰的文件（零修改）
-- `C:\Antigravity_Mod\mod_kit\agm_locks.js`、`agm_sidecar_reaper_core.js`、`repatch.ps1`、`repatch.bat`
-- `C:\Antigravity_Mod\resources\app.asar.bak`、`resources\app-update.yml`
-- `C:\Antigravity_Mod\plugins\config.json`、`plugins\ai-sidedock.js`、`plugins\hakimi-i18n.js`、`plugins\hakimi-i18n\**`
+#### 3. 用户数据与非目标文件（升级/安装期间绝不覆写）
+- `UserData\`、`plugins\config.json`、`plugins\state\`、`plugins\packages\`
+- `resources\app.asar.bak`、`plugins\repo\` 下用户自建的其他插件包
 
-#### 4. 回滚方案与影响 (`<TESTLAB_ROOT>\AGM_PLUGIN_01\rollback.ps1`)
-- 回滚脚本先检查 `C:\Antigravity_Mod\` 下无运行中进程（若有则列出并 `exit 3`，绝不杀进程）。
-- 校验 `<TESTLAB_ROOT>\AGM_PLUGIN_01\backup\manifest.tsv` 中备份文件的 SHA256。
-- 从 `backup\files\` 还原 `mod_kit\patch.js` 与 `resources\app.asar`（并核验 `plugins\config.json` 等未变文件）。
-- 移走/清理本次新增的 `plugins\agm-plugin-host.js`、`plugins\repo\`、`plugins\packages\`、`plugins\state\` 至 `backup\displaced_<timestamp>\`。
-- 完成后复核所有目标文件 SHA256 与 `R00_baseline` 100% 一致（`ROLLBACK OK`）。
+#### 4. 还原与版本回滚方案
+- **还原官方原版 `app.asar`**：使用仓库 `platform/scripts/restore-official.ps1 -TargetAppDir "<应用目录>"`。脚本会检查目标目录无运行中进程（若有则 `exit 3` 中止，绝不杀进程），将当前改装版 `app.asar` 归档至 `displaced_mod_<timestamp>\app.asar.mod_patched`，再从 `resources\app.asar.bak` 还原并校验 SHA256，全程保留用户数据区。
+- **回滚平台版本**：检出上一稳定版本标签或提交，重新执行 `platform/scripts/install-or-update.ps1 -TargetAppDir "<应用目录>"`（详见 [`docs/INSTALL.md`](INSTALL.md)）。`platform/scripts/legacy-rollback/` 仅为历史归档，**严禁在生产环境执行**。
 
 ---
 
@@ -475,66 +479,8 @@ stateDiagram-v2
 
 | 序号 | 风险点 | 严重度 | 缓解与防御措施 |
 |---|---|---|---|
-| 1 | **端口 `9224` 被历史陈旧套接字占用（`0x2740`）** | 中 | 实机验证脚本启动 Mod 时显式传入 `--remote-debugging-port=9325`，通过 `127.0.0.1:9325` 建立 CDP 会话驱动 UI 与截图，不依赖 9224 端口。 |
+| 1 | **开启远程调试端口带来的本机进程接管风险** | 中 | 公开发行的 `platform/scripts/启动爆改版.bat` 默认关闭 `--remote-debugging-port`；仅在本地排障时通过 `AGM_DEBUG_PORT` 环境变量或 `--debug-port <port>` 参数按需开启，用完即关闭，切勿在共享或公用设备上启用。 |
 | 2 | **`hakimi-i18n` 的 `MutationObserver` 翻译或采集插件中心动态表单/日志文本** | 中 | 插件中心悬浮胶囊 `#agm-plugin-center-trigger` 与模态框 `#agm-plugin-center-overlay` 均标记 `data-ag-localization-skip="true" data-immune="true" translate="no"`，直接命中 `sanitizer.js:85` 与 `discovery.js:183` 的免疫规则。 |
 | 3 | **内容安全策略 (CSP) 阻止 `Blob` Web Worker 创建** | 中 | 在 `agm-plugin-host.js` 中优先使用 `new Worker(URL.createObjectURL(new Blob([code])))`；同时在 `patch.js` 的 `configureHakimiSession` 中确保本地 Hub 页面 CSP（若有 `worker-src` / `script-src`）允许 `blob:`，并在 Worker 构造外层提供带超时隔离的受控沙箱降级兜底，确保无论 CSP 如何配置均能 100% 隔离执行。 |
-| 4 | **`Start-Process -RedirectStandardOutput` 启动 Mod 会导致 0 顶层窗口及管道挂起**（`STABILITY_03` 实测教训） | 高 | 验证脚本严禁对 `Antigravity.exe` 使用 `-RedirectStandardOutput`；统一使用普通窗口启动（参考 `AGM_STABILITY_03\tools\V04_cycle.ps1`），退出时调用 `CloseMainWindow()` 并由内置 Reaper 自动清理 sidecar。 |
+| 4 | **`Start-Process -RedirectStandardOutput` 启动客户端导致 0 顶层窗口及管道挂起** | 高 | 自动化脚本严禁对 `Antigravity.exe` 使用 `-RedirectStandardOutput`；统一使用普通窗口启动，退出时调用 `CloseMainWindow()` 并由内置 `AGM_SIDECAR_REAPER` 自动清理会话级 sidecar。 |
 | 5 | **插件包通过相对路径 `..` 或符号链接越界读写 `plugins\` 以外文件** | 高 | 所有新增 IPC 通道强制使用 `SAFE_ID_RE` + `resolveConfined(getPluginsDir(), ...)` + `fs.lstatSync`（拒绝 symlink/junction），任何越界参数直接抛出异常拒绝。 |
-
----
-
-## 4. 实施任务拆解 (Work Breakdown for Fast Coding Models)
-
-以下将实施阶段拆分为 5 个边界清晰、输入输出明确、可独立验收的原子工程任务：
-
-### Task T1：基线取证、全量备份与可执行回滚脚本 (`B01` / `B02`)
-- **输入**：`C:\Antigravity_Mod\` 当前生产文件、`%OFFICIAL_APP_DIR%\` 基线、`<TESTLAB_ROOT>\AGM_STABILITY_03\rollback.ps1` 参考实现。
-- **输出**：
-  - `<TESTLAB_ROOT>\AGM_PLUGIN_01\tools\R00_baseline.ps1`
-  - `<TESTLAB_ROOT>\AGM_PLUGIN_01\tools\B01_backup.ps1`
-  - `<TESTLAB_ROOT>\AGM_PLUGIN_01\rollback.ps1` & `rollback.bat`
-  - 证据文件：`evidence\R00_baseline.txt`、`evidence\B01_backup.txt`、`evidence\B02_rollback_verify.txt`
-- **验收测试**：
-  1. `R00_baseline` exit 0，记录 C/D 盘关键文件 SHA256、受保护 PID (`4268`, `15440`, `3580`) 与共享缓存状态。
-  2. `B01_backup` exit 0，备份 `mod_kit\*`、`resources\app.asar`、`resources\app-update.yml`、`plugins\config.json`、`plugins\ai-sidedock.js`、`plugins\hakimi-i18n.js` 至 `backup\files\` 并生成 `backup\manifest.tsv`。
-  3. `rollback.ps1 -VerifyOnly` exit 0，输出 `0 bad` 且 `VerifyOnly: nothing changed`。
-
-### Task T2：薄插座升级（`mod_kit\patch.js` 强锚点校验 + 7 个安全 IPC 原语）
-- **输入**：`C:\Antigravity_Mod\mod_kit\patch.js`、本设计第 `3(a)` 节规范。
-- **输出**：
-  - `<TESTLAB_ROOT>\AGM_PLUGIN_01\work\mod_kit\patch.js`（先在 `work\` 下编写并完成静态语法检查）
-- **验收测试**：
-  1. `node --check <TESTLAB_ROOT>\AGM_PLUGIN_01\work\mod_kit\patch.js` 返回 `exit 0`。
-  2. 对 `app.asar.bak` 的临时解包目录试运行 `patch.js`，验证 14 个 AGM 锚点 + 8 个 Hakimi 锚点全部命中、新增 7 个 `hakimi:*` IPC 通道与 `window.hakimiHost` 方法全部注入，且解包目录内 `dist/main.js`、`dist/preload.js`、`dist/utils.js`、`dist/updater.js`、`dist/ipcHandlers.js`、`dist/languageServer.js` 全部通过 `node --check`。
-  3. 负向测试：对故意破坏锚点的临时副本运行 `patch.js`，必须以 `exit 2` 失败退出且不写坏目标文件。
-
-### Task T3：外部插件宿主、插件中心 UI 与示例插件开发 (`agm-plugin-host.js` + `agm-hello-guard` + `agm-fault-probe`)
-- **输入**：本设计第 `3(b)`–`3(h)` 节规范。
-- **输出**（先写入 `<TESTLAB_ROOT>\AGM_PLUGIN_01\work\plugins\`）：
-  - `work\plugins\agm-plugin-host.js`（含宿主状态机、Web Worker 沙箱执行器、权限网关、Schema 校验器、传统插件适配器、插件中心 3 页签 + 详情页 UI）
-  - `work\plugins\repo\agm-hello-guard\manifest.json` & `index.js`
-  - `work\plugins\repo\agm-fault-probe\manifest.json` & `index.js`
-- **验收测试**：
-  1. `node --check` 校验 `agm-plugin-host.js`、`repo\agm-hello-guard\index.js`、`repo\agm-fault-probe\index.js` 全部 `exit 0`。
-  2. 编写离线 Node 单元测试验证 `agm-plugin-host.js` 中的纯函数模块（Manifest 校验、Semver 兼容性比对、4 类 `configSchema` 字段校验、权限网关拦截逻辑）全部断言通过。
-
-### Task T4：生产环境部署重铸与实机 CDP 自动化全链路验证 (`I01` / `I02` / `V01` / `V02` / `V03` / `V04` / `V05`)
-- **输入**：Task T2 与 T3 产物、`C:\Antigravity_Mod\mod_kit\repatch.ps1`。
-- **输出**：
-  - 部署与验证脚本：`tools\I01_deploy.ps1`、`tools\I02_repatch.ps1`、`tools\V01_static.ps1`、`tools\V02_live_cycle.ps1`（含 Node CDP 驱动脚本 `tools\cdp_plugin_test.js`）、`tools\V03_restart_persist.ps1`、`tools\V04_rollback_test.ps1`、`tools\V05_redline.ps1`
-  - 实机截图：`<TESTLAB_ROOT>\AGM_PLUGIN_01\verify\AGM_PLUGIN_01_preview.png`
-  - 证据文件：`evidence\I01_deploy.txt`、`evidence\I02_repatch.txt`、`evidence\V01_static.txt`、`evidence\V02_live_cycle.txt`、`evidence\V03_restart_persist.txt`、`evidence\V04_rollback_test.txt`、`evidence\V05_redline.txt`
-- **验收测试**：
-  1. `I01`、`I02`、`V01` 全部 `RESULT PASS`。
-  2. `V02_live_cycle`（CDP 端口 `9325`）真实点击插件中心按钮跑通：发现→安装→启用→调用→越权拦截（`E_PERMISSION_DENIED`）→配置非法值拦截→配置合法值保存→热重载生效→`agm-fault-probe` 抛错与死循环超时隔离→抓取真实 PNG 截图→`CloseMainWindow()` 正常退出且 10 秒后残留进程为 `0`。
-  3. `V03_restart_persist` 重启 IDE 核验配置与状态跨重启持久化，随后通过 UI 按钮跑通禁用→卸载闭环，并正常退出且残留进程为 `0`。
-  4. `V04_rollback_test` 验证回滚脚本 100% 恢复基线哈希后重新恢复交付态；`V05_redline` 确认 D 盘文件、受保护 PID (`4268`, `15440`, `3580`)、共享更新缓存与 `plugins\config.json` 毫发无损。
-
-### Task T5：交付报告与预览图投递 (`00_Flash_Box/`)
-- **输入**：`evidence\*.txt` 全部实测证据、`verify\AGM_PLUGIN_01_preview.png`。
-- **输出**：
-  - `<CLOUD_STAGING_DIR>\AGM_PLUGIN_01_report.md`（首行注明 `Round 1 | YYYY-MM-DD HH:MM`，如实记录完成项、未完成项、实测数据、修改文件 SHA256 清单、回滚方式与遗留问题）
-  - `<CLOUD_STAGING_DIR>\AGM_PLUGIN_01_preview.png`（顶部带 `Round 1 | YYYY-MM-DD HH:MM` 水印，大小 `< 2MB`；旧图移入 `00_Flash_Box\_Archive\` 并按 7 天规则清理）
-- **验收测试**：
-  1. 两个交付文件在 `00_Flash_Box\` 中真实落盘且非空，图片大小 `< 2MB`。
-  2. 输出标准 4 行 `【云审凭条】` 并停止等待验收。

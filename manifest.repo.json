@@ -74,18 +74,28 @@
     "files": [
         {
             "path": ".gitignore",
-            "size": 2177,
-            "sha256": "2F5A7827E3A1C027E11DCBBB4388E7FF9436BAFA7400631DC7B8BFC72CB61C89"
+            "size": 2376,
+            "sha256": "0F882E4EA1E25618490CBFAD3612827AE6F1D99112842397926565A7FC23D5B2"
         },
         {
             "path": "docs/ARCHITECTURE.md",
-            "size": 63009,
-            "sha256": "9D0E2E77A422FA5AC0648F7924809E8E8FBE996B73912B89A17E628A235092F7"
+            "size": 53449,
+            "sha256": "56C79E9145D607DC7A2F9AD3C5BED017BAE4D5419600778531B8BB5BF5A5E058"
+        },
+        {
+            "path": "docs/INSTALL.md",
+            "size": 16899,
+            "sha256": "F97F8652F04FEC888F9FE8BB059CBFB33216B01F459E6032AC96A6EFE086F161"
         },
         {
             "path": "docs/PLUGIN_DEV_GUIDE.md",
             "size": 8674,
             "sha256": "E28F4D52741ABBE2594AF5A67A0A11D802931E9FC6468A6F795068B668CC5FE0"
+        },
+        {
+            "path": "docs/RELEASE_NOTES_2.1.0.md",
+            "size": 7845,
+            "sha256": "56B60ED6C95B4F58D37CCEA2A9AD4077843DB644832BE7AC8F1604934EF2BF88"
         },
         {
             "path": "docs/WHITEPAPER.md",
@@ -244,13 +254,13 @@
         },
         {
             "path": "README.md",
-            "size": 10965,
-            "sha256": "F1F0566F21C9E7B7FF41AAE9F74F2602FE46D987059C220BA160DF5B418A5B61"
+            "size": 11691,
+            "sha256": "41F13F073FF4F0A98BD55E8F8AD73DDC2CB3B764B9E00F4735A69E1319DD87A8"
         },
         {
             "path": "platform/scripts/install-or-update.ps1",
-            "size": 12005,
-            "sha256": "555FAEFA7EB0E06BC8DE3A29B882A9CE8D8D29D903C4EEA3AAEE672DBA1149BF"
+            "size": 11996,
+            "sha256": "5EC9CDBE0E91F039FA85FB9A16FE3880F34B93AFD8C2A6FE5B54030D1E807FBA"
         },
         {
             "path": "platform/scripts/legacy-rollback/README.md",
@@ -269,8 +279,8 @@
         },
         {
             "path": "platform/scripts/restore-official.ps1",
-            "size": 4107,
-            "sha256": "A40F0370A9C6F6BB8551BA7305A2908CACE5D855A7F4C1A035D24A47CC415960"
+            "size": 4098,
+            "sha256": "127F79D76DCD5255E8723B5DBF15E296F9CBC0FE6CD2205D8CDCC2A944B2EC96"
         },
         {
             "path": "platform/scripts/启动爆改版.bat",

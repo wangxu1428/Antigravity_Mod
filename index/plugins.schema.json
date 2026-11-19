@@ -93,7 +93,7 @@
           "maxLength": 2000
         },
         "platformCompatibility": {
-          "description": "相对平台版本的 semver 范围，例如 >=0.1.0 <1.0.0。",
+          "description": "相对平台版本的 semver 范围，例如 >=2.1.0 <3.0.0。",
           "type": "string",
           "minLength": 1,
           "maxLength": 200

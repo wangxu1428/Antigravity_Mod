@@ -5,6 +5,12 @@
 
 ## [Unreleased]
 
+### Changed
+
+- 补齐 v2.1.0 安装与发布文档（`docs/INSTALL.md`、`docs/RELEASE_NOTES_2.1.0.md`），完成 `repatch.ps1` 与 `restore-official.ps1` 一次性隔离副本实测验收，收窄 `.gitignore` 过宽规则，清理 `docs/ARCHITECTURE.md` 实验室专有信息，对齐 `plugin-api/README.md` 与 `index/plugins.json`，移除脚本头初稿标记并同步更新 `manifest.repo.json`。
+
+## [2.1.0] - 2026-11-19
+
 ### Added
 
 - 导入 v2.1.0 平台与插件（分支 `dev/v2.1.0-import`）：纳入 `mod_kit/`、`plugins/`（宿主 v2.1.0、内置插件与 `plugins/repo/`）、`scripts/`、`tests/`、`manifest.repo.json`，以及 `docs/ARCHITECTURE.md`、`docs/PLUGIN_DEV_GUIDE.md`、`docs/WHITEPAPER.md`。保留既有 `LICENSE`（MIT，Copyright (c) 2026 wangxu1428）。`README.md` 以导入稿为底，并保留平台 MIT、插件自选许可证与非官方 / 未关联声明。`.gitignore` 合并双方规则，并将 `locales/` 收窄为 `/locales/`，以跟踪 `plugins/hakimi-i18n/locales/`。
