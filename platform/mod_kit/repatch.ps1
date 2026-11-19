@@ -96,8 +96,20 @@ function Test-LockException {
 
 function Get-Sha256Upper {
     param([Parameter(Mandatory = $true)][string]$FilePath)
-    $res = Get-FileHash -LiteralPath $FilePath -Algorithm SHA256 -ErrorAction Stop
-    return $res.Hash.ToUpperInvariant()
+    # Use .NET SHA256 so this works when Microsoft.PowerShell.Utility
+    # is not auto-loaded (observed on GitHub windows-latest with -NoProfile).
+    $hasher = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        $stream = [System.IO.File]::Open($FilePath, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::ReadWrite)
+        try {
+            $bytes = $hasher.ComputeHash($stream)
+            return ([BitConverter]::ToString($bytes)).Replace("-", "")
+        } finally {
+            $stream.Dispose()
+        }
+    } finally {
+        $hasher.Dispose()
+    }
 }
 
 function Remove-DirRobust {

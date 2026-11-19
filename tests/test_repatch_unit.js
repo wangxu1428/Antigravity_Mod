@@ -399,7 +399,7 @@ async function runAll() {
     '[System.IO.File]::Replace',
     '[System.IO.Directory]::Move',
     'node --check',
-    'Get-FileHash',
+    'Get-Sha256Upper',
     'restore-official.ps1',
     '-TargetAppDir',
     OFFICIAL_2321_SHA256,
@@ -412,6 +412,7 @@ async function runAll() {
     OFFICIAL_2321_SHA256,
     '[System.IO.File]::Replace',
     'AGM_OFFICIAL_ASAR_SHA256',
+    'Get-Sha256Upper',
   ];
   const missingRestoreTokens = requiredRestoreTokens.filter((t) => !restoreSrc.includes(t));
   check(

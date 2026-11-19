@@ -95,6 +95,24 @@ function Test-LockException {
     return $false
 }
 
+function Get-Sha256Upper {
+    param([Parameter(Mandatory = $true)][string]$FilePath)
+    # Use .NET SHA256 so this works when Microsoft.PowerShell.Utility
+    # is not auto-loaded (observed on GitHub windows-latest with -NoProfile).
+    $hasher = [System.Security.Cryptography.SHA256]::Create()
+    try {
+        $stream = [System.IO.File]::Open($FilePath, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::ReadWrite)
+        try {
+            $bytes = $hasher.ComputeHash($stream)
+            return ([BitConverter]::ToString($bytes)).Replace("-", "")
+        } finally {
+            $stream.Dispose()
+        }
+    } finally {
+        $hasher.Dispose()
+    }
+}
+
 Write-Host "==========================================================" -ForegroundColor Cyan
 Write-Host "  Antigravity Mod (AGM) 官方原版 app.asar 安全还原工具" -ForegroundColor Green
 Write-Host "==========================================================" -ForegroundColor Cyan
@@ -105,11 +123,11 @@ if (!(Test-Path -LiteralPath $AsarBackupPath)) {
     exit 2
 }
 
-$BackupHash = (Get-FileHash -LiteralPath $AsarBackupPath -Algorithm SHA256 -ErrorAction Stop).Hash.ToUpperInvariant()
+$BackupHash = Get-Sha256Upper -FilePath $AsarBackupPath
 $ActiveHash = 'MISSING'
 if (Test-Path -LiteralPath $AsarActivePath) {
     try {
-        $ActiveHash = (Get-FileHash -LiteralPath $AsarActivePath -Algorithm SHA256 -ErrorAction Stop).Hash.ToUpperInvariant()
+        $ActiveHash = Get-Sha256Upper -FilePath $AsarActivePath
     } catch {
         if (Test-LockException $_.Exception) {
             $ActiveHash = 'LOCKED'
@@ -163,7 +181,7 @@ $ArchivedAsarPath = $null
 
 try {
     Copy-Item -LiteralPath $AsarBackupPath -Destination $RestoredStagePath -Force
-    $StagedHash = (Get-FileHash -LiteralPath $RestoredStagePath -Algorithm SHA256 -ErrorAction Stop).Hash.ToUpperInvariant()
+    $StagedHash = Get-Sha256Upper -FilePath $RestoredStagePath
     if ($StagedHash -ne $BackupHash) {
         Write-Host ("[AGM][Restore] ERROR: 暂存还原文件 SHA256 校验失败（期望: {0}，实际: {1}）" -f $BackupHash, $StagedHash) -ForegroundColor Red
         exit 4
@@ -200,7 +218,7 @@ if ($ArchivedAsarPath -and (Test-Path -LiteralPath $ArchivedAsarPath)) {
     Write-Host "已将当前改装版 app.asar 归档至: $ArchivedAsarPath" -ForegroundColor Gray
 }
 
-$RestoredHash = (Get-FileHash -LiteralPath $AsarActivePath -Algorithm SHA256 -ErrorAction Stop).Hash.ToUpperInvariant()
+$RestoredHash = Get-Sha256Upper -FilePath $AsarActivePath
 
 if ($RestoredHash -ne $BackupHash) {
     Write-Host ("[AGM][Restore] ERROR: 还原后 SHA256 校验不一致！（期望: {0}，实际: {1}）" -f $BackupHash, $RestoredHash) -ForegroundColor Red

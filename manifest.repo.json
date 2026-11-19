@@ -84,8 +84,8 @@
         },
         {
             "path": "docs/INSTALL.md",
-            "size": 18988,
-            "sha256": "604B82433C28E00BB2653C5F67BC8A2903BF8A19C182E06DB47D2EDCB8A7D101"
+            "size": 22273,
+            "sha256": "5715B7ABE03FC08F03E3D96D587BBC7217C89123B8E7CCE4BD4B40E05BBF117D"
         },
         {
             "path": "docs/PLUGIN_DEV_GUIDE.md",
@@ -134,8 +134,8 @@
         },
         {
             "path": "platform/mod_kit/repatch.ps1",
-            "size": 16563,
-            "sha256": "CCB79DD6898762AB8F50D1DA73C400FA96FDEE773E8BAB630DFB93686B3E6E92"
+            "size": 34049,
+            "sha256": "BE25A7068473E97A81576A8763FAA89952CC1165B42A8767E64BF1159EFFA522"
         },
         {
             "path": "platform/agm-plugin-host.js",
@@ -279,8 +279,8 @@
         },
         {
             "path": "platform/scripts/restore-official.ps1",
-            "size": 4098,
-            "sha256": "127F79D76DCD5255E8723B5DBF15E296F9CBC0FE6CD2205D8CDCC2A944B2EC96"
+            "size": 10034,
+            "sha256": "7979128226A821B46C41AE76654EBB665B2EABECB52BA59287D419D36166EFF4"
         },
         {
             "path": "platform/scripts/启动爆改版.bat",
