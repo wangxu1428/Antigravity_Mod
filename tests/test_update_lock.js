@@ -5,6 +5,7 @@
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+const crypto = require('crypto');
 const EventEmitter = require('events');
 
 const REPO_ROOT = path.resolve(__dirname, '..');
@@ -286,6 +287,64 @@ module.exports = { startLs, killLanguageServer };
     au.autoDownload = true;
     au.autoInstallOnAppQuit = true;
     L.check('UL7', 'autoDownload / autoInstallOnAppQuit forced false, assignments ignored', au.autoDownload === false && au.autoInstallOnAppQuit === false);
+
+    // UL8: computeLockedUpdateYml + lockUpdateYml no-op on conformant YAML & surgical update preserving custom keys/comments
+    {
+      const customConformant = '# user comment\r\nprovider: generic\r\nurl: http://127.0.0.1:9/custom-dead/\r\nupdaterCacheDirName: antigravity-mod-updater # keep\r\ncustomUserFlag: true\r\n';
+      const conformantPath = path.join(tmpDir, 'conformant-update.yml');
+      fs.writeFileSync(conformantPath, customConformant, 'utf8');
+      const pastTime = new Date(Date.now() - 10000);
+      fs.utimesSync(conformantPath, pastTime, pastTime);
+      const mtimeBefore = fs.statSync(conformantPath).mtimeMs;
+      const hashBefore = crypto.createHash('sha256').update(fs.readFileSync(conformantPath)).digest('hex');
+
+      const lockRes1 = agmLocks.lockUpdateYml(conformantPath);
+      const mtimeAfter = fs.statSync(conformantPath).mtimeMs;
+      const hashAfter = crypto.createHash('sha256').update(fs.readFileSync(conformantPath)).digest('hex');
+
+      const nonDefaultYml = '# custom header\nprovider: generic\nurl: http://127.0.0.1:9/custom-dead/\nupdaterCacheDirName: custom-cache-dir # note\ncustomSetting: keep-me\n';
+      const compRes = agmLocks.computeLockedUpdateYml(nonDefaultYml);
+      const expectedSurgical = '# custom header\nprovider: generic\nurl: http://127.0.0.1:9/custom-dead/\nupdaterCacheDirName: antigravity-mod-updater # note\ncustomSetting: keep-me\n';
+      L.check(
+        'UL8',
+        'conformant app-update.yml is true no-op (mtime & SHA256 unchanged) and non-default updaterCacheDirName preserves custom keys/comments',
+        lockRes1.changed === false &&
+          mtimeAfter === mtimeBefore &&
+          hashAfter === hashBefore &&
+          compRes.changed === true &&
+          compRes.content === expectedSurgical,
+        { lockRes1, mtimeBefore, mtimeAfter, hashBefore, hashAfter, compRes }
+      );
+    }
+
+    // UL9: --update-yml-out writes staged YAML only and leaves active source YAML untouched
+    {
+      const ul9Dir = fs.mkdtempSync(path.join(os.tmpdir(), 'agm_ul9_'));
+      try {
+        const { tmpDir: fDir, ymlCopy: activeYml } = createSyntheticFixtureDir();
+        try {
+          const nonDefaultSrc = 'provider: generic\nurl: http://127.0.0.1:9/agm-update-disabled/\nupdaterCacheDirName: non-default-cache\ncustomExtra: preserved\n';
+          fs.writeFileSync(activeYml, nonDefaultSrc, 'utf8');
+          const beforeSha = crypto.createHash('sha256').update(fs.readFileSync(activeYml)).digest('hex');
+          const stagedOut = path.join(ul9Dir, 'staged.yml');
+          agmLocks.apply(fDir, ['--update-yml', activeYml, '--update-yml-out', stagedOut]);
+          const afterSha = crypto.createHash('sha256').update(fs.readFileSync(activeYml)).digest('hex');
+          const stagedContent = fs.existsSync(stagedOut) ? fs.readFileSync(stagedOut, 'utf8') : '';
+          L.check(
+            'UL9',
+            '--update-yml-out writes updated YAML to staging path without altering active source YAML',
+            beforeSha === afterSha &&
+              stagedContent.includes('updaterCacheDirName: antigravity-mod-updater') &&
+              stagedContent.includes('customExtra: preserved'),
+            { beforeSha, afterSha, stagedContent }
+          );
+        } finally {
+          fs.rmSync(fDir, { recursive: true, force: true });
+        }
+      } finally {
+        fs.rmSync(ul9Dir, { recursive: true, force: true });
+      }
+    }
 
     Module._load = origLoad;
     global.setTimeout = _st;
