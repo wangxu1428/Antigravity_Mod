@@ -42,3 +42,5 @@ jobs:
         run: node tests/test_compat_versions_unit.js
       - name: IPC authorization security tests (SEC-01..18)
         run: node tests/test_ipc_sec_unit.js
+      - name: Updater IPC authorization tests (UPD-01..12)
+        run: node tests/test_updater_auth_unit.js

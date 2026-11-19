@@ -16,6 +16,7 @@ const INSTALLER_PS1 = path.join(REPO_ROOT, 'platform', 'scripts', 'install-or-up
 const PATCH_JS = path.join(REPO_ROOT, 'platform', 'mod_kit', 'patch.js');
 const AGM_LOCKS_JS = path.join(REPO_ROOT, 'platform', 'mod_kit', 'agm_locks.js');
 const AGM_IPC_AUTH_JS = path.join(REPO_ROOT, 'platform', 'mod_kit', 'agm_ipc_auth.js');
+const AGM_UPDATER_AUTH_JS = path.join(REPO_ROOT, 'platform', 'mod_kit', 'agm_updater_auth.js');
 const REAPER_CORE_JS = path.join(REPO_ROOT, 'platform', 'mod_kit', 'agm_sidecar_reaper_core.js');
 const TEMPLATE_YML = path.join(REPO_ROOT, 'platform', 'mod_kit', 'app-update.template.yml');
 
@@ -277,6 +278,7 @@ function setupFakeApp(caseDir, opts = {}) {
   fs.copyFileSync(PATCH_JS, path.join(modKitDir, 'patch.js'));
   fs.copyFileSync(AGM_LOCKS_JS, path.join(modKitDir, 'agm_locks.js'));
   fs.copyFileSync(AGM_IPC_AUTH_JS, path.join(modKitDir, 'agm_ipc_auth.js'));
+  fs.copyFileSync(AGM_UPDATER_AUTH_JS, path.join(modKitDir, 'agm_updater_auth.js'));
   fs.copyFileSync(REAPER_CORE_JS, path.join(modKitDir, 'agm_sidecar_reaper_core.js'));
   fs.copyFileSync(TEMPLATE_YML, path.join(modKitDir, 'app-update.template.yml'));
   if (!opts.omitUpdateYml) {

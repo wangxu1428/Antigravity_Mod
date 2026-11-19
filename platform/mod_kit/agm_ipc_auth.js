@@ -23,7 +23,9 @@ function extractHttpHost(url) {
     if (typeof url !== 'string' || !url) return null;
     const m = /^(https?):\/\/([^/?#]+)/i.exec(url);
     if (!m) return null;
-    let host = m[2].toLowerCase();
+    const authority = m[2].toLowerCase();
+    if (authority.indexOf('@') >= 0) return null;
+    let host = authority;
     if (host.startsWith('[')) {
         const end = host.indexOf(']');
         host = end >= 0 ? host.slice(0, end + 1) : host;
@@ -37,6 +39,54 @@ function isLoopbackHost(host) {
     if (!host) return false;
     if (host === 'localhost' || host.endsWith('.localhost')) return true;
     if (host === '127.0.0.1' || host === '[::1]' || host === '::1') return true;
+    return false;
+}
+
+function extractLoopbackOrigin(url) {
+    if (typeof url !== 'string' || !url) return null;
+    const m = /^(https?):\/\/([^/?#]+)/i.exec(url);
+    if (!m) return null;
+    const scheme = m[1].toLowerCase();
+    const authority = m[2].toLowerCase();
+    if (authority.indexOf('@') >= 0) return null;
+    let host = authority;
+    let port = '';
+    if (authority.startsWith('[')) {
+        const end = authority.indexOf(']');
+        if (end < 0) return null;
+        host = authority.slice(0, end + 1);
+        const rest = authority.slice(end + 1);
+        if (rest.startsWith(':')) port = rest.slice(1);
+        else if (rest.length > 0) return null;
+    } else {
+        const colon = authority.indexOf(':');
+        if (colon >= 0) {
+            host = authority.slice(0, colon);
+            port = authority.slice(colon + 1);
+        }
+    }
+    if (!isLoopbackHost(host)) return null;
+    if (port) {
+        if (!/^\d{1,5}$/.test(port)) return null;
+        const portNum = parseInt(port, 10);
+        if (portNum < 1 || portNum > 65535) return null;
+    }
+    const effectivePort = port ? String(parseInt(port, 10)) : (scheme === 'https' ? '443' : '80');
+    return scheme + '://' + host + ':' + effectivePort;
+}
+
+function isWebviewContents(wc) {
+    if (!wc || typeof wc !== 'object') return false;
+    try {
+        if (typeof wc.getType === 'function' && wc.getType() === 'webview') return true;
+    } catch (_) {
+        return true;
+    }
+    try {
+        if (wc.hostWebContents !== undefined && wc.hostWebContents !== null) return true;
+    } catch (_) {
+        return true;
+    }
     return false;
 }
 
@@ -205,6 +255,7 @@ function createIpcAuthorizer(options) {
     const opts = options || {};
     const registry = new Map();
     const attached = typeof WeakSet === 'function' ? new WeakSet() : null;
+    const reloadCandidates = typeof WeakMap === 'function' ? new WeakMap() : null;
     const logger = typeof opts.logger === 'function' ? opts.logger : function () {};
     const ipcState = new WeakMap();
     const hasRemoteSecurityOpt = opts.remoteWindowSecurity !== undefined && opts.remoteWindowSecurity !== null;
@@ -369,11 +420,25 @@ function createIpcAuthorizer(options) {
         return { ok: true, reason: null, available: true, hasArgs: hasArgs, explicitLocal: optCheck.explicitLocal };
     }
 
+    function taintCandidate(wc) {
+        if (!reloadCandidates || !wc || typeof wc !== 'object') return;
+        try {
+            const cand = reloadCandidates.get(wc);
+            if (cand) {
+                cand.tainted = true;
+                cand.pendingReload = false;
+            }
+            reloadCandidates.delete(wc);
+        } catch (_) {}
+    }
+
     function revoke(target, reason) {
         const wc = target && typeof target === 'object' ? target : null;
         const id = wc ? wc.id : target;
         const entry = registry.get(id);
+        if (wc) taintCandidate(wc);
         if (entry && (!wc || entry.wc === wc)) {
+            if (entry.wc) taintCandidate(entry.wc);
             registry.delete(id);
             return true;
         }
@@ -406,40 +471,137 @@ function createIpcAuthorizer(options) {
             if (info.isMainFrame === false) return;
             if (info.isInPlace === true) return;
             const entry = registry.get(id);
-            if (!entry || entry.wc !== wc) return;
+            const cand = reloadCandidates ? reloadCandidates.get(wc) : null;
+            if (!entry || entry.wc !== wc) {
+                if (cand && !cand.tainted) {
+                    const navOrigin = extractLoopbackOrigin(info.url);
+                    if (!navOrigin || navOrigin !== cand.expectedOrigin) {
+                        taintCandidate(wc);
+                    }
+                }
+                return;
+            }
             // The very first navigation is the window's initial load, not a
             // post-trust navigation. Everything after the first completed load
-            // revokes the registration. A first navigation that is already a
-            // clearly remote origin (e.g. an initial redirect) is revoked too.
+            // revokes the registration immediately; same-origin loopback reloads
+            // must pass full re-verification on did-finish-load to re-register.
             if (!entry.loaded) {
-                if (isClearlyRemoteUrl(info.url)) registry.delete(id);
+                if (isClearlyRemoteUrl(info.url)) {
+                    registry.delete(id);
+                    taintCandidate(wc);
+                } else if (cand && typeof info.url === 'string' && info.url.length > 0) {
+                    const initNavOrigin = extractLoopbackOrigin(info.url);
+                    if (!initNavOrigin || initNavOrigin !== cand.expectedOrigin) {
+                        taintCandidate(wc);
+                    }
+                }
                 return;
             }
             registry.delete(id);
+            if (cand && !cand.tainted && cand.id === id) {
+                const reloadOrigin = extractLoopbackOrigin(info.url);
+                if (reloadOrigin && reloadOrigin === cand.expectedOrigin) {
+                    cand.pendingReload = true;
+                } else {
+                    taintCandidate(wc);
+                }
+            }
         };
 
         const onRedirect = function () {
             const info = navigationInfo(Array.prototype.slice.call(arguments));
             if (info.isMainFrame === false) return;
-            if (!isClearlyRemoteUrl(info.url)) return;
             const entry = registry.get(id);
-            if (entry && entry.wc === wc) registry.delete(id);
+            const cand = reloadCandidates ? reloadCandidates.get(wc) : null;
+            const redirOrigin = extractLoopbackOrigin(info.url);
+            if (cand && (!redirOrigin || redirOrigin !== cand.expectedOrigin)) {
+                taintCandidate(wc);
+            }
+            if (!isClearlyRemoteUrl(info.url) && (!cand || (redirOrigin && redirOrigin === cand.expectedOrigin))) {
+                return;
+            }
+            if (entry && entry.wc === wc) {
+                registry.delete(id);
+                taintCandidate(wc);
+            }
         };
 
         const onFinished = function () {
             const entry = registry.get(id);
-            if (!entry || entry.wc !== wc) return;
-            entry.loaded = true;
-            // Additional sanity check only: a trusted local window that ends up
-            // on a clearly remote http(s) origin loses its authorization.
-            if (isClearlyRemoteUrl(mainFrameUrl(wc))) {
-                registry.delete(id);
+            const cand = reloadCandidates ? reloadCandidates.get(wc) : null;
+            const curUrl = mainFrameUrl(wc);
+            if (entry && entry.wc === wc) {
+                entry.loaded = true;
+                if (isClearlyRemoteUrl(curUrl)) {
+                    registry.delete(id);
+                    taintCandidate(wc);
+                    return;
+                }
+                if (cand && curUrl) {
+                    const curOrigin = extractLoopbackOrigin(curUrl);
+                    if (!curOrigin || curOrigin !== cand.expectedOrigin) {
+                        taintCandidate(wc);
+                    }
+                }
+                return;
+            }
+            // D2 safe reload recovery: strictly re-verify all 7 main-process properties
+            if (cand && cand.pendingReload && !cand.tainted) {
+                if (safeIsDestroyed(wc) || isWebviewContents(wc)) {
+                    taintCandidate(wc);
+                    return;
+                }
+                let curId;
+                try { curId = wc.id; } catch (_) { curId = null; }
+                if (curId !== cand.id) {
+                    taintCandidate(wc);
+                    return;
+                }
+                if (cand.win && safeIsDestroyed(cand.win)) {
+                    taintCandidate(wc);
+                    return;
+                }
+                let mf = null;
+                try { mf = wc.mainFrame; } catch (_) { mf = null; }
+                if (!mf || frameDestroyed(mf)) {
+                    taintCandidate(wc);
+                    return;
+                }
+                const finishedOrigin = extractLoopbackOrigin(curUrl);
+                if (!finishedOrigin || finishedOrigin !== cand.expectedOrigin) {
+                    taintCandidate(wc);
+                    return;
+                }
+                const wpCheck = inspectWebPreferences(wc);
+                if (!wpCheck.ok) {
+                    taintCandidate(wc);
+                    return;
+                }
+                const officialCheck = checkOfficialBackend(wc, cand.win);
+                if (!officialCheck.ok) {
+                    taintCandidate(wc);
+                    return;
+                }
+                const existing = registry.get(id);
+                if (existing && existing.wc !== wc) {
+                    taintCandidate(wc);
+                    return;
+                }
+                cand.pendingReload = false;
+                registry.set(id, {
+                    wc: wc,
+                    win: cand.win,
+                    loaded: true,
+                    source: cand.source + ':reload',
+                    origin: cand.expectedOrigin,
+                });
             }
         };
 
         const onDestroyed = function () {
             const entry = registry.get(id);
             if (entry && entry.wc === wc) registry.delete(id);
+            taintCandidate(wc);
         };
 
         try { wc.on('did-start-navigation', onNavigation); } catch (_) {}
@@ -451,9 +613,10 @@ function createIpcAuthorizer(options) {
         } catch (_) {}
     }
 
-    function register(wc, source) {
+    function register(wc, source, meta) {
         if (!wc || typeof wc !== 'object') return false;
         if (safeIsDestroyed(wc)) return false;
+        if (isWebviewContents(wc)) return false;
         let id;
         try {
             id = wc.id;
@@ -461,11 +624,34 @@ function createIpcAuthorizer(options) {
             return false;
         }
         if (id === undefined || id === null) return false;
-        const officialCheck = checkOfficialBackend(wc, null);
+        const win = (meta && typeof meta === 'object' && meta.win) ? meta.win : null;
+        const officialCheck = checkOfficialBackend(wc, win);
         if (!officialCheck.ok) return false;
         const existing = registry.get(id);
         if (existing && existing.wc === wc) return true;
-        registry.set(id, { wc: wc, loaded: false, source: typeof source === 'string' ? source : 'explicit' });
+        const regSource = typeof source === 'string' ? source : 'explicit';
+        const initUrl = (meta && typeof meta === 'object' && typeof meta.initialUrl === 'string' && meta.initialUrl)
+            ? meta.initialUrl
+            : mainFrameUrl(wc);
+        const loopOrigin = extractLoopbackOrigin(initUrl);
+        registry.set(id, {
+            wc: wc,
+            win: win,
+            loaded: false,
+            source: regSource,
+            origin: loopOrigin,
+        });
+        if (reloadCandidates && loopOrigin) {
+            reloadCandidates.set(wc, {
+                id: id,
+                wc: wc,
+                win: win,
+                source: regSource,
+                expectedOrigin: loopOrigin,
+                pendingReload: false,
+                tainted: false,
+            });
+        }
         attach(wc, id);
         return true;
     }
@@ -476,13 +662,15 @@ function createIpcAuthorizer(options) {
         try { sender = event.sender; } catch (_) { return 'sender-unavailable'; }
         if (!sender) return 'missing-sender';
         if (safeIsDestroyed(sender)) return 'sender-destroyed';
+        if (isWebviewContents(sender)) return 'webview-sender';
         let senderId;
         try { senderId = sender.id; } catch (_) { return 'sender-unavailable'; }
         const entry = registry.get(senderId);
         if (!entry || entry.wc !== sender) return 'untrusted-sender';
-        const officialCheck = checkOfficialBackend(sender, null);
+        const officialCheck = checkOfficialBackend(sender, entry.win || null);
         if (!officialCheck.ok) {
             registry.delete(senderId);
+            taintCandidate(sender);
             return officialCheck.reason;
         }
         let frame;
@@ -559,18 +747,29 @@ function createIpcAuthorizer(options) {
         return wrapped;
     }
 
-    function evaluateCreatedWindow(args, win, hookSource) {
+    function evaluateCreatedWindow(args, win, hookSource, utilsModule) {
         if (!win) return;
         let wc = null;
         try {
-            wc = win.webContents || (win.id !== undefined && win.mainFrame ? win : null);
+            if (utilsModule && typeof utilsModule.getHubWebContents === 'function') {
+                wc = utilsModule.getHubWebContents(win);
+            }
         } catch (_) {
-            return;
+            wc = null;
+        }
+        if (!wc) {
+            try {
+                wc = win.webContents || (win.id !== undefined && win.mainFrame ? win : null);
+            } catch (_) {
+                return;
+            }
         }
         if (!wc || safeIsDestroyed(wc)) return;
+        if (isWebviewContents(wc)) return;
 
         let hasLocalInitialUrl = false;
         let hasExplicitLocalOption = false;
+        let initialUrlStr = '';
         try {
             for (let i = 0; i < args.length; i++) {
                 const a = args[i];
@@ -578,12 +777,18 @@ function createIpcAuthorizer(options) {
                     if (a.length > 0) {
                         if (!isExplicitLocalUrl(a)) return;
                         hasLocalInitialUrl = true;
+                        if (!initialUrlStr) initialUrlStr = a;
                     }
                 } else if (a !== undefined && a !== null && typeof a === 'object') {
                     const optRes = inspectOptionsObject(a);
                     if (!optRes.ok) return;
                     if (optRes.explicitLocal) hasExplicitLocalOption = true;
-                    if (optRes.hasLocalUrl) hasLocalInitialUrl = true;
+                    if (optRes.hasLocalUrl) {
+                        hasLocalInitialUrl = true;
+                        if (!initialUrlStr) {
+                            initialUrlStr = typeof a.url === 'string' ? a.url : (typeof a.initialUrl === 'string' ? a.initialUrl : '');
+                        }
+                    }
                 }
             }
         } catch (_) {
@@ -610,7 +815,10 @@ function createIpcAuthorizer(options) {
             return;
         }
 
-        register(wc, typeof hookSource === 'string' ? hookSource : 'utils.createWindow');
+        register(wc, typeof hookSource === 'string' ? hookSource : 'utils.createWindow', {
+            win: win,
+            initialUrl: initialUrlStr,
+        });
     }
 
     function installCreateWindowHook(utilsModule, source) {
@@ -623,7 +831,7 @@ function createIpcAuthorizer(options) {
             const args = Array.prototype.slice.call(arguments);
             const result = original.apply(this, args);
             const registerWindow = function (win) {
-                evaluateCreatedWindow(args, win, hookSource);
+                evaluateCreatedWindow(args, win, hookSource, utilsModule);
             };
             try {
                 if (result && typeof result.then === 'function') {
@@ -670,6 +878,7 @@ const api = {
     DENY_MESSAGE: DENY_MESSAGE,
     isClearlyRemoteUrl: isClearlyRemoteUrl,
     isExplicitLocalUrl: isExplicitLocalUrl,
+    extractLoopbackOrigin: extractLoopbackOrigin,
     createIpcAuthorizer: createIpcAuthorizer,
 };
 

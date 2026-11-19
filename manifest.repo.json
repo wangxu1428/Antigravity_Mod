@@ -83,8 +83,8 @@
         },
         {
             "path": ".github/workflows/test.yml",
-            "size": 1277,
-            "sha256": "38A2BD0F7567ADC4C1BD3E37EF10A9BB512FAC044088F6191E97A9644DB98643"
+            "size": 1386,
+            "sha256": "B0A51489DE66AB0C1D1D15C87C512FAD248DDCF4AD1D2BC4CB65166E6603CC7A"
         },
         {
             "path": "docs/ARCHITECTURE.md",
@@ -138,8 +138,8 @@
         },
         {
             "path": "platform/mod_kit/agm_ipc_auth.js",
-            "size": 27838,
-            "sha256": "09DF8F21AFEF879FAF1C609788C70C41C29D77E9B861B122A9DD0B75EAD87E49"
+            "size": 35822,
+            "sha256": "56F3F7C0516D957F22CB8BF8D29534FB2C2229EB9716F85C38270CB3B8EC2E28"
         },
         {
             "path": "platform/mod_kit/agm_sidecar_reaper_core.js",
@@ -153,8 +153,8 @@
         },
         {
             "path": "platform/mod_kit/patch.js",
-            "size": 41159,
-            "sha256": "8630BC8F465E382F66305FAEB68019E63CAF7F1AE36BF184D8B933FCDD4BE034"
+            "size": 54244,
+            "sha256": "551ACB4FB6EA6EB36228277C6EBF2FD807D4AA5C6B60B996EE30E812724CFD34"
         },
         {
             "path": "platform/mod_kit/repatch.bat",
@@ -288,8 +288,8 @@
         },
         {
             "path": "platform/scripts/install-or-update.ps1",
-            "size": 28079,
-            "sha256": "BD9F8BD72C722A1513A43B27B4C7A2A86894AE73676DCD29ACC1C25A354C0395"
+            "size": 28102,
+            "sha256": "67B564F90D149F793509D076DE3674E45A3BB93B33DD6D5BBD9B07F63AC4BD92"
         },
         {
             "path": "platform/scripts/legacy-rollback/README.md",
@@ -353,13 +353,13 @@
         },
         {
             "path": "tests/test_repatch_unit.js",
-            "size": 33056,
-            "sha256": "15AE5E4E58EE497814193A31A412E57174885DC36E0DD6D0D2FC7A3B3C182F26"
+            "size": 33237,
+            "sha256": "B2A381EE59C63274D46D3A4A226B8C6714406B168E8A9C91A72A6E0A26973D1B"
         },
         {
             "path": "tests/test_fault_injection.js",
-            "size": 65971,
-            "sha256": "47147DDB8B893FE6BB9DBA834DE542F59DEBC2B1C6C918DB223224839E0A780D"
+            "size": 66152,
+            "sha256": "8468CE545067C085D9F17370E3AD9D1099B0735EDCC3E4B36BAA58D31222A263"
         },
         {
             "path": "tests/test_manifest_integrity.js",
@@ -368,8 +368,8 @@
         },
         {
             "path": "tests/test_compat_233_unit.js",
-            "size": 40973,
-            "sha256": "E7EF38C003935F8A03CEB85865039B2B97D4C34920F036CE2BB5C23E7A278873"
+            "size": 41155,
+            "sha256": "08F382AE7B66F0A2CEDE9B64713C1262CB6E85AB2D0CA1D0EC267184A71DB423"
         },
         {
             "path": "tests/test_compat_versions_unit.js",
@@ -380,6 +380,16 @@
             "path": "tests/test_ipc_sec_unit.js",
             "size": 55935,
             "sha256": "BD8B8B7A89EDC5D7DC699D1AE3A4DEBA8530B14E8716ABAED452EF0EBE25276C"
+        },
+        {
+            "path": "platform/mod_kit/agm_updater_auth.js",
+            "size": 33101,
+            "sha256": "8E24831023E83F802B1A8C9BBB070570A74B83FFD5CF85B6B1784A932C4C8993"
+        },
+        {
+            "path": "tests/test_updater_auth_unit.js",
+            "size": 59155,
+            "sha256": "875F081D684D1DDFE7D8820A4A521DB4F1639B66DA1175E3DF9123B16177E5A1"
         }
     ]
 }

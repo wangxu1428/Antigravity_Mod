@@ -20,6 +20,27 @@ if (!agmIpcAuthSource.includes('AGM_IPC_SEC_GATE_V1') || !agmIpcAuthSource.inclu
     process.exit(2);
 }
 
+// --- AGM_UPDATER_AUTH_V1: load updater authorization adapter & static scanner ---
+const agmUpdaterAuthPath = path.join(__dirname, 'agm_updater_auth.js');
+let agmUpdaterAuth = null;
+let agmUpdaterRuntimeSource = '';
+try {
+    agmUpdaterAuth = require(agmUpdaterAuthPath);
+    agmUpdaterRuntimeSource = agmUpdaterAuth.getRuntimeSource();
+} catch (e) {
+    console.error('[Patch][AGM] FATAL: updater authorization module missing or unreadable: platform/mod_kit/agm_updater_auth.js (' + e.message + ')');
+    process.exit(2);
+}
+if (!agmUpdaterAuth ||
+    agmUpdaterAuth.MARKER !== 'AGM_UPDATER_AUTH_V1' ||
+    typeof agmUpdaterAuth.createUpdaterAuthAdapter !== 'function' ||
+    typeof agmUpdaterAuth.canReceiveUpdaterBroadcast !== 'function' ||
+    typeof agmUpdaterAuth.scanUpdaterChannels !== 'function' ||
+    !agmUpdaterRuntimeSource.includes('AGM_UPDATER_AUTH_V1')) {
+    console.error('[Patch][AGM] FATAL: updater authorization module is incomplete or corrupted.');
+    process.exit(2);
+}
+
 const targetDir = process.argv[2];
 if (!targetDir || !fs.existsSync(targetDir)) {
     console.error('Usage: node patch.js <unpacked_temp_dir>');
@@ -29,6 +50,8 @@ if (!targetDir || !fs.existsSync(targetDir)) {
 const mainJsPath = path.join(targetDir, 'dist', 'main.js');
 const utilsJsPath = path.join(targetDir, 'dist', 'utils.js');
 const preloadJsPath = path.join(targetDir, 'dist', 'preload.js');
+const ipcHandlersJsPath = path.join(targetDir, 'dist', 'ipcHandlers.js');
+const updaterJsPath = path.join(targetDir, 'dist', 'updater.js');
 
 console.log('[Patch] Patching target dir:', targetDir);
 
@@ -44,15 +67,39 @@ try {
     process.exit(2);
 }
 
+// --- AGM_UPDATER_AUTH_V1: build-time static scan of dist/**/*.js and plugins/** ---
+(function runUpdaterStaticScan() {
+    const pluginsIdx = process.argv.indexOf('--plugins-dir');
+    let explicitPluginsDir = (pluginsIdx >= 0 && pluginsIdx + 1 < process.argv.length) ? process.argv[pluginsIdx + 1] : null;
+    if (!explicitPluginsDir) {
+        const siblingPlugins = path.join(__dirname, '..', 'plugins');
+        const repoPlugins = path.join(__dirname, '..', '..', 'plugins');
+        if (fs.existsSync(siblingPlugins)) explicitPluginsDir = siblingPlugins;
+        else if (fs.existsSync(repoPlugins)) explicitPluginsDir = repoPlugins;
+    }
+    const scanRes = agmUpdaterAuth.scanUpdaterChannels(targetDir, { pluginsDir: explicitPluginsDir });
+    if (!scanRes.ok) {
+        console.error('[Patch][AGM][UpdaterScan] FATAL: unknown or unprotected updater:* IPC detected:');
+        for (const v of scanRes.violations) {
+            console.error(`  - ${v.file}:L${v.line} [${v.kind}] ${v.detail}`);
+        }
+        console.error('[Patch][AGM] Build aborted. Nothing was written.');
+        process.exit(2);
+    }
+    console.log(`[Patch][AGM] Updater static scan PASS (files=${scanRes.scannedFiles}, inbound=${scanRes.inboundFound.length}, outbound=${scanRes.outboundFound.length}).`);
+})();
+
 // --- Read source files into memory before any write ---
-if (!fs.existsSync(mainJsPath) || !fs.existsSync(utilsJsPath) || !fs.existsSync(preloadJsPath)) {
-    console.error('[Patch][Hakimi] FATAL: missing dist/main.js, dist/utils.js, or dist/preload.js');
+if (!fs.existsSync(mainJsPath) || !fs.existsSync(utilsJsPath) || !fs.existsSync(preloadJsPath) || !fs.existsSync(ipcHandlersJsPath) || !fs.existsSync(updaterJsPath)) {
+    console.error('[Patch][Hakimi] FATAL: missing dist/main.js, dist/utils.js, dist/preload.js, dist/ipcHandlers.js, or dist/updater.js');
     process.exit(2);
 }
 
 let mainJs = fs.readFileSync(mainJsPath, 'utf8');
 let utilsJs = fs.readFileSync(utilsJsPath, 'utf8');
 let preloadJs = fs.readFileSync(preloadJsPath, 'utf8');
+const rawIpcHandlersJs = fs.readFileSync(ipcHandlersJsPath, 'utf8');
+const rawUpdaterJs = fs.readFileSync(updaterJsPath, 'utf8');
 
 function countLiteral(src, needle) {
     if (!needle) return 0;
@@ -93,6 +140,27 @@ function preflightHakimiAnchors(mJs, uJs, pJs) {
 
     checkLit('dist/utils.js', uJs, 'H_UTILS_1 webviewTag', 'webviewTag: true,', 'webviewTag: builtInBrowser,');
     checkLit('dist/utils.js', uJs, 'H_UTILS_2 devTools', 'devTools: true,', 'devTools: (0, debugConsole_1.isDebugConsoleEnabled)(),');
+
+    if (uJs.includes('function createWindow(') && !uJs.includes('AGM_UPDATER_AUTH_UTILS_CREATED_V1')) {
+        checkLit('dist/utils.js', uJs, 'AGM_UTILS_LEXICAL_CREATEWINDOW_KEYBIND', 'AGM_UPDATER_AUTH_UTILS_CREATED_V1', 'void createWindow(url, storageManager, { cascade: true });');
+        checkLit('dist/utils.js', uJs, 'AGM_UTILS_LEXICAL_CREATEWINDOW_SHOW', 'AGM_UPDATER_AUTH_UTILS_CREATED_V1', 'createWindow(`${constants_1.WINDOW_ORIGIN}:${port}/`);');
+    }
+
+    if (!rawIpcHandlersJs.includes('AGM_UPDATER_AUTH_IPC_V1')) {
+        const fullLocalRe = /function localOnly\(channel, handler\) \{\r?\n    electron_1\.ipcMain\.handle\(channel, \(event, \.\.\.args\) => \{\r?\n        if \(\(0, remoteWindowSecurity_1\.isRemoteContents\)\(event\?\.sender\)\) \{\r?\n            throw new Error\(`\$\{channel\} is not available in SSH windows`\);\r?\n        \}\r?\n        return handler\(event, \.\.\.args\);\r?\n    \}\);\r?\n\}/;
+        const synthLocalRe = /const localOnly = \(_?c, fn\) => fn;/;
+        const nFull = countRegex(rawIpcHandlersJs, fullLocalRe);
+        const nSynth = countRegex(rawIpcHandlersJs, synthLocalRe);
+        if (nFull !== 1 && nSynth !== 1) {
+            problems.push(`dist/ipcHandlers.js: anchor "AGM_UPDATER_LOCALONLY" matched full=${nFull}, synth=${nSynth} (expected exact 1)`);
+        }
+    }
+
+    if ((rawUpdaterJs.includes('function broadcastState(') || rawUpdaterJs.includes('updater:state-changed')) &&
+        !rawUpdaterJs.includes('AGM_UPDATER_AUTH_BROADCAST_V1')) {
+        checkLit('dist/updater.js', rawUpdaterJs, 'AGM_UPDATER_BROADCAST_LOOP', 'AGM_UPDATER_AUTH_BROADCAST_V1', 'for (const win of (0, utils_1.getHubWindows)()) {');
+        checkLit('dist/updater.js', rawUpdaterJs, 'AGM_UPDATER_BROADCAST_SEND', 'AGM_UPDATER_AUTH_BROADCAST_V1', "hubContents.send('updater:state-changed', state);");
+    }
 
     checkRe('dist/preload.js', pJs, 'H_PRELOAD_1 exposeInMainWorld sshRemote', "exposeInMainWorld('hakimiHost'", bridgeMarkerRe);
     if (!pJs.includes('HakimiPluginHost Initializer')) {
@@ -160,6 +228,15 @@ const __agmIpcGate = __agmIpcAuth.createIpcAuthorizer({
     remoteWindowSecurity: __agmRemoteWindowSecurity,
     windowBackends: __agmWindowBackends,
 });
+// --- AGM_UPDATER_AUTH_GATE_BIND: expose the single shared gate instance ---
+const __agmUpdaterAuth = (function () {
+    const module = { exports: {} };
+    const exports = module.exports;
+${agmUpdaterRuntimeSource}
+    return module.exports;
+})();
+__agmUpdaterAuth.bindSharedGate(__agmIpcGate);
+// --- end AGM_UPDATER_AUTH_GATE_BIND ---
 try {
     __agmIpcGate.installCreateWindowHook(utils_1, 'utils.createWindow');
 } catch (err) {
@@ -713,6 +790,17 @@ if (!utilsJs.includes('webviewTag: true,')) {
 if (!utilsJs.includes('devTools: true,')) {
     utilsJs = utilsJs.replace('devTools: (0, debugConsole_1.isDebugConsoleEnabled)(),', 'devTools: true,');
 }
+if (utilsJs.includes('function createWindow(') && !utilsJs.includes('AGM_UPDATER_AUTH_UTILS_CREATED_V1')) {
+    utilsJs = utilsJs.replace(
+        'void createWindow(url, storageManager, { cascade: true });',
+        'void exports.createWindow(url, storageManager, { cascade: true }); // AGM_UPDATER_AUTH_UTILS_CREATED_V1'
+    );
+    utilsJs = utilsJs.replace(
+        'createWindow(`${constants_1.WINDOW_ORIGIN}:${port}/`);',
+        'exports.createWindow(`${constants_1.WINDOW_ORIGIN}:${port}/`); // AGM_UPDATER_AUTH_UTILS_CREATED_V1'
+    );
+    console.log('[Patch] utils.js: Routed internal lexical createWindow() calls through exports.createWindow hook.');
+}
 console.log('[Patch] utils.js: Enabled webviewTag & devTools.');
 
 // -----------------------------------------------------------------------------
@@ -892,6 +980,7 @@ const requiredPreloadMarkers = [
 const missingPost = [];
 for (const m of requiredMainMarkers) if (!mainJs.includes(m)) missingPost.push('main.js:' + m);
 if (!mainJs.includes('AGM_IPC_SEC_GATE_V1')) missingPost.push('main.js:AGM_IPC_SEC_GATE_V1');
+if (!mainJs.includes('AGM_UPDATER_AUTH_GATE_BIND')) missingPost.push('main.js:AGM_UPDATER_AUTH_GATE_BIND');
 if (countRegex(mainJs, /secureHandle\('hakimi:/g) !== 13) {
     missingPost.push('main.js:hakimi handlers behind secureHandle != 13 (found ' + countRegex(mainJs, /secureHandle\('hakimi:/g) + ')');
 }
@@ -900,6 +989,14 @@ if (countRegex(mainJs, /electron_1\.ipcMain\.handle\('hakimi:/g) !== 0) {
 }
 if (!utilsJs.includes('webviewTag: true,')) missingPost.push('utils.js:webviewTag');
 if (!utilsJs.includes('devTools: true,')) missingPost.push('utils.js:devTools');
+if (utilsJs.includes('function createWindow(')) {
+    if (countLiteral(utilsJs, 'AGM_UPDATER_AUTH_UTILS_CREATED_V1') !== 2) {
+        missingPost.push('utils.js:internal lexical createWindow calls not both routed through exports.createWindow');
+    }
+    if (countRegex(utilsJs, /(?<!function\s)(?<!\.)\bcreateWindow\(/g) !== 0) {
+        missingPost.push('utils.js:bare lexical createWindow call remains');
+    }
+}
 for (const m of requiredPreloadMarkers) if (!preloadJs.includes(m)) missingPost.push('preload.js:' + m);
 
 if (missingPost.length > 0) {
@@ -908,7 +1005,7 @@ if (missingPost.length > 0) {
 }
 
 // -----------------------------------------------------------------------------
-// 4. Write Files & Validate All Files (including AGM locks)
+// 4. Write Files & Validate All Files (including AGM locks & updater auth)
 // -----------------------------------------------------------------------------
 // --- AGM: inject AGM_UPDATE_LOCK + AGM_SIDECAR_REAPER (+ optional --update-yml <path>) ---
 let agmFiles = [];
@@ -919,13 +1016,128 @@ try {
     process.exit(2);
 }
 
+// --- AGM_UPDATER_AUTH_V1: patch dist/ipcHandlers.js (post-lock) & dist/updater.js ---
+let ipcHandlersJs = fs.readFileSync(ipcHandlersJsPath, 'utf8');
+if (!ipcHandlersJs.includes('AGM_UPDATER_AUTH_IPC_V1')) {
+    const ipcAdapterPrelude = [
+        '// --- AGM_UPDATER_AUTH_IPC_V1: updater:* boundary adapter (Scheme B, D1-D5) ---',
+        'const __agmUpdaterAuthIpc = (function () {',
+        '    const module = { exports: {} };',
+        '    const exports = module.exports;',
+        agmUpdaterRuntimeSource,
+        '    return module.exports;',
+        '})();',
+        'const __agmUpdaterIpcAdapter = __agmUpdaterAuthIpc.createUpdaterAuthAdapter({',
+        '    getGate: function () { return __agmUpdaterAuthIpc.getSharedGate(); },',
+        '    logger: function (channel, reason) {',
+        '        try { console.warn(\'[AGM Updater IPC] denied channel=\' + channel + \' reason=\' + reason); } catch (_) {}',
+        '    },',
+        '    isRemoteContents: typeof remoteWindowSecurity_1 !== \'undefined\' && remoteWindowSecurity_1 && typeof remoteWindowSecurity_1.isRemoteContents === \'function\'',
+        '        ? function (sender) { return (0, remoteWindowSecurity_1.isRemoteContents)(sender); }',
+        '        : null,',
+        '    app: typeof electron_1 !== \'undefined\' && electron_1 ? electron_1.app : null,',
+        '});',
+        '// --- end AGM_UPDATER_AUTH_IPC_V1 ---',
+    ].join('\n');
+
+    const fullLocalRe = /function localOnly\(channel, handler\) \{\r?\n    electron_1\.ipcMain\.handle\(channel, \(event, \.\.\.args\) => \{\r?\n        if \(\(0, remoteWindowSecurity_1\.isRemoteContents\)\(event\?\.sender\)\) \{\r?\n            throw new Error\(`\$\{channel\} is not available in SSH windows`\);\r?\n        \}\r?\n        return handler\(event, \.\.\.args\);\r?\n    \}\);\r?\n\}/;
+    const synthLocalRe = /const localOnly = \(_?c, fn\) => fn;/;
+    if (fullLocalRe.test(ipcHandlersJs)) {
+        ipcHandlersJs = ipcHandlersJs.replace(fullLocalRe, () => [
+            ipcAdapterPrelude,
+            'function localOnly(channel, handler) {',
+            '    const __effectiveHandler = (typeof channel === \'string\' && channel.indexOf(\'updater:\') === 0)',
+            '        ? __agmUpdaterIpcAdapter.wrapUpdaterHandler(channel, handler)',
+            '        : handler;',
+            '    electron_1.ipcMain.handle(channel, (event, ...args) => {',
+            '        if ((typeof channel !== \'string\' || channel.indexOf(\'updater:\') !== 0) &&',
+            '            (0, remoteWindowSecurity_1.isRemoteContents)(event?.sender)) {',
+            '            throw new Error(`${channel} is not available in SSH windows`);',
+            '        }',
+            '        return __effectiveHandler(event, ...args);',
+            '    });',
+            '}',
+        ].join('\n'));
+        console.log('[Patch][AGM] ipcHandlers.js: Bound updater:* adapter inside localOnly (preserving I1..I3 locks).');
+    } else if (synthLocalRe.test(ipcHandlersJs)) {
+        ipcHandlersJs = ipcHandlersJs.replace(synthLocalRe, () => [
+            ipcAdapterPrelude,
+            'const localOnly = (channel, fn) => {',
+            '    return (typeof channel === \'string\' && channel.indexOf(\'updater:\') === 0)',
+            '        ? __agmUpdaterIpcAdapter.wrapUpdaterHandler(channel, fn)',
+            '        : fn;',
+            '};',
+        ].join('\n'));
+        console.log('[Patch][AGM] ipcHandlers.js: Bound updater:* adapter in synthetic harness localOnly.');
+    } else {
+        console.error('[Patch][AGM] FATAL: failed to inject updater auth adapter in dist/ipcHandlers.js.');
+        process.exit(2);
+    }
+}
+
+let updaterJs = fs.readFileSync(updaterJsPath, 'utf8');
+if ((updaterJs.includes('function broadcastState(') || updaterJs.includes('updater:state-changed')) &&
+    !updaterJs.includes('AGM_UPDATER_AUTH_BROADCAST_V1')) {
+    const broadcastPrelude = [
+        '// --- AGM_UPDATER_AUTH_BROADCAST_V1: local trusted window isolation for broadcastState ---',
+        'const __agmUpdaterAuthBroadcast = (function () {',
+        '    const module = { exports: {} };',
+        '    const exports = module.exports;',
+        agmUpdaterRuntimeSource,
+        '    return module.exports;',
+        '})();',
+        'function __agmUpdaterBroadcastAllowed(win, hubContents) {',
+        '    const rws = (function () { try { return require(\'./remote/remoteWindowSecurity\'); } catch (_) { return null; } })();',
+        '    const wb = (function () { try { return require(\'./remote/windowBackends\'); } catch (_) { return null; } })();',
+        '    return __agmUpdaterAuthBroadcast.canReceiveUpdaterBroadcast(win, hubContents, {',
+        '        getGate: function () { return __agmUpdaterAuthBroadcast.getSharedGate(); },',
+        '        remoteWindowSecurity: rws,',
+        '        windowBackends: wb,',
+        '    });',
+        '}',
+        '// --- end AGM_UPDATER_AUTH_BROADCAST_V1 ---',
+    ].join('\n');
+
+    updaterJs = updaterJs.replace('function broadcastState(state) {', broadcastPrelude + '\nfunction broadcastState(state) {');
+    updaterJs = updaterJs.replace(
+        'for (const win of (0, utils_1.getHubWindows)()) {',
+        'const __agmLocalWins = typeof utils_1.getLocalHubWindows === \'function\' ? utils_1.getLocalHubWindows() : [];\n    for (const win of __agmLocalWins) {'
+    );
+    updaterJs = updaterJs.replace(
+        "hubContents.send('updater:state-changed', state);",
+        "if (__agmUpdaterBroadcastAllowed(win, hubContents)) {\n                hubContents.send('updater:state-changed', state);\n            }"
+    );
+    console.log('[Patch][AGM] updater.js: Hardened broadcastState to trusted local Hub windows only.');
+}
+
+// Post-check ipcHandlers.js and updater.js BEFORE writing
+const missingUpdaterPost = [];
+if (!ipcHandlersJs.includes('AGM_UPDATER_AUTH_IPC_V1')) missingUpdaterPost.push('ipcHandlers.js:AGM_UPDATER_AUTH_IPC_V1');
+if (!ipcHandlersJs.includes('AGM_UPDATE_LOCK')) missingUpdaterPost.push('ipcHandlers.js:AGM_UPDATE_LOCK');
+if ((updaterJs.includes('function broadcastState(') || updaterJs.includes('updater:state-changed'))) {
+    if (!updaterJs.includes('AGM_UPDATER_AUTH_BROADCAST_V1')) missingUpdaterPost.push('updater.js:AGM_UPDATER_AUTH_BROADCAST_V1');
+    const bsStart = updaterJs.indexOf('function broadcastState(state)');
+    const bsEnd = updaterJs.indexOf('function getLastState()', bsStart);
+    if (bsStart < 0 || bsEnd <= bsStart || updaterJs.slice(bsStart, bsEnd).includes('getHubWindows')) {
+        missingUpdaterPost.push('updater.js:broadcastState still references getHubWindows');
+    }
+}
+if (missingUpdaterPost.length > 0) {
+    console.error('[Patch][AGM] FATAL: updater auth post-check failed:\n  - ' + missingUpdaterPost.join('\n  - '));
+    process.exit(2);
+}
+
 fs.writeFileSync(mainJsPath, mainJs, 'utf8');
 fs.writeFileSync(utilsJsPath, utilsJs, 'utf8');
 fs.writeFileSync(preloadJsPath, preloadJs, 'utf8');
+fs.writeFileSync(ipcHandlersJsPath, ipcHandlersJs, 'utf8');
+fs.writeFileSync(updaterJsPath, updaterJs, 'utf8');
 
 console.log('[Patch] Validating syntax with node --check...');
 execSync(`node --check "${mainJsPath}"`);
 execSync(`node --check "${utilsJsPath}"`);
 execSync(`node --check "${preloadJsPath}"`);
+execSync(`node --check "${ipcHandlersJsPath}"`);
+execSync(`node --check "${updaterJsPath}"`);
 for (const f of agmFiles) execSync(`node --check "${f}"`);
 console.log('[Patch] All files passed syntax check successfully!');
