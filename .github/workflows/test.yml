@@ -36,3 +36,5 @@ jobs:
         run: node tests/test_manifest_integrity.js
       - name: i18n teardown unit tests
         run: node tests/test_i18n_teardown_unit.js
+      - name: Compat 2.33.0 unit tests
+        run: node tests/test_compat_233_unit.js

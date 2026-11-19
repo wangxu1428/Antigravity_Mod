@@ -56,8 +56,8 @@ function countRegex(src, re) {
     return (src.match(g) || []).length;
 }
 
-const readyTargetRe = /    \(0, ipcHandlers_1\.registerIpcHandlers\)\(storageManager, \{\r?\n        resolveStorage: \(sender\) => hostStores\.forSender\(sender\),\r?\n        sidecarRoutesFor: \(sender\) => remoteManager\?\.sidecarRoutesFor\(sender\),\r?\n    \}\);/;
-const bridgeMarkerRe = /    electron_1\.contextBridge\.exposeInMainWorld\('sshRemote', createLocalSshRemoteAPI\(\)\);\r?\n\}/;
+const readyTargetRe = /^([ \t]*)(?:const[ \t]+[A-Za-z_$][\w$]*[ \t]*=[ \t]*)?\(0,[ \t]*ipcHandlers_1\.registerIpcHandlers\)\(storageManager,[ \t]*\{\r?\n(?:[ \t]+[A-Za-z_$][\w$]*:[^{};\r\n]+\r?\n){1,16}\1\}\);/m;
+const bridgeMarkerRe = /^([ \t]*)electron_1\.contextBridge\.exposeInMainWorld\('sshRemote',[ \t]*createLocalSshRemoteAPI\(\)\);/m;
 
 function preflightHakimiAnchors(mJs, uJs, pJs) {
     const problems = [];
@@ -636,25 +636,24 @@ if (mainJs.includes(sessTarget) && !mainJs.includes('configureHakimiSession(targ
     console.log('[Patch] main.js: Hooked session-created.');
 }
 
-const readyReplacement = `    (0, ipcHandlers_1.registerIpcHandlers)(storageManager, {
-        resolveStorage: (sender) => hostStores.forSender(sender),
-        sidecarRoutesFor: (sender) => remoteManager?.sidecarRoutesFor(sender),
-    });
-    // --- Register Hakimi IPC and Sessions ---
-    try {
-        registerHakimiIpcHandlers();
-        configureHakimiSession(electron_1.session.defaultSession);
-        const hakimiPartitions = ['persist:hakimi_gemini', 'persist:hakimi_gpt', 'persist:hakimi_grok'];
-        for (const p of hakimiPartitions) {
-            configureHakimiSession(electron_1.session.fromPartition(p));
-        }
-    } catch (err) {
-        console.error('[Hakimi] Setup error in whenReady:', err);
-    }
-    // ----------------------------------------`;
+const readyHakimiSetupCode = [
+    '',
+    '// --- Register Hakimi IPC and Sessions ---',
+    'try {',
+    '    registerHakimiIpcHandlers();',
+    '    configureHakimiSession(electron_1.session.defaultSession);',
+    "    const hakimiPartitions = ['persist:hakimi_gemini', 'persist:hakimi_gpt', 'persist:hakimi_grok'];",
+    '    for (const p of hakimiPartitions) {',
+    '        configureHakimiSession(electron_1.session.fromPartition(p));',
+    '    }',
+    '} catch (err) {',
+    "    console.error('[Hakimi] Setup error in whenReady:', err);",
+    '}',
+    '// ----------------------------------------',
+].join('\n');
 
 if (readyTargetRe.test(mainJs) && !mainJs.includes('Register Hakimi IPC and Sessions')) {
-    mainJs = mainJs.replace(readyTargetRe, readyReplacement);
+    mainJs = mainJs.replace(readyTargetRe, (m, indent) => m + readyHakimiSetupCode.replace(/\n/g, '\n' + indent));
     console.log('[Patch] main.js: Hooked whenReady.');
 }
 
@@ -694,7 +693,7 @@ electron_1.contextBridge.exposeInMainWorld('hakimiHost', hakimiHostAPI);
 // ------------------------------`;
 
 if (!preloadJs.includes("exposeInMainWorld('hakimiHost'")) {
-    preloadJs = preloadJs.replace(bridgeMarkerRe, (m) => m + hakimiBridgeCode);
+    preloadJs = preloadJs.replace(bridgeMarkerRe, (m, indent) => m + hakimiBridgeCode.replace(/\n/g, '\n' + indent));
     console.log('[Patch] preload.js: Exposed hakimiHost API.');
 }
 

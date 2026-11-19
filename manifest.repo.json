@@ -124,8 +124,8 @@
         },
         {
             "path": "platform/mod_kit/patch.js",
-            "size": 38949,
-            "sha256": "80D505E0E0E452D3371CD8450976EE5A551776DB8987A0411F1032B44AF11899"
+            "size": 38835,
+            "sha256": "C0EA793143497B5321FB8C6AA2CABE1AEDDDBE2A9959AE1182B07A220E2DEE2A"
         },
         {
             "path": "platform/mod_kit/repatch.bat",
@@ -134,8 +134,8 @@
         },
         {
             "path": "platform/mod_kit/repatch.ps1",
-            "size": 63149,
-            "sha256": "0D296B0003B15654D3E7C69CA2077CD3797B97E5ECDA40D7ABCF91AC18CC1C4D"
+            "size": 63265,
+            "sha256": "B06C2716645C034834F65B306A1E24F73FB31E9697D33F812EB795A4E7DAB682"
         },
         {
             "path": "platform/agm-plugin-host.js",
@@ -279,8 +279,8 @@
         },
         {
             "path": "platform/scripts/restore-official.ps1",
-            "size": 22537,
-            "sha256": "33D0E5DB783F3277CD2CB72B0DDE5FEBC21859ED197CD0E468C4E191EAD99DCA"
+            "size": 22653,
+            "sha256": "E3793ACB3A2742109B5743E4397C2E0BE20DAEC5ABE7BB6B9EE36C716E989C4E"
         },
         {
             "path": "platform/scripts/启动爆改版.bat",
@@ -336,6 +336,11 @@
             "path": "tests/test_manifest_integrity.js",
             "size": 9237,
             "sha256": "EF729CD43F6D6C9B16B6391E10B9EB7FC9C7ED16A7ADCFFEF10800D2D07BA07E"
+        },
+        {
+            "path": "tests/test_compat_233_unit.js",
+            "size": 39864,
+            "sha256": "A79B8478A265C4A7B84B407BC26DE3051FAE3F7D59A388DA86A45A583616DBF2"
         }
     ]
 }
