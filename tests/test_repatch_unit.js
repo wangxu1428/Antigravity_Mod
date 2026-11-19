@@ -1,4 +1,4 @@
-// tests/test_repatch_unit.js : Offline unit tests for platform/mod_kit/repatch.ps1 (RP1-RP6)
+// tests/test_repatch_unit.js : Offline unit tests for platform/mod_kit/repatch.ps1 (RP1-RP7)
 // Uses a synthetic fake `asar` CLI in os.tmpdir(); zero real Electron app.asar or network access.
 'use strict';
 
@@ -296,7 +296,7 @@ function runAll() {
   check('RP6', 'repatch.ps1 contains required hardening primitives', missingTokens.length === 0, { missingTokens });
 
   if (process.platform !== 'win32') {
-    console.log('INFO Non-Windows host detected; skipping Windows PowerShell execution cases RP1-RP5.');
+    console.log('INFO Non-Windows host detected; skipping Windows PowerShell execution cases RP1-RP5, RP7.');
     const f = results.filter((r) => !r.ok).length;
     console.log(`SUMMARY pass=${results.length - f} fail=${f}`);
     process.exitCode = f ? 1 : 0;
