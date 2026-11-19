@@ -36,7 +36,7 @@ docs(index): 添加插件索引模板
 
 不要把 `examples` 里的示范条目改成正式插件，也不要删掉字段说明。只改文档或索引、没有新发行包时，跳过第 3 步。
 
-`plugin-api/` 的接口规范尚未编写，由开发者负责。在规范落地前，不要自行添加接口、字段或协议。
+`plugin-api/` 预留用于存放独立版本化的接口规范与正式 Schema（当前 v2.1.0 已实现的插件接口、Manifest v1 与权限目录请参见 [`docs/PLUGIN_DEV_GUIDE.md`](docs/PLUGIN_DEV_GUIDE.md)）；在正式规范文件拆分落地前，请勿在 `plugin-api/` 自行添加冲突接口、字段或协议。
 
 ## 禁止内容
 

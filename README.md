@@ -60,12 +60,15 @@ Antigravity_Mod/
 │   ├── test_update_lock.js                    #   自动更新锁离线注入与拦截单测 (UL1-UL7)
 │   ├── test_reaper_unit.js                    #   Sidecar 进程收割器离线单测 (RU1-RU16)
 │   └── fixtures/agm-fault-probe/              #   异常抛错与死循环超时隔离测试探针
-├── docs/                                      # 架构文档与开发手册
+├── docs/                                      # 安装手册、发布说明、架构文档与开发指南
+│   ├── INSTALL.md                             #   安装、升级、官方还原与版本回滚指南（含 AI 助手护栏）
+│   ├── RELEASE_NOTES_2.1.0.md                 #   v2.1.0 发布说明、实测验证状态与已知问题
 │   ├── ARCHITECTURE.md                        #   AGM 插件插座与管理中心详细架构设计说明
 │   ├── WHITEPAPER.md                          #   技术架构与算法公式白皮书
-│   └── PLUGIN_DEV_GUIDE.md                    #   Manifest v1、权限目录、configSchema 与 Worker API 开发指南
+│   ├── PLUGIN_DEV_GUIDE.md                    #   Manifest v1、权限目录、configSchema 与 Worker API 开发指南
+│   └── versioning.md                          #   平台与插件版本策略及 Git 标签规则
 ├── index/                                     # 插件索引（plugins 数组当前为空，examples 仅格式示范）
-└── plugin-api/                                # 插件 API 规范（尚未编写，不要自行添加接口）
+└── plugin-api/                                # 插件 API 规范说明（当前 v2.1.0 规范见 docs/PLUGIN_DEV_GUIDE.md）
 ```
 
 ### 运行时布局（用户机器，未改）
@@ -86,6 +89,8 @@ Antigravity_Mod/
 ---
 
 ## 快速使用与离线测试 (Quick Start & Offline Tests)
+
+> 首次安装、升级、还原官方原版或回滚版本，请先阅读 **[安装指南 `docs/INSTALL.md`](docs/INSTALL.md)** 与 **[v2.1.0 发布说明 `docs/RELEASE_NOTES_2.1.0.md`](docs/RELEASE_NOTES_2.1.0.md)**（务必先以 `-DryRun` 预检并仅操作独立客户端副本，切勿改装日常主力安装）。
 
 ### 1. 运行纯离线单元测试（无需客户端，零生产写盘）
 ```bash

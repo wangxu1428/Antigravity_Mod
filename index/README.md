@@ -23,7 +23,7 @@
 | SHA256 | `sha256` | 发行包原始字节的 SHA256，64 位小写十六进制 |
 | 许可证 | `license` | 可选。该插件自身的许可证，建议使用 SPDX 标识符，例如 `MIT` |
 
-`platformCompatibility` 比较的是平台版本（标签 `platform-vX.Y.Z` 中的 `X.Y.Z`），使用 [node-semver](https://github.com/npm/node-semver) 范围语法，例如 `>=0.1.0 <1.0.0`。它不是 Antigravity 官方程序的版本号。
+`platformCompatibility` 比较的是平台版本（标签 `platform-vX.Y.Z` 中的 `X.Y.Z`），使用 [node-semver](https://github.com/npm/node-semver) 范围语法，例如 `>=2.1.0 <3.0.0`。它不是 Antigravity 官方程序的版本号。
 
 可选字段 `license`：记录该插件自己的许可证，不填写并不表示采用平台的 MIT 许可证。示例条目为 `MIT`。
 

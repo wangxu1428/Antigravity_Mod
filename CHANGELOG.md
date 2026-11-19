@@ -5,6 +5,12 @@
 
 ## [Unreleased]
 
+### Changed
+
+- 补齐 v2.1.0 安装与发布文档（`docs/INSTALL.md`、`docs/RELEASE_NOTES_2.1.0.md`），完成 `repatch.ps1` 与 `restore-official.ps1` 一次性隔离副本实测验收，收窄 `.gitignore` 过宽规则，清理 `docs/ARCHITECTURE.md` 实验室专有信息，对齐 `plugin-api/README.md` 与 `index/plugins.json`，移除脚本头初稿标记并同步更新 `manifest.repo.json`。
+
+## [2.1.0] - 2026-11-19
+
 ### Added
 
 - CI：新增 `.github/workflows/test.yml`，在 PR 和推送到 `main` 时于 `ubuntu-latest` 与 `windows-latest`（Node 20）运行离线测试（host 15 项、reaper 16 项、update lock 9 项，共 40 项）。

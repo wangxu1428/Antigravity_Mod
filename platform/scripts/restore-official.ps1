@@ -1,5 +1,5 @@
 ﻿# =============================================================================
-# Antigravity Mod (AGM) 官方纯净底座安全还原脚本 (初稿)
+# Antigravity Mod (AGM) 官方纯净底座安全还原脚本
 # platform/scripts/restore-official.ps1
 #
 # 核心安全准则：

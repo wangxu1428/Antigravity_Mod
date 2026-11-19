@@ -104,10 +104,9 @@ coverage/
 # 暂存树中的 `locales/` 改为 `/locales/`，只忽略仓库根下的 locales/，
 # 以便跟踪 plugins/builtin/hakimi-i18n/hakimi-i18n/locales/。
 
-# 用户运行态配置与已安装插件（platform/config.default.json 仍跟踪）
+# 用户运行态配置与已安装插件（限定于运行态路径；platform/config.default.json 仍跟踪）
 /UserData/
-config.json
-plugins/config.json
+/plugins/config.json
 state/
 plugins/state/
 packages/
@@ -120,12 +119,12 @@ displaced_*/
 *.bak_*
 *.orig
 
-# 官方 Electron / Chromium 资源的补充排除
-*.bin
+# 官方 Electron / Chromium 资源的补充排除（限定于应用根目录，避免误伤源码子目录）
+/*.bin
 *.dat
 *.asar.*
 /locales/
-resources/
+/resources/
 
 # 依赖、日志、缓存与临时目录的补充排除
 GPUCache/
@@ -136,8 +135,11 @@ verify/
 evidence/
 sandbox/
 
-# 浏览器配置档与站点数据
-Cookies
-Cookies-journal
-Local State
-Preferences
+# 浏览器配置档与站点数据（限定于运行态目录与配置档路径）
+/UserData/**/Preferences
+/Default/Preferences
+/Profile */Preferences
+/Preferences
+/Local State
+/Cookies
+/Cookies-journal
