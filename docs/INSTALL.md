@@ -97,7 +97,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\platform\scripts\install-o
 
 安装完成后，双击或命令行运行 `<TargetAppDir>\启动爆改版.bat`，它会以 `--user-data-dir="%~dp0UserData"` 启动独立的便携实例。默认**不开启** Chromium 远程调试端口；仅在本地排障时通过环境变量 `AGM_DEBUG_PORT` 或参数 `--debug-port <port>` 按需开启，切勿在共享设备上开启。
 
-> **`install-or-update.ps1` 测试状态说明**：已对照源码完成逻辑与路径保护静态核验，但本次发布前的隔离实测夹具仅覆盖 `repatch.ps1` 与 `restore-official.ps1`，**尚未执行 `install-or-update.ps1` 的端到端自动化实机安装测试**。首次在本地运行前请务必先执行 `-DryRun` 并在独立副本中验证。
+> **`install-or-update.ps1` 实测状态**：2026-11-19 已在一次性隔离副本中完成端到端实测，结果 **20/20 PASS（`OVERALL: PASS`）**：带 `-TargetAppDir` 与 `-SkipRepatch` 对全新目录先 `-DryRun`（零写盘）再正式安装，平台文件与仓库逐字节 SHA256 一致；对预埋用户数据的旧版目录连续两轮升级，12 个用户/受保护文件 SHA256 全程不变，`app-update.yml` 仅首轮备份，两轮结果幂等。重铸步骤（未带 `-SkipRepatch`）由下文 `repatch.ps1` 实测覆盖。首次在本地运行前仍建议先执行 `-DryRun`。
 
 ---
 

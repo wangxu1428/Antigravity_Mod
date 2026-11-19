@@ -61,14 +61,14 @@
 
 ### 3.3 `install-or-update.ps1` 测试状态
 
-- **状态**：已完成源码级保护逻辑审查，但本次发布的 `asar` 测试夹具**未包含 `install-or-update.ps1` 的端到端自动化实机安装测试**。请在使用时先执行 `-DryRun` 预检并在独立副本中确认。
+- **状态**：**20/20 PASS（`OVERALL: PASS`）**。2026-11-19 在一次性隔离副本中带 `-TargetAppDir` 与 `-SkipRepatch` 实测：全新目录 `-DryRun` 零写盘、正式安装后平台文件与仓库 SHA256 一致；预埋用户数据的旧版目录连续两轮升级，12 个用户/受保护文件 SHA256 不变，`app-update.yml` 仅首轮备份，结果幂等。
 
 ---
 
 ## 4. 已知问题与注意事项 (Known Issues & Caveats)
 
 1. **`app.asar.bak` 缺失时的备份污染陷阱**：如第 3.1 节用例 (d) 所验证，当目标目录缺少 `resources\app.asar.bak` 时，`repatch.ps1` 会将当前的 `resources\app.asar` 直接复制为 `.bak`。若当前 `app.asar` 已被打过补丁，生成的 `.bak` 将不再是官方原厂文件且无法再次通过 `agm_locks.js` 预检（触发 `exit 2`）。首次重铸前务必确认放入的是官方纯净 `app.asar`。
-2. **`install-or-update.ps1` 端到端自动安装测试待补**：当前自动化夹具仅验证了 `repatch.ps1` 与 `restore-official.ps1` 核心链路。
+2. **`install-or-update.ps1` 待加固项（不影响本次实测结论）**：未传 `-TargetAppDir` 且无 `AGM_ROOT` 时会静默回退到 `C:\Antigravity_Mod` 并默认重铸；目标目录只校验 `resources` 而未校验 `Antigravity.exe`；非提权运行时可能漏检提权客户端进程；受保护路径校验未解析符号链接/联接点；文件为逐个非原子覆写。
 3. **`restore-official.ps1` 不自动还原 `app-update.yml`**：还原官方 `app.asar` 后，`resources\app-update.yml` 仍保持禁用更新锁配置；如需恢复官方更新源，需手动将 `resources\app-update.yml.bak_<时间戳>` 改回 `resources\app-update.yml`。
 4. **官方版本升级锚点依赖**：若未来官方 Antigravity 客户端代码结构变化导致 `agm_locks.js`（14 处）或 `patch.js`（8 处）锚点失效，重铸会以 `exit 2` 中止且不会写坏 `app.asar`，需等待平台适配更新。
 5. **插件索引当前状态**：`index/plugins.json` 中正式收录数组 `plugins` 目前为空，仅包含一条 `example: true` 示范条目（兼容范围示例已更新为 `>=2.1.0 <3.0.0`）。
