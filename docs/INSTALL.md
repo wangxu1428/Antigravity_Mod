@@ -30,7 +30,7 @@
 | **Windows PowerShell 5.1+** | 运行 `.ps1` 安装、重铸与还原脚本（推荐 `powershell -NoProfile -ExecutionPolicy Bypass`）。 |
 | **Node.js** | 供 `mod_kit\patch.js` 注入补丁并执行 `node --check` 语法校验，也可用于运行离线单元测试。 |
 | **`asar` 或 `npx`** | `mod_kit\repatch.ps1` 需要解包和重打包 `app.asar`：优先使用 `PATH` 中的全局 `asar`（可通过 `npm i -g @electron/asar` 安装）；若无全局 `asar`，脚本会自动回退为 `npx asar`。 |
-| **关闭目标目录全部进程** | 安装、重铸与还原脚本均会扫描目标目录前缀下的所有运行中进程（含客户端本体与 Sidecar）。一旦检测到进程仍在运行，脚本会列出 PID 并以 `exit 3` 中止，**绝不强制杀进程**。 |
+| **关闭目标目录全部进程** | 安装、重铸与还原脚本均会扫描目标目录前缀下的所有运行中进程（含客户端本体与 Sidecar）。一旦检测到进程仍在运行，脚本会列出 PID 并以 `exit 3` 中止，如实汇报未替换 `app.asar` 及备份状态（若 `repatch.ps1` 在检测进程前已原子创建可信官方 `.bak`，则输出 `ABORTED_PROCESS_RUNNING_BACKUP_CREATED`；其余场景输出 `ABORTED_PROCESS_RUNNING`），**绝不强制杀进程**。 |
 
 ---
 
@@ -129,7 +129,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\platform\scripts\install-o
 
 标准流程为：
 1. 记录操作前 `resources\app-update.yml` 的存在性与 SHA256；核验 `resources\` 目录、`mod_kit\patch.js`、`node` 与 `asar`（或回退 `npx asar`）可用性；若目标 `app.asar` 存在且未创建 `.bak`，先校验其 SHA256 属于已知官方白名单（内置 `5B493943...`）再原子生成 `app.asar.bak`，**非官方版本绝不写入 `.bak`**（以 `exit 4` 中止）；若 `.bak` 已存在则只读校验其 SHA256 属于官方白名单，绝不覆盖，若发现 `.bak` 已被污染则报警并以 `exit 4` 拒绝解包与还原；
-2. 通过 `Get-CimInstance Win32_Process` 检查 `$RootDir\` 下是否有运行中进程，若有则列出 PID 并以 `exit 3` 中止（绝不杀进程）；目标 `app.asar` 若被外部进程独占锁定则以 `exit 10` 安全退出；
+2. 通过 `Get-CimInstance Win32_Process` 检查 `$RootDir\` 下是否有运行中进程，若有则列出 PID 并以 `exit 3` 中止（绝不杀进程），如实提示未替换 `app.asar` 及 `.bak` 状态（若第 1 步刚创建可信官方 `.bak` 则输出 `ABORTED_PROCESS_RUNNING_BACKUP_CREATED` 与备份路径/SHA256，若原本已有 `.bak` 则输出 `ABORTED_PROCESS_RUNNING` 与“已保留”，不再称“没有变更”或 `CLEAN_NO_CHANGE`）；目标 `app.asar` 若被外部进程独占锁定则以 `exit 10` 安全退出；
 3. 在同卷暂存目录 `resources\.agm_repatch_tmp_<时间戳>` 备份原 `app-update.yml`（若存在）并准备暂存输入（兼容首次安装 `app-update.yml` 不存在的情况，回退使用 `app-update.template.yml` 或内置默认模板）；若存在 `resources\app.asar.unpacked` 但缺失 `resources\app.asar.bak.unpacked`，先在临时区把 `.bak` 与 `app.asar.unpacked` 配对，再调用 `asar extract` 解包到 `%TEMP%\agm_rp_src_<时间戳>`，并显式校验 `$LASTEXITCODE`（非 `0` 立即中止）；
 4. 调用 `node mod_kit\patch.js "<TempSrc>" --update-yml "<stagedInput>" --update-yml-out "<stagedOut>"`：先预检 **14 个 AGM 锁锚点**（`AGM_UPDATE_LOCK` + `AGM_SIDECAR_REAPER`）与 **8 个 Hakimi 锚点**，并校验 `app-update.yml` 指向 `127.0.0.1:9`，任一失败则以 `exit 2` 中止且不改写任何 JS 或活动 YAML；随后对 6 个注入 JS 文件显式执行 `node --check`；
 5. 先调用 `asar pack ... --unpack "**/chrome-devtools-mcp/**"` 打包到隔离暂存区 `resources\.agm_repatch_tmp_<时间戳>\app.asar`（绝不直接写入目标 `app.asar`），显式校验 `$LASTEXITCODE`；
@@ -181,7 +181,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\platform\scripts\restore-o
 ### 5.2 还原行为说明
 
 1. 检查 `<TargetAppDir>\resources\app.asar.bak` 是否存在（缺失则以 `exit 2` 退出），并校验其 SHA256 属于官方白名单（支持 `-OfficialAsarHashes` / `AGM_OFFICIAL_ASAR_SHA256`；若 `.bak` 已被污染则打印 `ALARM` 并以 `exit 4` 拒绝还原）；
-2. 检查 `<TargetAppDir>\` 下是否有运行中进程（有则列出 PID 并以 `exit 3` 退出，绝不杀进程）；
+2. 检查 `<TargetAppDir>\` 下是否有运行中进程（有则列出 PID 并以 `exit 3` 退出，如实提示未替换 `app.asar` 且已保留既有可信官方 `.bak`，恢复状态 `ABORTED_PROCESS_RUNNING`，绝不杀进程）；
 3. 先复制到同卷暂存文件 `.agm_restore_tmp_<时间戳>\app.asar.official_stage` 并校验 SHA256 一致；若当前存在 `resources\app.asar`，则归档至 `<TargetAppDir>\displaced_mod_<时间戳>\app.asar.mod_patched` 并校验归档文件 SHA256 与还原前目标一致；
 4. 使用同卷 `[System.IO.File]::Replace`（保留替换前同卷备份 `app.asar.replace_bak`）原子还原至 `resources\app.asar`，并在 `try` 块内执行还原后 SHA256 复核；
 5. 若替换抛错或还原后 SHA256 不一致，绝不直接以非原子覆盖破坏目标或先删除恢复材料：先检查目标存在性与哈希，若目标被锁定/不可读则保留全部可信材料并报告 `UNKNOWN/NEEDS_RECOVERY`（`exit 10`）；若检测到目标缺失或哈希不一致，则从已校验的 `app.asar.replace_bak` 或 `app.asar.mod_patched` 通过同卷暂存 + `File.Replace` 原子安全回滚至还原前状态并二次校验（`RECOVERED_AUTO`）；若回滚再次失败，物理保留 `.agm_restore_tmp_*`、归档目录与 `.bak` 并报告 `FAILED_NEEDS_MANUAL_RECOVERY`（`exit 11`）；
@@ -238,5 +238,5 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\platform\scripts\restore-o
 | `File.Replace` 成功后异常 / 替换期间部分写入失败 / `unpacked` 首次或二次移动失败 / `unpacked` 后置校验失败 / YAML 写入或部分失败 | `9 / 10 / 12`（`restore` 为 `4 / 10`） | `RECOVERED_AUTO` | `CONSISTENT_ORIG` | **完全自动安全恢复** | 通过同卷暂存 + `File.Replace` + `[Directory]::Move` 原子回滚至操作前原状态并二次校验 SHA256，三者一致回退 |
 | `File.Replace` 抛出错误或替换完成后目标被外部锁定、SHA256 无法读取 | `10` | `UNKNOWN/NEEDS_RECOVERY` | `UNKNOWN_STATE` | **必须人工介入** | 物理保留 `app.asar.replace_bak`、`app.asar.prev_*`/`modded_prev_*` 或 `displaced_mod_*`；关闭占用进程后核对 SHA256 并用保留备份执行 `[System.IO.File]::Replace` |
 | 自动回滚再次失败（`app.asar` 回滚失败、`unpacked` 回滚失败/被锁、或 YAML 恢复失败） | `11` | `FAILED_NEEDS_MANUAL_RECOVERY` | `INCONSISTENT_*` | **必须人工介入** | `finally` 物理禁止删除 `.agm_repatch_tmp_*` / `.agm_restore_tmp_*`，完整保留唯一旧 `app.asar.unpacked.orig_bak`、`app-update.yml.orig_bak` 与 `app.asar.replace_bak`；解除占用后按输出命令手工恢复 |
-| 检测到运行中客户端/Sidecar 进程 | `3` | `CLEAN_NO_CHANGE` | `CONSISTENT_ORIG` | **需用户关闭进程** | 绝不强杀进程，请用户正常退出客户端后重试 |
+| 检测到运行中客户端/Sidecar 进程 | `3` | `ABORTED_PROCESS_RUNNING_BACKUP_CREATED`（`repatch.ps1` 先创建了可信 `.bak` 时）或 `ABORTED_PROCESS_RUNNING` | `CONSISTENT_ORIG` | **需用户关闭进程** | 未替换 `app.asar`、绝不强杀进程；如实提示已创建或已保留可信官方 `.bak`（无备份时不提备份），请用户正常退出客户端后重试 |
 | 现有 `app.asar.bak` 被污染或缺失 `.bak` 时目标不是白名单官方原版 | `4` | `CLEAN_NO_CHANGE` | `CONSISTENT_ORIG` | **必须人工补齐官方原版** | 从官方 2.32.1 安装目录提取纯净 `app.asar`（`5B493943...`）替换 `app.asar.bak` 或移除污染 `.bak` 后重试 |

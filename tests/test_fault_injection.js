@@ -390,6 +390,61 @@ async function withFileLock(filePath, accessMode, shareMode, fn) {
   }
 }
 
+async function withRunningProcessInDir(caseDir, fn) {
+  const comSpec = process.env.ComSpec || path.join(process.env.SystemRoot || 'C:\\Windows', 'System32', 'cmd.exe');
+  const dummyExe = path.join(caseDir, 'agm_dummy_proc.exe');
+  fs.copyFileSync(comSpec, dummyExe);
+
+  const child = spawn(dummyExe, ['/c', 'echo READY & set /p _agm_hold='], {
+    stdio: ['pipe', 'pipe', 'pipe'],
+    windowsHide: true,
+  });
+
+  await new Promise((resolve, reject) => {
+    let outBuf = '';
+    let errBuf = '';
+    const timer = setTimeout(() => {
+      reject(new Error(`Timed out waiting for dummy process in ${caseDir}: stdout=${outBuf} stderr=${errBuf}`));
+    }, 10000);
+    child.stdout.on('data', (chunk) => {
+      outBuf += chunk.toString('utf8');
+      if (outBuf.includes('READY')) { clearTimeout(timer); resolve(); }
+    });
+    child.stderr.on('data', (chunk) => { errBuf += chunk.toString('utf8'); });
+    child.once('exit', (code) => {
+      if (!outBuf.includes('READY')) {
+        clearTimeout(timer);
+        reject(new Error(`Dummy process exited early (code=${code}): stderr=${errBuf}`));
+      }
+    });
+  });
+
+  try {
+    return await fn(child.pid, dummyExe);
+  } finally {
+    try {
+      if (child.stdin && !child.stdin.destroyed) {
+        child.stdin.write('\r\n');
+        child.stdin.end();
+      }
+    } catch (_) {}
+    await new Promise((resolve) => {
+      let settled = false;
+      const killTimer = setTimeout(() => {
+        if (!settled) {
+          settled = true;
+          try { child.kill(); } catch (_) {}
+          resolve();
+        }
+      }, 2500);
+      child.once('close', () => {
+        if (!settled) { settled = true; clearTimeout(killTimer); resolve(); }
+      });
+    });
+    try { fs.rmSync(dummyExe, { force: true }); } catch (_) {}
+  }
+}
+
 async function runAll() {
   // FI-S1: Cross-platform static contract check on R3 hardening tokens
   {
@@ -401,24 +456,26 @@ async function runAll() {
       'FAILED_NEEDS_MANUAL_RECOVERY',
       'RECOVERED_AUTO',
       'CLEAN_NO_CHANGE',
+      'ABORTED_PROCESS_RUNNING',
       '[AGM][Status]',
       'Get-Sha256Upper',
     ];
-    const missRepatch = requiredCommon.concat(['RESTORE_FAILED_BACKUP_RETAINED', 'mustRetainForUnpacked', 'UNCHANGED_ALREADY_CONFORMANT'])
+    const missRepatch = requiredCommon.concat(['RESTORE_FAILED_BACKUP_RETAINED', 'mustRetainForUnpacked', 'UNCHANGED_ALREADY_CONFORMANT', 'ABORTED_PROCESS_RUNNING_BACKUP_CREATED'])
       .filter((t) => !repatchSrc.includes(t));
     const missRestore = requiredCommon.concat(['mustRetain', 'app.asar.replace_bak'])
       .filter((t) => !restoreSrc.includes(t));
-    const missInstaller = ['Get-Sha256Upper', 'Build-DesiredUpdateYmlPlan', 'StagedUpdateYmlPath', 'ALREADY_CONFORMANT', 'SURGICAL_UPDATE']
+    const missInstaller = ['Get-Sha256Upper', 'Build-DesiredUpdateYmlPlan', 'StagedUpdateYmlPath', 'ALREADY_CONFORMANT', 'SURGICAL_UPDATE', 'ABORTED_PROCESS_RUNNING', 'ABORTED_PROCESS_RUNNING_BACKUP_CREATED']
       .filter((t) => !installerSrc.includes(t));
     const hasMoveItem = /\bMove-Item\b/i.test(repatchSrc);
     const hasGetFileHash = /\bGet-FileHash\b/i.test(repatchSrc) || /\bGet-FileHash\b/i.test(restoreSrc) || /\bGet-FileHash\b/i.test(installerSrc);
+    const hasStaleNothingChanged = repatchSrc.includes('Nothing was changed.') || restoreSrc.includes('Nothing was changed.') || installerSrc.includes('Nothing was changed.');
 
     check(
       'FI-S1',
-      'R3 recovery state machine, physical retain guards, .NET SHA256, and zero Move-Item/Get-FileHash tokens present across scripts',
-      missRepatch.length === 0 && missRestore.length === 0 && missInstaller.length === 0 && !hasMoveItem && !hasGetFileHash,
-      { missRepatch, missRestore, missInstaller, hasMoveItem, hasGetFileHash },
-      { command: 'static-contract-check', exitCode: 0, statusMap: {}, extra: { missRepatch, missRestore, missInstaller, hasMoveItem, hasGetFileHash } }
+      'R3 recovery state machine, truthful exit-3 states, physical retain guards, .NET SHA256, and zero Move-Item/Get-FileHash tokens present across scripts',
+      missRepatch.length === 0 && missRestore.length === 0 && missInstaller.length === 0 && !hasMoveItem && !hasGetFileHash && !hasStaleNothingChanged,
+      { missRepatch, missRestore, missInstaller, hasMoveItem, hasGetFileHash, hasStaleNothingChanged },
+      { command: 'static-contract-check', exitCode: 0, statusMap: {}, extra: { missRepatch, missRestore, missInstaller, hasMoveItem, hasGetFileHash, hasStaleNothingChanged } }
     );
   }
 
@@ -464,14 +521,14 @@ async function runAll() {
   }
 
   if (process.platform !== 'win32') {
-    console.log('INFO Non-Windows host detected; skipping Windows PowerShell/Win32 File.Replace fault injection scenarios FI-R1..FI-R8b, FI-U1..FI-U5b, FI-Y1..FI-Y6.');
+    console.log('INFO Non-Windows host detected; skipping Windows PowerShell/Win32 File.Replace fault injection scenarios FI-R1..FI-R8b, FI-U1..FI-U5b, FI-Y1..FI-Y6, FI-P1..FI-P3.');
     const f = results.filter((r) => !r.ok).length;
     console.log(`SUMMARY pass=${results.length - f} fail=${f}`);
     process.exitCode = f ? 1 : 0;
     return;
   }
 
-  const rootTmp = fs.mkdtempSync(path.join(os.tmpdir(), 'agm_fi_win_'));
+  const rootTmp = fs.realpathSync.native(fs.mkdtempSync(path.join(os.tmpdir(), 'agm_fi_win_')));
   try {
     const fakeBinDir = path.join(rootTmp, 'fakebin');
     const psTempDir = path.join(rootTmp, 'pstemp');
@@ -1159,6 +1216,144 @@ async function runAll() {
           statusMap: resA.statusMap,
           rawOutput: resA.rawOutput + '\n--- MISSING ---\n' + resB.rawOutput + '\n--- SKIPREPATCH ---\n' + resC.rawOutput,
           extra: { shaPreA, shaPostA, existsAfterB, shaPreC, shaPostC },
+        }
+      );
+    }
+
+    // =========================================================================
+    // Group D: Process Running exit 3 Truthful Status (FI-P1 .. FI-P3)
+    // =========================================================================
+
+    // FI-P1: repatch.ps1 creates trusted official .bak first, then aborts exit 3 due to running process -> truthful backup-created message & ABORTED_PROCESS_RUNNING_BACKUP_CREATED
+    {
+      const caseDir = path.join(rootTmp, 'fi_p1_exit3_bak_created');
+      const { modKitDir, resDir, asarPath, origHash } = setupFakeApp(caseDir);
+      const bakPath = path.join(resDir, 'app.asar.bak');
+      const res = await withRunningProcessInDir(caseDir, () =>
+        runPs1(
+          path.join(modKitDir, 'repatch.ps1'),
+          ['-TargetAppDir', caseDir],
+          fakeBinDir,
+          psTempDir,
+          { AGM_FAKE_ASAR_MODE: 'ok', AGM_OFFICIAL_ASAR_SHA256: origHash }
+        )
+      );
+      const bakExists = fs.existsSync(bakPath);
+      const bakHash = sha256File(bakPath);
+      const afterAsarHash = sha256File(asarPath);
+      check(
+        'FI-P1',
+        'repatch.ps1 exit 3 after creating trusted .bak truthfully reports backup creation and ABORTED_PROCESS_RUNNING_BACKUP_CREATED',
+        res.status === 3 &&
+          res.statusMap.RECOVERY_STATE === 'ABORTED_PROCESS_RUNNING_BACKUP_CREATED' &&
+          res.statusMap.CONSISTENCY_STATE === 'CONSISTENT_ORIG' &&
+          bakExists &&
+          bakHash === origHash &&
+          afterAsarHash === origHash &&
+          res.rawOutput.includes('已创建可信官方备份') &&
+          res.rawOutput.includes(bakPath) &&
+          !res.rawOutput.includes('CLEAN_NO_CHANGE') &&
+          !res.rawOutput.includes('Nothing was changed') &&
+          !res.rawOutput.includes('没有变更'),
+        { status: res.status, statusMap: res.statusMap, bakExists, bakHash, origHash, afterAsarHash, out: res.rawOutput.slice(-800) },
+        { command: res.command, exitCode: res.status, statusMap: res.statusMap, rawOutput: res.rawOutput, extra: { origHash, bakHash, afterAsarHash, bakPath } }
+      );
+    }
+
+    // FI-P2: repatch.ps1 with pre-existing trusted .bak aborts exit 3 -> reports retained backup & ABORTED_PROCESS_RUNNING
+    {
+      const caseDir = path.join(rootTmp, 'fi_p2_exit3_bak_retained');
+      const { modKitDir, resDir, asarPath, origHash } = setupFakeApp(caseDir);
+      const bakPath = path.join(resDir, 'app.asar.bak');
+      fs.copyFileSync(asarPath, bakPath);
+      const res = await withRunningProcessInDir(caseDir, () =>
+        runPs1(
+          path.join(modKitDir, 'repatch.ps1'),
+          ['-TargetAppDir', caseDir],
+          fakeBinDir,
+          psTempDir,
+          { AGM_FAKE_ASAR_MODE: 'ok', AGM_OFFICIAL_ASAR_SHA256: origHash }
+        )
+      );
+      const bakHash = sha256File(bakPath);
+      const afterAsarHash = sha256File(asarPath);
+      check(
+        'FI-P2',
+        'repatch.ps1 exit 3 with pre-existing trusted .bak reports retained backup and ABORTED_PROCESS_RUNNING',
+        res.status === 3 &&
+          res.statusMap.RECOVERY_STATE === 'ABORTED_PROCESS_RUNNING' &&
+          res.statusMap.CONSISTENCY_STATE === 'CONSISTENT_ORIG' &&
+          bakHash === origHash &&
+          afterAsarHash === origHash &&
+          res.rawOutput.includes('已保留') &&
+          res.rawOutput.includes(bakPath) &&
+          !res.rawOutput.includes('已创建可信官方备份') &&
+          !res.rawOutput.includes('CLEAN_NO_CHANGE') &&
+          !res.rawOutput.includes('Nothing was changed') &&
+          !res.rawOutput.includes('没有变更'),
+        { status: res.status, statusMap: res.statusMap, bakHash, origHash, afterAsarHash, out: res.rawOutput.slice(-800) },
+        { command: res.command, exitCode: res.status, statusMap: res.statusMap, rawOutput: res.rawOutput, extra: { origHash, bakHash, afterAsarHash, bakPath } }
+      );
+    }
+
+    // FI-P3: restore-official.ps1 & install-or-update.ps1 exit 3 truthful prompt & ABORTED_PROCESS_RUNNING (with & without .bak)
+    {
+      const caseDir = path.join(rootTmp, 'fi_p3_exit3_restore_and_installer');
+      const { resDir, asarPath, origHash } = setupFakeApp(caseDir);
+      const bakPath = path.join(resDir, 'app.asar.bak');
+
+      // Subcase A: install-or-update.ps1 without .bak -> no mention of backup, ABORTED_PROCESS_RUNNING
+      const instNoBak = await withRunningProcessInDir(caseDir, () =>
+        runPs1(INSTALLER_PS1, ['-TargetAppDir', caseDir], fakeBinDir, psTempDir, {})
+      );
+      const bakAfterInstNoBak = fs.existsSync(bakPath);
+
+      // Subcase B & C: pre-create trusted .bak, run restore-official.ps1 and install-or-update.ps1 -> retained backup, ABORTED_PROCESS_RUNNING
+      fs.copyFileSync(asarPath, bakPath);
+      const restoreRes = await withRunningProcessInDir(caseDir, () =>
+        runPs1(RESTORE_PS1, ['-TargetAppDir', caseDir], fakeBinDir, psTempDir, { AGM_OFFICIAL_ASAR_SHA256: origHash })
+      );
+      const instWithBak = await withRunningProcessInDir(caseDir, () =>
+        runPs1(INSTALLER_PS1, ['-TargetAppDir', caseDir], fakeBinDir, psTempDir, {})
+      );
+
+      const noStale = (txt) =>
+        !txt.includes('CLEAN_NO_CHANGE') && !txt.includes('Nothing was changed') && !txt.includes('没有变更');
+
+      check(
+        'FI-P3',
+        'restore-official.ps1 and install-or-update.ps1 exit 3 report ABORTED_PROCESS_RUNNING and truthful backup state (omitted when absent, retained when present)',
+        instNoBak.status === 3 &&
+          instNoBak.statusMap.RECOVERY_STATE === 'ABORTED_PROCESS_RUNNING' &&
+          !bakAfterInstNoBak &&
+          instNoBak.rawOutput.includes('未替换 app.asar') &&
+          !instNoBak.rawOutput.includes('备份') &&
+          noStale(instNoBak.rawOutput) &&
+          restoreRes.status === 3 &&
+          restoreRes.statusMap.RECOVERY_STATE === 'ABORTED_PROCESS_RUNNING' &&
+          restoreRes.rawOutput.includes('已保留') &&
+          restoreRes.rawOutput.includes(bakPath) &&
+          noStale(restoreRes.rawOutput) &&
+          instWithBak.status === 3 &&
+          instWithBak.statusMap.RECOVERY_STATE === 'ABORTED_PROCESS_RUNNING' &&
+          instWithBak.rawOutput.includes('已保留') &&
+          instWithBak.rawOutput.includes(bakPath) &&
+          noStale(instWithBak.rawOutput),
+        {
+          instNoBakStatus: instNoBak.status,
+          instNoBakMap: instNoBak.statusMap,
+          bakAfterInstNoBak,
+          restoreStatus: restoreRes.status,
+          restoreMap: restoreRes.statusMap,
+          instWithBakStatus: instWithBak.status,
+          instWithBakMap: instWithBak.statusMap,
+        },
+        {
+          command: `${instNoBak.command} | ${restoreRes.command} | ${instWithBak.command}`,
+          exitCode: restoreRes.status,
+          statusMap: restoreRes.statusMap,
+          rawOutput: instNoBak.rawOutput + '\n--- RESTORE ---\n' + restoreRes.rawOutput + '\n--- INSTALLER_WITH_BAK ---\n' + instWithBak.rawOutput,
+          extra: { origHash, bakPath, bakAfterInstNoBak },
         }
       );
     }

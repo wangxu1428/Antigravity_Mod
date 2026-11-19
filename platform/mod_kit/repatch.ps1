@@ -235,6 +235,7 @@ $TargetExistedBefore = $false
 $TempAsarHash = $null
 $FinalTargetHash = $null
 $AsarBakHash = $null
+$OfficialBakCreatedThisRun = $false
 $BakPolluted = $false
 $SimulatedTargetLocked = $false
 
@@ -418,6 +419,7 @@ if (Test-Path -LiteralPath $AsarBak) {
         } else {
             [System.IO.File]::Move($bakTmp, $AsarBak)
             $AsarBakHash = $OrigTargetHash
+            $OfficialBakCreatedThisRun = $true
         }
     } catch {
         if (Test-Path -LiteralPath $bakTmp) {
@@ -505,7 +507,16 @@ $agmBusy = @(Get-CimInstance Win32_Process | Where-Object {
 })
 if ($agmBusy.Count -gt 0) {
     $agmBusy | ForEach-Object { Write-Host ("  busy: PID {0} {1}" -f $_.ProcessId, $_.ExecutablePath) -ForegroundColor Red }
-    Write-Host "[AGM] C Mod processes are still running (incl. possible historical sidecar orphans). Close them / clean them with explicit approval, then retry. Nothing was changed." -ForegroundColor Red
+    if ($OfficialBakCreatedThisRun) {
+        $OverallRecoveryState = "ABORTED_PROCESS_RUNNING_BACKUP_CREATED"
+        Write-Host ("[AGM][Repatch] 目标进程正在运行（含可能残留的 Sidecar 进程），未替换 app.asar；已创建可信官方备份：{0}（SHA256={1}）。请先关闭目标进程后再重试（本脚本绝不强制杀进程）。" -f $AsarBak, $AsarBakHash) -ForegroundColor Red
+    } elseif (Test-Path -LiteralPath $AsarBak -PathType Leaf) {
+        $OverallRecoveryState = "ABORTED_PROCESS_RUNNING"
+        Write-Host ("[AGM][Repatch] 目标进程正在运行（含可能残留的 Sidecar 进程），未替换 app.asar；已保留既有可信官方备份：{0}（SHA256={1}）。请先关闭目标进程后再重试（本脚本绝不强制杀进程）。" -f $AsarBak, $AsarBakHash) -ForegroundColor Red
+    } else {
+        $OverallRecoveryState = "ABORTED_PROCESS_RUNNING"
+        Write-Host "[AGM][Repatch] 目标进程正在运行（含可能残留的 Sidecar 进程），未替换 app.asar。请先关闭目标进程后再重试（本脚本绝不强制杀进程）。" -ForegroundColor Red
+    }
     Write-RollbackHint
     Write-StructuredStatus -ExitCode 3
     exit 3

@@ -178,3 +178,18 @@
 - **是否将 `tests/test_repatch_unit.js`（及 R3 新增发行测试）纳入 Manifest 的评估结论**：**应当纳入**。理由：`tests/test_repatch_unit.js`、`tests/test_fault_injection.js`、`tests/test_manifest_integrity.js` 与 `docs/WINDOWS_TEST_EVIDENCE.md` 均通过 `git archive` 随发行仓库分发并直接参与 CI 与本地发行门禁校验（已有 `test_host_unit.js`、`test_reaper_unit.js`、`test_update_lock.js` 也均在 `manifest.repo.json` 内），纳入清单可保证测试门禁代码本身的完整性与可溯源性；而 `manifest.repo.json` 自身不可自引用（SHA256 无法包含自身）。
 - **自动恢复 vs 人工介入边界**：详见 [`docs/INSTALL.md`](INSTALL.md) 第 8 节对照表。
 - **热重载状态**：`client_h` 维持 **UNKNOWN**（不在本 PR 修复范围，未修改插件）。
+
+### 6.4 PR #8 R3 `exit 3` 提示如实化补丁实测（`2026-11-19`）
+
+> 本节为 PR #8 R3 独立审计后的增量补丁实测记录（保留上文 6.1–6.3 节历史结果不变）：修复 `repatch.ps1`、`restore-official.ps1`、`install-or-update.ps1` 在 `exit 3`（目标进程正在运行）路径下的提示文本与恢复状态输出——不再输出“没有变更 / Nothing was changed”与 `CLEAN_NO_CHANGE`，改为如实区分 `ABORTED_PROCESS_RUNNING_BACKUP_CREATED`（`repatch.ps1` 已先原子创建可信官方 `.bak`）与 `ABORTED_PROCESS_RUNNING`（保留既有备份或无备份中止）。
+
+- **全量离线单测补充与重跑**：`tests/test_fault_injection.js` 新增 `FI-P1`（无 `.bak` 触发 `exit 3` 验证已创建 `.bak` 与 `ABORTED_PROCESS_RUNNING_BACKUP_CREATED`）、`FI-P2`（已有 `.bak` 触发 `exit 3` 验证“已保留”与 `ABORTED_PROCESS_RUNNING`）、`FI-P3`（`restore-official.ps1` 与 `install-or-update.ps1` 有/无 `.bak` 触发 `exit 3` 验证 `ABORTED_PROCESS_RUNNING`），并同步 `FI-S1` 静态契约。全套 6 个单测全部通过：`test_host_unit.js` **15/15**、`test_reaper_unit.js` **16/16**、`test_update_lock.js` **11/11**、`test_repatch_unit.js` **14/14**、`test_fault_injection.js` **26/26**（模拟 Linux 2/2）、`test_manifest_integrity.js` **5/5**（共 **87/87 PASS**）。
+- **W 隔离官方夹具实跑（`5B493943...`，原始证据 `evidence/r3/exit3_patch/exit3_fixture_evidence.txt`，SHA256 `84FAD3E2646C2AEBC528394C664443D7E8B02CFC71C71762896D5E3D3EE36BA8`）**：
+
+| 场景 | 脚本与初始备份状态 | 退出码 | 恢复状态 (`RECOVERY_STATE`) | `.bak` SHA256 与关键提示结论 |
+|---|---|---|---|---|
+| `Scene 0` | `install-or-update.ps1`（无 `.bak`） | `exit 3` | `ABORTED_PROCESS_RUNNING` | `.bak` 仍 `MISSING`；提示“未同步平台文件、未替换 app.asar”，不提备份、无 `CLEAN_NO_CHANGE` |
+| `Scene 1` | `repatch.ps1`（无 `.bak`，创建后遇运行中进程） | `exit 3` | `ABORTED_PROCESS_RUNNING_BACKUP_CREATED` | 已创建 `.bak` = `5B493943E67E500638555315594D5B1ACBC7A02E6DAC3C786651921C1EE8519F`；目标 `app.asar` 未替换（仍 `5B493943...`）；提示明确列出“已创建可信官方备份：路径” |
+| `Scene 2` | `repatch.ps1`（已有 `.bak`） | `exit 3` | `ABORTED_PROCESS_RUNNING` | `.bak` 维持 `5B493943...`；提示“已保留既有可信官方备份：路径” |
+| `Scene 3` | `restore-official.ps1`（已有 `.bak`） | `exit 3` | `ABORTED_PROCESS_RUNNING` | `.bak` 维持 `5B493943...`；提示“已保留既有可信官方备份：路径” |
+| `Scene 4` | `install-or-update.ps1`（已有 `.bak`） | `exit 3` | `ABORTED_PROCESS_RUNNING` | `.bak` 维持 `5B493943...`；提示“未同步平台文件、未替换 app.asar；已保留既有备份：路径” |

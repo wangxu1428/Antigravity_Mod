@@ -254,7 +254,13 @@ if ($RunningProcesses.Count -gt 0) {
     foreach ($proc in $RunningProcesses) {
         Write-Host ("  [运行中进程] PID {0} : {1}" -f $proc.ProcessId, $proc.ExecutablePath) -ForegroundColor Red
     }
-    Write-Host "[AGM] 目标目录下仍有客户端或 Sidecar 进程运行。请先关闭客户端后再执行安装/升级（本脚本绝不强制杀进程）。" -ForegroundColor Red
+    $existingBakPath = Join-Path $TargetResourcesDir 'app.asar.bak'
+    if (Test-Path -LiteralPath $existingBakPath -PathType Leaf) {
+        Write-Host ("[AGM][Installer] 目标进程正在运行（含客户端或 Sidecar 进程），未同步平台文件、未替换 app.asar；已保留既有备份：{0}。请先关闭客户端后再执行安装/升级（本脚本绝不强制杀进程）。" -f $existingBakPath) -ForegroundColor Red
+    } else {
+        Write-Host "[AGM][Installer] 目标进程正在运行（含客户端或 Sidecar 进程），未同步平台文件、未替换 app.asar。请先关闭客户端后再执行安装/升级（本脚本绝不强制杀进程）。" -ForegroundColor Red
+    }
+    Write-Host "[AGM][Installer][Status] EXIT_CODE=3 RECOVERY_STATE=ABORTED_PROCESS_RUNNING"
     exit 3
 }
 
@@ -375,6 +381,8 @@ try {
     # 8. 事务化提交 app-update.yml 与（未传 -SkipRepatch 时）重铸 resources\app.asar
     if (-not $SkipRepatch) {
         $TargetRepatchScript = Join-Path $TargetModKitDir 'repatch.ps1'
+        $TargetAsarBakPath = Join-Path $TargetResourcesDir 'app.asar.bak'
+        $BakExistedBeforeRepatch = Test-Path -LiteralPath $TargetAsarBakPath -PathType Leaf
         Write-Host "正在调用 mod_kit\repatch.ps1 重铸 resources\app.asar（活动 app-update.yml 将在 ASAR 校验及替换完成后原子提交）..." -ForegroundColor Yellow
 
         $repatchArgs = @('-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', $TargetRepatchScript, '-TargetAppDir', $TargetAppDir)
@@ -386,10 +394,24 @@ try {
         if ($null -eq $repatchExit) { $repatchExit = 0 }
 
         if ($repatchExit -ne 0) {
-            Write-Host ("[AGM][Installer] ERROR: repatch.ps1 执行失败，退出码: {0}" -f $repatchExit) -ForegroundColor Red
+            if ($repatchExit -eq 3) {
+                $bakExistsNow = Test-Path -LiteralPath $TargetAsarBakPath -PathType Leaf
+                if ((-not $BakExistedBeforeRepatch) -and $bakExistsNow) {
+                    $installerRecState = 'ABORTED_PROCESS_RUNNING_BACKUP_CREATED'
+                    Write-Host ("[AGM][Installer] 目标进程正在运行，repatch.ps1 已中止（exit 3），未替换 app.asar；平台文件已同步，已创建可信官方备份：{0}。请先关闭客户端后再重试（本脚本绝不强制杀进程）。" -f $TargetAsarBakPath) -ForegroundColor Red
+                } elseif ($bakExistsNow) {
+                    $installerRecState = 'ABORTED_PROCESS_RUNNING'
+                    Write-Host ("[AGM][Installer] 目标进程正在运行，repatch.ps1 已中止（exit 3），未替换 app.asar；平台文件已同步，已保留既有可信官方备份：{0}。请先关闭客户端后再重试（本脚本绝不强制杀进程）。" -f $TargetAsarBakPath) -ForegroundColor Red
+                } else {
+                    $installerRecState = 'ABORTED_PROCESS_RUNNING'
+                    Write-Host "[AGM][Installer] 目标进程正在运行，repatch.ps1 已中止（exit 3），未替换 app.asar；平台文件已同步。请先关闭客户端后再重试（本脚本绝不强制杀进程）。" -ForegroundColor Red
+                }
+            } else {
+                Write-Host ("[AGM][Installer] ERROR: repatch.ps1 执行失败，退出码: {0}" -f $repatchExit) -ForegroundColor Red
+            }
             # 防御性核验并恢复原 YAML 状态，确保不留下漂移或多余备份
             $yamlRecoveryOk = $true
-            $yamlRecState = 'CLEAN_NO_CHANGE'
+            $yamlRecState = if ($repatchExit -eq 3) { 'NOT_MODIFIED' } else { 'CLEAN_NO_CHANGE' }
             if ($YamlPreExists) {
                 $curYamlHash = Get-SafeYamlHash -FilePath $TargetUpdateYmlPath
                 if ($curYamlHash -ne $YamlPreHash) {
@@ -439,7 +461,11 @@ try {
                 $KeepInstallStageDir = $true
             }
             $yamlPostNow = Get-SafeYamlHash -FilePath $TargetUpdateYmlPath
-            Write-Host ("[AGM][Installer][Status] EXIT_CODE={0} YAML_PRE_EXISTS={1} YAML_PRE_SHA256={2} YAML_POST_SHA256={3} YAML_RECOVERY_STATE={4}" -f $repatchExit, $YamlPreExists, $YamlPreHash, $yamlPostNow, $yamlRecState)
+            if ($repatchExit -eq 3) {
+                Write-Host ("[AGM][Installer][Status] EXIT_CODE=3 RECOVERY_STATE={0} YAML_PRE_EXISTS={1} YAML_PRE_SHA256={2} YAML_POST_SHA256={3} YAML_RECOVERY_STATE={4}" -f $installerRecState, $YamlPreExists, $YamlPreHash, $yamlPostNow, $yamlRecState)
+            } else {
+                Write-Host ("[AGM][Installer][Status] EXIT_CODE={0} YAML_PRE_EXISTS={1} YAML_PRE_SHA256={2} YAML_POST_SHA256={3} YAML_RECOVERY_STATE={4}" -f $repatchExit, $YamlPreExists, $YamlPreHash, $yamlPostNow, $yamlRecState)
+            }
             exit $repatchExit
         }
 

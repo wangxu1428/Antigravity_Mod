@@ -250,7 +250,12 @@ if ($RunningProcesses.Count -gt 0) {
     foreach ($proc in $RunningProcesses) {
         Write-Host ("  [运行中进程] PID {0} : {1}" -f $proc.ProcessId, $proc.ExecutablePath) -ForegroundColor Red
     }
-    Write-Host "[AGM] 目标目录下仍有进程运行，请先关闭客户端后再还原（本脚本绝不强制杀进程）。" -ForegroundColor Red
+    $RecoveryState = 'ABORTED_PROCESS_RUNNING'
+    if (Test-Path -LiteralPath $AsarBackupPath -PathType Leaf) {
+        Write-Host ("[AGM][Restore] 目标进程正在运行，未替换 app.asar；已保留既有可信官方备份：{0}（SHA256={1}）。请先关闭客户端后再还原（本脚本绝不强制杀进程）。" -f $AsarBackupPath, $BackupHash) -ForegroundColor Red
+    } else {
+        Write-Host "[AGM][Restore] 目标进程正在运行，未替换 app.asar。请先关闭客户端后再还原（本脚本绝不强制杀进程）。" -ForegroundColor Red
+    }
     Write-RestoreStatus -ExitCode 3
     exit 3
 }
