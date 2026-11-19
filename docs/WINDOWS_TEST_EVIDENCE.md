@@ -13,9 +13,11 @@
 | **Node.js** | `v26.13.1` |
 | **@electron/asar** | `v4.3.2` |
 | **官方客户端基线** | Antigravity `2.32.1`（Electron `44.9.1`） |
-| **官方原版 `resources\app.asar` SHA256** | `98A4308C8820A4A73F157B036FCCAA37F642B4C6F916BFA855F44A34A14F5C46` |
+| **官方纯净底座 `resources\app.asar.bak` SHA256** | `5B493943E67E500638555315594D5B1ACBC7A02E6DAC3C786651921C1EE8519F`（大小 5,656,861 字节；与 `docs/WHITEPAPER.md` 记载一致） |
+| **当前 D 盘 `resources\app.asar` SHA256（非官方）** | `98A4308C8820A4A73F157B036FCCAA37F642B4C6F916BFA855F44A34A14F5C46`（大小 7,521,517 字节，内含预置旧版 `AGY_ZH_ENGINE_START`，不得当作官方原版） |
+| **在纯净官方底座上加固后的 `repatch.ps1` 产出 SHA256** | `E17875BABF622F39D50275C0A28F37B91E9591EF09C80A4449D8C73A5FFD5063`（2026-11-19 14:36 +08:00 返工校正后实测） |
 | **旧版未加固 `repatch.ps1` 产出 SHA256** | `0B252405A7EE92A6F0B47D11C00829D28365E44DBD9FFD76FD10359AB1FD2D31`（参考旧证据 `RELEASE_DOCS_01`；因未检出 `asar extract` 失败而丢失 `chrome-devtools-mcp`） |
-| **本次加固后 `repatch.ps1` 产出 SHA256** | `6F60316D31FA8A920D12D228666EBC3F977BCD6D338B26E0C61FC0621069EC84`（`asar extract` 成功配对 `.unpacked`，完整保留 `chrome-devtools-mcp`） |
+| **误把 `98A4308C...` 当官方底座时的 `repatch.ps1` 产出 SHA256** | `6F60316D31FA8A920D12D228666EBC3F977BCD6D338B26E0C61FC0621069EC84`（第 1–2 轮实测的输入其实是预置旧汉化引擎的 `app.asar`，不是纯净官方版） |
 
 ---
 
@@ -91,3 +93,31 @@
 | `p0_1b_locked` | `P0-1b` 在 `W\app` 的 `robocopy` 独立副本上以 `FileStream(Read, FileShare.Read)` 锁住 `app.asar` 直击 `[System.IO.File]::Replace` | `2026-11-19 14:25:06 +08:00` | **PASS (exit=10, 3550ms)** | 解包/补丁/打包与暂存校验全部通过后在 `File.Replace` 处因占用退出（`exit 10`），解锁后文件仍在且 SHA256 保持 `6F60316D...`，临时目录零残留 | `p0_1_locked_replace/p0_1b_read_lock_replace.txt`、`p0_1_locked_replace/meta.json` | `p0_1b`: `A376213EEC511420A22329E4EB999D7876087949B847473C409C705D71E72BA7`；`meta.json`: `907A584E...` |
 | `p0_2_pollution` | `P0-2a` 连续 3 轮重铸 `.bak` 恒为 `98A4308C...`；`P0-2b/c` 污染 `.bak` 触发 `repatch.ps1` 与 `restore-official.ps1` 双端 `ALARM` 拒绝（`exit 4`）；`P0-2d` 无 `.bak` + 改装版拒绝写 `.bak`（`exit 4`） | `2026-11-19 14:25:22 +08:00` | **PASS (4/4 子项全绿)** | 重复重铸 `.bak` 哈希与 mtime 不变、改装备份落盘 `.modded_prev_*`；污染 `.bak` 下双脚本均拒绝解包/还原，目标文件无改动 | `p0_2_bak_pollution/p0_2a_*.txt`..`p0_2d_*.txt`、`p0_2_bak_pollution/meta.json` | `meta.json`: `4957B6F476690AC6ED1CE991AB87F3EDD328F85879A51B4663FAFBCEDD22C347` |
 | `residual_audit` | `Get-CimInstance Win32_Process` 排查上一轮 `PID 10752` 与 `W\app` 残留进程（始末两次） | `2026-11-19 14:15:46` / `14:27:12` | **PASS (exit=0)** | 上一轮 `PID 10752` 已不存在，`W\app` 进程数 `0`，未触碰 `D:\`（11 进程）与平行任务 | `residual_process_audit/process_audit.txt`、`final_process_check.txt` | `process_audit`: `99B1D87C...`；`final`: `F05773F8...` |
+
+
+---
+
+## 5. 官方哈希校正与纯净底座复测（Round 3，2026-11-19 14:15–14:37 Asia/Shanghai）
+
+只读核验（未写入 `D:\AI_Studio\Apps\Antigravity\`）：
+
+1. `98A4308C8820A4A73F157B036FCCAA37F642B4C6F916BFA855F44A34A14F5C46` 对应 **D 盘当前 `resources\app.asar`**（7,521,517 字节，mtime `2026-11-16 04:01:07`），文件内含 `AGY_ZH_ENGINE_START`，是预置了旧版汉化引擎的改装稿，不是纯净官方版。
+2. 同目录 `resources\app.asar.bak` 的 SHA256 为 `5B493943E67E500638555315594D5B1ACBC7A02E6DAC3C786651921C1EE8519F`（5,656,861 字节，mtime `2026-11-14 06:20:30`），不含 `AGY_ZH_ENGINE_START`，才是纯净官方底座。这与 `docs/WHITEPAPER.md` 已记载的官方备份一致。
+3. 因此第 2 轮返工把 `98A4308C...` 写入默认官方白名单是错误的。已在本轮把 `repatch.ps1` 与 `restore-official.ps1` 的默认白名单改为 `5B493943...`，并增加单测 `RP6b` 防止把 `98A4308C...` 再写回白名单。第 4 节表格是校正前的实测记录，予以保留但不作为“官方原版”结论。
+
+校正后复测（输入为 D 盘 `app.asar.bak` 的只读夹具副本，解包时配对官方 `app.asar.unpacked`）：
+
+| 测试 ID | 测试内容 | 日期 | 结果 | 关键实测指标与哈希 | 原始证据文件 | 证据 SHA256 |
+|---|---|---|---|---|---|---|
+| `offline_repatch_r3` | `node tests/test_repatch_unit.js`（RP1–RP13 + RP6b 白名单校正） | `2026-11-19 14:37 +08:00` | **PASS (14/14, exit=0)** | 默认白名单为 `5B493943...`，且不含 `98A4308C...`；Windows 用例与 Linux 跳过逻辑均通过 | `official_hash_correction/offline_tests.txt` | `EC9861AB365C5F79087D1E73886B491ABB664AF5E27031B2AA2F8EC939405E6A` |
+| `ci_linux_sim_r3` | 本机模拟 `process.platform='linux'` | `2026-11-19 14:37 +08:00` | **PASS (2/2, exit=0, 74ms)** | RP6 + RP6b 通过，Windows 用例被跳过 | `official_hash_correction/offline_tests.txt` | `EC9861AB365C5F79087D1E73886B491ABB664AF5E27031B2AA2F8EC939405E6A` |
+| `repatch_official_a` | Case (a) 在纯净官方底座首次重铸 | `2026-11-19 14:36:57 +08:00` | **PASS (exit=0, 3598ms)** | `.bak` = `5B493943...`；产出 `app.asar` = `E17875BA...` | `repatch_rework_a/case_a.txt` | `0116684E45D7E104398DFDE6FF1B363348FB483ABFCFBC369A0CC0A2EA825E4D` |
+| `repatch_official_b` | Case (b) 重复重铸 | `2026-11-19 14:36:57 +08:00` | **PASS (exit=0, 3463ms)** | `.bak` 仍为 `5B493943...`；改装快照为 `.modded_prev_*`；产出仍为 `E17875BA...` | `repatch_rework_b/case_b.txt` | `E2A94AFDDA1BF1C65AB6B56E16E23C0DB153E3ED4FF9BFA8385E0B975E9941D3` |
+| `repatch_official_c` | Case (c) 官方还原 | `2026-11-19 14:36:57 +08:00` | **PASS (exit=0, 378ms)** | `app.asar` 还原为 `5B493943...` | `repatch_rework_c/case_c.txt` | `458C1967C0BB6AAAD59A8A6B796C07253B5FF857BB982D78417D39109969D66B` |
+| `repatch_official_d` | Case (d) 无 `.bak` + 改装版拒绝写 `.bak` | `2026-11-19 14:36:57 +08:00` | **PASS (exit=4, 248ms)** | 打印 ALARM，未生成官方 `.bak` | `repatch_rework_d/case_d.txt` | `B0925071E67E6F81B430994096FC1E23780B28846505A4E291AFA29F0BE8BA2D` |
+| `repatch_official_e` | Case (e) 打包失败目标不变 | `2026-11-19 14:36:57 +08:00` | **PASS (exit=19, 2742ms)** | 目标保持 `5B493943...` | `repatch_rework_e/case_e.txt` | `32E0252AFD54FE595E23FFF9CAC848EBF7399BBB695DD5DCA7CD4A748D823CEE` |
+| `p0_1_official` | P0-1 占用锁（纯净官方目录，已预置官方 `.bak`） | `2026-11-19 14:36:57 +08:00` | **PASS** | `FileShare.None` exit 10 / 264ms，`FileShare.Read` exit 10 / 3449ms；解锁后 SHA256 仍为 `5B493943...` | `p0_1_locked_replace/p0_1a_exclusive_lock.txt`、`p0_1b_read_lock_replace.txt` | `79F4BC2E4D29A882...`、`6D9A7727B031912C...` |
+| `p0_2_official` | P0-2 以纯净官方 `.bak` 为基准的防污染 | `2026-11-19 14:36:57 +08:00` | **PASS (4/4)** | 连续重铸后 `.bak` 仍为 `5B493943...`；污染 `.bak` 时 `repatch`/`restore` 均 ALARM + exit 4 | `p0_2_bak_pollution/*` | `rework_suite_summary.txt`: `5979422266C8549D1B50DF5414967904BC574C4ECCB46DAC77D9F8987E2EEC41` |
+| `official_hash_audit` | D 盘只读 SHA256 与 `AGY_ZH_ENGINE_START` 扫描 | `2026-11-19 14:15 +08:00` | **PASS** | 见上文 1–3 条结论；校正后 D 盘 `app.asar`/`app.asar.bak` 的哈希与 mtime 仍未改变 | `official_hash_audit/audit.txt`、`official_hash_correction/post_correction_process_and_d_readonly.txt` | `BC88E37847BD1A3E71589F1EA65AFF609037D62E46B901DCF4F7507B99660A50`、`DBFDD8A20A1892A118D9958DE60B48FA0E0F907D927CB59E5B44095CF6B11562` |
+
+热重载 `h` 仍为 **UNKNOWN**（本轮未改插件，未为此启动客户端）。`RELEASE_HARDENING_01` 目录下无残留本任务进程。

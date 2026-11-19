@@ -15,7 +15,8 @@ const PATCH_JS = path.join(REPO_ROOT, 'platform', 'mod_kit', 'patch.js');
 const AGM_LOCKS_JS = path.join(REPO_ROOT, 'platform', 'mod_kit', 'agm_locks.js');
 const REAPER_CORE_JS = path.join(REPO_ROOT, 'platform', 'mod_kit', 'agm_sidecar_reaper_core.js');
 const TEMPLATE_YML = path.join(REPO_ROOT, 'platform', 'mod_kit', 'app-update.template.yml');
-const OFFICIAL_2321_SHA256 = '98A4308C8820A4A73F157B036FCCAA37F642B4C6F916BFA855F44A34A14F5C46';
+const OFFICIAL_2321_SHA256 = '5B493943E67E500638555315594D5B1ACBC7A02E6DAC3C786651921C1EE8519F';
+const KNOWN_PREPATCHED_ZH_SHA256 = '98A4308C8820A4A73F157B036FCCAA37F642B4C6F916BFA855F44A34A14F5C46';
 
 const results = [];
 function check(id, desc, cond, detail) {
@@ -418,6 +419,23 @@ async function runAll() {
     'repatch.ps1 & restore-official.ps1 contain atomic replace + official backup whitelist primitives without Move-Item',
     missingRepatchTokens.length === 0 && !hasMoveItem && missingRestoreTokens.length === 0,
     { missingRepatchTokens, hasMoveItem, missingRestoreTokens }
+  );
+
+  const officialArrayRe = /\$KnownOfficialAsarHashes\s*=\s*@\(([\s\S]*?)\)/;
+  function officialLiterals(src) {
+    const m = src.match(officialArrayRe);
+    return m ? (m[1].match(/[0-9A-Fa-f]{64}/g) || []).map((h) => h.toUpperCase()) : [];
+  }
+  const repatchOfficial = officialLiterals(ps1Src);
+  const restoreOfficial = officialLiterals(restoreSrc);
+  check(
+    'RP6b',
+    'default official whitelist is clean 5B493943... and does not include prepatched ZH hash 98A4308C...',
+    repatchOfficial.includes(OFFICIAL_2321_SHA256) &&
+      restoreOfficial.includes(OFFICIAL_2321_SHA256) &&
+      !repatchOfficial.includes(KNOWN_PREPATCHED_ZH_SHA256) &&
+      !restoreOfficial.includes(KNOWN_PREPATCHED_ZH_SHA256),
+    { repatchOfficial, restoreOfficial }
   );
 
   if (process.platform !== 'win32') {
