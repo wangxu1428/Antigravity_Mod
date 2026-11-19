@@ -9,7 +9,11 @@
         "i18nEngineVersion": "1.1.0",
         "i18nDictVersion": "1.14.0",
         "sidedockVersion": "1.1.0",
-        "compatibleAppVersion": "2.32.x",
+        "compatibleAppVersion": "2.32.1",
+        "compatibleAppVersions": [
+            "2.32.1",
+            "2.33.0"
+        ],
         "compatibleElectron": "44.9.1",
         "userDataIsolationMode": "gitignore-and-installer-protected",
         "protectedUserPaths": [
@@ -78,14 +82,24 @@
             "sha256": "0F882E4EA1E25618490CBFAD3612827AE6F1D99112842397926565A7FC23D5B2"
         },
         {
+            "path": ".github/workflows/test.yml",
+            "size": 1172,
+            "sha256": "41FDFDE117FFFBFF623D0FACEBDBE20B46266D71383BDE7C259CB64CB9F08B05"
+        },
+        {
             "path": "docs/ARCHITECTURE.md",
             "size": 53988,
             "sha256": "57D28BA51A0F3FB5B039F926A57B8BE2805B737C36F21BCBA3756DA0284A6CCB"
         },
         {
+            "path": "docs/Full_Handover.md",
+            "size": 18111,
+            "sha256": "6ACD633344E7D95C2E3CDBA8EC162D722A2020D46B6097A1F3F10A97E7868EBC"
+        },
+        {
             "path": "docs/INSTALL.md",
-            "size": 27874,
-            "sha256": "A621C740261C3D5B0BEB9D968EA30FE587A7C1AF00FB8356E5F7F91CCE0AA29F"
+            "size": 27882,
+            "sha256": "B920E2A44874FA7C81636E0C83DBD9B99484930DC3997F547A0808505CFB3C0F"
         },
         {
             "path": "docs/PLUGIN_DEV_GUIDE.md",
@@ -94,8 +108,8 @@
         },
         {
             "path": "docs/RELEASE_NOTES_2.1.0.md",
-            "size": 8211,
-            "sha256": "E58969D146DC643B021922D5DB8B2C854B10C5741853666A02726F2BAF482C18"
+            "size": 8235,
+            "sha256": "A69247E94A17D2BCE76B4D4D06E7045D09ACD2757FA573EEB47D9B6828C57A76"
         },
         {
             "path": "docs/WHITEPAPER.md",
@@ -111,6 +125,11 @@
             "path": "platform/mod_kit/agm_locks.js",
             "size": 12893,
             "sha256": "DA12202342359C91BF910F93B0D4E961B252A9D318B127A414B484F135FA1922"
+        },
+        {
+            "path": "platform/mod_kit/agm_compat_versions.js",
+            "size": 3372,
+            "sha256": "7946278633ACEC60ADFA14E08783BF1E308F07F067F2FD9A80DBBC4FA3676115"
         },
         {
             "path": "platform/mod_kit/agm_sidecar_reaper_core.js",
@@ -254,8 +273,8 @@
         },
         {
             "path": "README.md",
-            "size": 11691,
-            "sha256": "41F13F073FF4F0A98BD55E8F8AD73DDC2CB3B764B9E00F4735A69E1319DD87A8"
+            "size": 11701,
+            "sha256": "DF1E658283C075193730B3374E6390F2C62B6D3071B48214116D93082591CC85"
         },
         {
             "path": "platform/scripts/install-or-update.ps1",
@@ -339,8 +358,13 @@
         },
         {
             "path": "tests/test_compat_233_unit.js",
-            "size": 39864,
-            "sha256": "A79B8478A265C4A7B84B407BC26DE3051FAE3F7D59A388DA86A45A583616DBF2"
+            "size": 40807,
+            "sha256": "6C3B55F45557A2EEEB0BA0EC47489A2B2666770B6EC0F1FCD5C137666D6779C3"
+        },
+        {
+            "path": "tests/test_compat_versions_unit.js",
+            "size": 8779,
+            "sha256": "70360E8FEF8946C340CAC8130847DEF575D2C7D05E0DDDCA374EC9BE4839A189"
         }
     ]
 }

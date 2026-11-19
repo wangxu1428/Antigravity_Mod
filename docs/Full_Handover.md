@@ -72,7 +72,7 @@ Antigravity_Mod/
 
 ## 3. 版本
 
-- 平台代码版本：2.1.0（宿主 2.1.0，`manifest.repo.json` 记录兼容 Antigravity 2.32.x / Electron 44.9.1）。
+- 平台代码版本：2.1.0（宿主 2.1.0，`manifest.repo.json` 记录已验证 Antigravity `2.32.1`、`2.33.0` / Electron 44.9.1）。
 - 内置插件：`hakimi-i18n` 1.1.0（词典 1.14.0），`ai-sidedock` 1.1.0。可选示例插件：`agm-hello-guard` 1.0.0。
 - **尚未打任何 Tag，尚未建任何 Release，也没有带 SHA256 的发行包。** `CHANGELOG.md` 只有 `[Unreleased]` 段。
 - 计划的标签格式：平台 `platform-vX.Y.Z`；插件 `plugin-<id>-vX.Y.Z`。标签只打在已合入 `main` 的提交上。

@@ -26,7 +26,7 @@
 
 | 条件 | 说明 |
 | --- | --- |
-| **独立 Antigravity 副本** | 从官方客户端完整复制出的独立目录（兼容基线 `2.32.x` / Electron `44.9.1`），目录内必须存在 `resources\` 子目录与**官方未修改的纯净 `resources\app.asar`**（便携启动还需要根目录存在 `Antigravity.exe`）。 |
+| **独立 Antigravity 副本** | 从官方客户端完整复制出的独立目录（已验证 `2.32.1`、`2.33.0` / Electron `44.9.1`），目录内必须存在 `resources\` 子目录与**官方未修改的纯净 `resources\app.asar`**（便携启动还需要根目录存在 `Antigravity.exe`）。 |
 | **Windows PowerShell 5.1+** | 运行 `.ps1` 安装、重铸与还原脚本（推荐 `powershell -NoProfile -ExecutionPolicy Bypass`）。 |
 | **Node.js** | 供 `mod_kit\patch.js` 注入补丁并执行 `node --check` 语法校验，也可用于运行离线单元测试。 |
 | **`asar` 或 `npx`** | `mod_kit\repatch.ps1` 需要解包和重打包 `app.asar`：优先使用 `PATH` 中的全局 `asar`（可通过 `npm i -g @electron/asar` 安装）；若无全局 `asar`，脚本会自动回退为 `npx asar`。 |

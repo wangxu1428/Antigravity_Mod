@@ -135,7 +135,7 @@ set AGM_DEBUG_PORT=9224
 
 ## English Summary
 
-**Antigravity_Mod (AGM)** is an external plugin platform and localization suite for Antigravity IDE (compatible with v2.32.x / Electron 44.9.1).
+**Antigravity_Mod (AGM)** is an external plugin platform and localization suite for Antigravity IDE (verified with v2.32.1 and v2.33.0 / Electron 44.9.1).
 - **No Proprietary Binaries**: Only the platform core (`platform/`, including `mod_kit/` and the host `platform/agm-plugin-host.js` v2.1.0), built-in plugins (`plugins/builtin/`), optional plugin packages (`plugins/optional/`), tests, and documentation are distributed.
 - **Strict User Data Isolation**: **User data is stored outside the platform distribution directory (or in `.gitignore`-protected runtime paths within the installation tree); platform upgrades never overwrite or delete user configurations (`plugins/config.json`), plugin state (`plugins/state/`), installed packages (`plugins/packages/`), or browser profile data (`UserData/`).** The repository layout change does not move those runtime directories. The installer copies sources back onto the previous load paths and never deletes user files.
 

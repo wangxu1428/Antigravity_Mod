@@ -24,15 +24,30 @@ const OFFICIAL_2330_SHA256 = 'B33C81600E82E65593AA8430EF01B37D6B28D9D98F0FAF45E2
 const KNOWN_PREPATCHED_ZH_SHA256 = '98A4308C8820A4A73F157B036FCCAA37F642B4C6F916BFA855F44A34A14F5C46';
 
 const results = [];
-function check(id, desc, cond, detail) {
-  if (cond) {
-    results.push({ id, ok: true });
+function record(id, status, desc, detail) {
+  results.push({ id, status });
+  if (status === 'PASS') {
     console.log(`PASS ${id} ${desc}`);
+  } else if (status === 'SKIP') {
+    console.log(`SKIP ${id} ${desc} :: ${detail === undefined ? 'not run' : detail}`);
   } else {
-    results.push({ id, ok: false });
     const msg = detail === undefined ? 'condition false' : (typeof detail === 'string' ? detail : JSON.stringify(detail));
     console.log(`FAIL ${id} ${desc} :: ${msg}`);
   }
+}
+
+function check(id, desc, cond, detail) {
+  if (cond) record(id, 'PASS', desc);
+  else record(id, 'FAIL', desc, detail);
+}
+
+// SKIP 只允许在非 Windows 出现；Windows 上任何 Windows 专用用例走到 SKIP 一律判 FAIL。
+function skip(id, desc, reason) {
+  if (process.platform === 'win32') {
+    check(id, desc, false, 'Windows 上不允许 SKIP：' + reason);
+    return;
+  }
+  record(id, 'SKIP', desc, reason);
 }
 
 function sha256File(filePath) {
@@ -853,7 +868,11 @@ async function runAll() {
 
     // C233-15: Windows-only synthetic repatch.ps1 & restore-official.ps1 repeat + unknown hash rejection
     if (process.platform !== 'win32') {
-      check('C233-15', 'Windows PowerShell synthetic repatch repeat & unknown rejection (skipped on non-win32)', true);
+      skip(
+        'C233-15',
+        'Windows synthetic 2.33.0 repatch.ps1 repeat & unknown hash rejection',
+        'requires win32 + powershell.exe; process.platform=' + process.platform
+      );
     } else {
       const fakeBin = path.join(rootTmp, 'fakebin');
       const psTmp = path.join(rootTmp, 'pstmp');
@@ -979,9 +998,16 @@ process.exit(2);
     try { fs.rmSync(rootTmp, { recursive: true, force: true }); } catch (_) {}
   }
 
-  const failCount = results.filter((r) => !r.ok).length;
-  console.log(`SUMMARY pass=${results.length - failCount} fail=${failCount}`);
-  process.exitCode = failCount ? 1 : 0;
+  const passCount = results.filter((r) => r.status === 'PASS').length;
+  const failCount = results.filter((r) => r.status === 'FAIL').length;
+  const skipCount = results.filter((r) => r.status === 'SKIP').length;
+  console.log(`SUMMARY pass=${passCount} fail=${failCount} skip=${skipCount}`);
+  if (process.platform === 'win32' && skipCount > 0) {
+    console.error('FATAL: SKIP is not allowed on Windows for Windows-only cases.');
+    process.exitCode = 1;
+  } else {
+    process.exitCode = failCount ? 1 : 0;
+  }
 }
 
 runAll().catch((err) => {
