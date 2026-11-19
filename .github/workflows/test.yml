@@ -1,0 +1,30 @@
+name: offline-tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Host unit tests
+        run: node tests/test_host_unit.js
+      - name: Reaper unit tests
+        run: node tests/test_reaper_unit.js
+      - name: Update lock tests
+        run: node tests/test_update_lock.js
