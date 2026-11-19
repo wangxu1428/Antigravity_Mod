@@ -989,6 +989,11 @@ async function runAll() {
         { name: 'tainted_var', file: 'dist/main.js', patch: (s) => s + "\nconst ch = 'updater:x'; electron_1.ipcMain.handle(ch, () => {});\n" },
         { name: 'unauth_send', file: 'dist/main.js', patch: (s) => s + "\nwin.webContents.send('updater:state-changed', {});\n" },
         { name: 'plugin_touch_updater', file: 'plugins/evil.js', create: true, patch: () => "ipcRenderer.invoke('updater:get-state');\n" },
+        { name: 'bracket_ipcMain_handle', file: 'dist/main.js', patch: (s) => s + "\nelectron_1.ipcMain['handle']('updater:evil-bracket', () => {});\n" },
+        { name: 'bracket_ipcMain_apply', file: 'dist/main.js', patch: (s) => s + "\nelectron_1.ipcMain['handle'].apply(electron_1.ipcMain, ['updater:evil-bracket-apply', () => {}]);\n" },
+        { name: 'const_alias_ipcMain_handle', file: 'dist/main.js', patch: (s) => s + "\nconst reg = electron_1.ipcMain.handle;\nreg('updater:evil-alias', () => {});\n" },
+        { name: 'destructured_ipcMain_handle', file: 'dist/main.js', patch: (s) => s + "\nconst { handle: hUpd } = electron_1.ipcMain;\nhUpd('updater:evil-destr', () => {});\n" },
+        { name: 'reflect_apply_handle', file: 'dist/main.js', patch: (s) => s + "\nReflect.apply(electron_1.ipcMain.handle, electron_1.ipcMain, ['updater:evil-reflect', () => {}]);\n" },
       ];
       const negFailures = [];
       for (const tc of scanNegs) {
@@ -1005,7 +1010,15 @@ async function runAll() {
           negFailures.push({ name: tc.name, status: res.status, zeroWrite: JSON.stringify(before) === JSON.stringify(after), stderr: res.stderr.slice(0, 200) });
         }
       }
-      check('UPD-09', '未知 updater:* 默认拒绝（运行时 + patch.js 静态扫描 8 类绕过写法均 exit 2 且零写盘）', rtDenied && negFailures.length === 0, { rtDenied, negFailures });
+      // Verify extraPluginFiles explicitly scans platform/agm-plugin-host.js without requiring plugins/ placement
+      const extraHostDir = path.join(rootTmp, 'upd09_extra_host');
+      fs.mkdirSync(path.join(extraHostDir, 'dist'), { recursive: true });
+      fs.writeFileSync(path.join(extraHostDir, 'dist', 'ok.js'), "'use strict';\n", 'utf8');
+      const evilHostPath = path.join(extraHostDir, 'agm-plugin-host.js');
+      fs.writeFileSync(evilHostPath, "const { ipcRenderer } = require('electron');\nipcRenderer.invoke('updater:get-state');\n", 'utf8');
+      const extraScanRes = UPDATER_AUTH.scanUpdaterChannels(extraHostDir, { extraPluginFiles: [evilHostPath] });
+      const extraHostBlocked = !extraScanRes.ok && extraScanRes.violations.some((v) => v.kind === 'plugin-updater-ipc');
+      check('UPD-09', '未知 updater:* 默认拒绝（运行时 + patch.js 静态扫描 13 类绕过写法 + agm-plugin-host 扫描均拦截）', rtDenied && negFailures.length === 0 && extraHostBlocked, { rtDenied, negFailures, extraHostBlocked });
     }
 
     // -------------------------------------------------------------------------

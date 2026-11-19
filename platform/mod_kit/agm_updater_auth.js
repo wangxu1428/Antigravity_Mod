@@ -527,7 +527,41 @@ function lineNumberAt(src, index) {
     return line;
 }
 
-function extractFirstCallArg(src, openParenIdx) {
+function splitTopLevelItems(src) {
+    const items = [];
+    let depth = 0;
+    let start = 0;
+    let quote = null;
+    const n = src.length;
+    for (let i = 0; i < n; i++) {
+        const c = src[i];
+        if (quote) {
+            if (c === '\\' && i + 1 < n) {
+                i++;
+                continue;
+            }
+            if (c === quote) quote = null;
+            continue;
+        }
+        if (c === "'" || c === '"' || c === '`') {
+            quote = c;
+            continue;
+        }
+        if (c === '(' || c === '[' || c === '{') {
+            depth++;
+        } else if (c === ')' || c === ']' || c === '}') {
+            if (depth > 0) depth--;
+        } else if (c === ',' && depth === 0) {
+            items.push(src.slice(start, i).trim());
+            start = i + 1;
+        }
+    }
+    const tail = src.slice(start).trim();
+    if (tail || items.length > 0) items.push(tail);
+    return items;
+}
+
+function extractCallArgs(src, openParenIdx) {
     let depth = 1;
     let i = openParenIdx + 1;
     const n = src.length;
@@ -552,15 +586,26 @@ function extractFirstCallArg(src, openParenIdx) {
             depth++;
         } else if (c === ')' || c === ']' || c === '}') {
             if (c === ')' && depth === 1) {
-                return src.slice(openParenIdx + 1, i).trim();
+                return splitTopLevelItems(src.slice(openParenIdx + 1, i));
             }
             depth--;
-        } else if (c === ',' && depth === 1) {
-            return src.slice(openParenIdx + 1, i).trim();
         }
         i++;
     }
-    return src.slice(openParenIdx + 1).trim();
+    return splitTopLevelItems(src.slice(openParenIdx + 1));
+}
+
+function extractFirstCallArg(src, openParenIdx) {
+    const args = extractCallArgs(src, openParenIdx);
+    return args.length > 0 ? args[0] : '';
+}
+
+function extractFirstArrayElement(arrExpr) {
+    if (!arrExpr) return '';
+    const trimmed = String(arrExpr).trim();
+    if (!trimmed.startsWith('[') || !trimmed.endsWith(']')) return '';
+    const items = splitTopLevelItems(trimmed.slice(1, -1));
+    return items.length > 0 ? items[0] : '';
 }
 
 function parsePlainStringLiteral(expr) {
@@ -576,6 +621,171 @@ function parsePlainStringLiteral(expr) {
         }
     }
     return inner;
+}
+
+function collectIpcAliases(code, isPlugin) {
+    const ipcMainObjs = new Set(['ipcMain']);
+    const ipcRendererObjs = new Set(isPlugin ? ['ipcRenderer'] : []);
+    const methodAliases = new Map(); // varName -> 'ipcMain' | 'localOnly' | 'ipcRenderer' | 'send'
+
+    function stripBindSuffix(rhs) {
+        return rhs.replace(/\.bind\s*\([^)]*\)\s*$/, '').trim();
+    }
+
+    function classifyTarget(expr) {
+        const clean = stripBindSuffix(String(expr || '').trim().replace(/^\((.*)\)$/, '$1').trim());
+        if (!clean) return null;
+        if (methodAliases.has(clean)) return methodAliases.get(clean);
+        if (clean === 'localOnly') return 'localOnly';
+
+        const dotOrBracket = /^([A-Za-z_$][\w$.]*)(?:\.([A-Za-z_$][\w$]*)|\[\s*['"]([A-Za-z_$][\w$]*)['"]\s*\])(?:\.(?:call|apply))?$/.exec(clean);
+        if (!dotOrBracket) return null;
+        const base = dotOrBracket[1];
+        const prop = dotOrBracket[2] || dotOrBracket[3];
+
+        const baseTail = base.split('.').pop();
+        const isIpcMainObj = ipcMainObjs.has(base) || baseTail === 'ipcMain' || /\[\s*['"]ipcMain['"]\s*\]$/.test(base);
+        const isIpcRendObj = isPlugin && (ipcRendererObjs.has(base) || baseTail === 'ipcRenderer' || /\[\s*['"]ipcRenderer['"]\s*\]$/.test(base));
+
+        if (isIpcMainObj && /^(?:handle|handleOnce|on|once)$/.test(prop)) return 'ipcMain';
+        if (isIpcRendObj && /^(?:invoke|send|sendSync|on|once)$/.test(prop)) return 'ipcRenderer';
+        if (/^(?:send|sendSync|postMessage)$/.test(prop)) return 'send';
+        return null;
+    }
+
+    const declOrAssignRe = /(?:(?:const|let|var)\s+([A-Za-z_$][\w$]*)|(?:^|[;{}\r\n])\s*([A-Za-z_$][\w$]*))\s*=\s*([^;\r\n]+)/g;
+    const destructRe = /(?:const|let|var)\s*\{([^}]+)\}\s*=\s*([^;\r\n]+)/g;
+
+    for (let pass = 0; pass < 3; pass++) {
+        declOrAssignRe.lastIndex = 0;
+        let m;
+        while ((m = declOrAssignRe.exec(code)) !== null) {
+            const varName = m[1] || m[2];
+            const rhs = (m[3] || '').trim();
+            if (!varName || !rhs) continue;
+
+            const rhsClean = stripBindSuffix(rhs);
+            if (/^(?:[A-Za-z_$][\w$.]*\.)?ipcMain$/.test(rhsClean) || /\[\s*['"]ipcMain['"]\s*\]$/.test(rhsClean) || ipcMainObjs.has(rhsClean)) {
+                ipcMainObjs.add(varName);
+            } else if (isPlugin && (/^(?:[A-Za-z_$][\w$.]*\.)?ipcRenderer$/.test(rhsClean) || /\[\s*['"]ipcRenderer['"]\s*\]$/.test(rhsClean) || ipcRendererObjs.has(rhsClean))) {
+                ipcRendererObjs.add(varName);
+            } else {
+                const kind = classifyTarget(rhsClean);
+                if (kind && (kind !== 'send' || /(?:webContents|hubContents|sender)\b/i.test(rhsClean))) {
+                    methodAliases.set(varName, kind);
+                }
+            }
+        }
+
+        destructRe.lastIndex = 0;
+        while ((m = destructRe.exec(code)) !== null) {
+            const fields = m[1];
+            const rhs = m[2].trim();
+            const rhsTail = rhs.split('.').pop();
+            const isMainObj = ipcMainObjs.has(rhs) || rhsTail === 'ipcMain';
+            const isRendObj = isPlugin && (ipcRendererObjs.has(rhs) || rhsTail === 'ipcRenderer');
+            const isElectronSrc = /require\s*\(\s*['"]electron['"]\s*\)/.test(rhs) || /\belectron(?:_1)?$/.test(rhs);
+
+            const parts = fields.split(',');
+            for (let pi = 0; pi < parts.length; pi++) {
+                const part = parts[pi].trim();
+                if (!part || part.indexOf('=') >= 0) continue;
+                const colonIdx = part.indexOf(':');
+                const key = (colonIdx >= 0 ? part.slice(0, colonIdx) : part).trim();
+                const bindName = (colonIdx >= 0 ? part.slice(colonIdx + 1) : part).trim();
+                if (!/^[A-Za-z_$][\w$]*$/.test(key) || !/^[A-Za-z_$][\w$]*$/.test(bindName)) continue;
+                if (isElectronSrc && key === 'ipcMain') ipcMainObjs.add(bindName);
+                else if (isElectronSrc && isPlugin && key === 'ipcRenderer') ipcRendererObjs.add(bindName);
+                else if (isMainObj && /^(?:handle|handleOnce|on|once)$/.test(key)) methodAliases.set(bindName, 'ipcMain');
+                else if (isRendObj && /^(?:invoke|send|sendSync|on|once)$/.test(key)) methodAliases.set(bindName, 'ipcRenderer');
+            }
+        }
+    }
+
+    return {
+        ipcMainObjs: ipcMainObjs,
+        ipcRendererObjs: ipcRendererObjs,
+        methodAliases: methodAliases,
+        classifyTarget: classifyTarget,
+    };
+}
+
+function inspectIpcChannelExpr(relPath, isPlugin, kind, callee, ln, firstArg, taintedVars, inboundFound, outboundFound, violations) {
+    const isIpcMain = kind === 'ipcMain';
+    const isLocalOnly = kind === 'localOnly';
+    const isIpcRenderer = kind === 'ipcRenderer';
+    const isSend = !isIpcMain && !isLocalOnly && !isIpcRenderer;
+    const lit = parsePlainStringLiteral(firstArg);
+
+    if (lit !== null) {
+        if (/^updater:/i.test(lit)) {
+            if (isPlugin) {
+                violations.push({
+                    file: relPath,
+                    line: ln,
+                    kind: 'plugin-updater-ipc',
+                    detail: 'Plugin references updater channel ' + lit + ' via ' + callee,
+                });
+                return;
+            }
+            if (isIpcMain) {
+                inboundFound.push({ file: relPath, line: ln, channel: lit, via: callee });
+                violations.push({
+                    file: relPath,
+                    line: ln,
+                    kind: 'unprotected-direct-ipcmain',
+                    detail: 'Direct ' + callee + "('" + lit + "') bypasses localOnly updater adapter",
+                });
+            } else if (isLocalOnly) {
+                inboundFound.push({ file: relPath, line: ln, channel: lit, via: 'localOnly' });
+                if (relPath !== 'dist/ipcHandlers.js') {
+                    violations.push({
+                        file: relPath,
+                        line: ln,
+                        kind: 'unexpected-updater-location',
+                        detail: 'localOnly(' + lit + ') outside dist/ipcHandlers.js',
+                    });
+                } else if (!hasOwn(UPDATER_CHANNEL_POLICIES, lit)) {
+                    violations.push({
+                        file: relPath,
+                        line: ln,
+                        kind: 'unknown-updater-channel',
+                        detail: 'Unregistered updater channel in localOnly: ' + lit,
+                    });
+                }
+            } else if (isSend) {
+                outboundFound.push({ file: relPath, line: ln, channel: lit, via: callee });
+                if (relPath !== 'dist/updater.js' || lit !== 'updater:state-changed') {
+                    violations.push({
+                        file: relPath,
+                        line: ln,
+                        kind: relPath !== 'dist/updater.js' ? 'unexpected-updater-send-location' : 'unknown-updater-send',
+                        detail: 'Unexpected updater outbound ' + callee + "('" + lit + "') in " + relPath,
+                    });
+                }
+            }
+        }
+        return;
+    }
+
+    const looksDynamicUpdater =
+        /`/.test(firstArg) ||
+        /\+/.test(firstArg) ||
+        /\.concat\s*\(/.test(firstArg) ||
+        /\.join\s*\(/.test(firstArg) ||
+        /\bupdater/i.test(firstArg) ||
+        taintedVars.has(firstArg);
+
+    if (looksDynamicUpdater) {
+        if (isIpcMain || isLocalOnly || isSend || isPlugin) {
+            violations.push({
+                file: relPath,
+                line: ln,
+                kind: 'dynamic-updater-registration',
+                detail: 'Dynamic/non-literal updater channel expression in ' + callee + '(' + firstArg.slice(0, 80) + ')',
+            });
+        }
+    }
 }
 
 function scanUpdaterSource(relPath, rawSrc, opts) {
@@ -618,7 +828,7 @@ function scanUpdaterSource(relPath, rawSrc, opts) {
         }
     }
 
-    // 2. Detect string concatenation / array join forming updater: (ignore inside regex literals by checking quote boundary)
+    // 2. Detect string concatenation / array join forming updater:
     const concatPatterns = [
         { kind: 'dynamic-concat-updater-channel', re: /['"]updater:?['"]\s*\+\s*(?![\*\/])/gi },
         { kind: 'dynamic-concat-updater-channel', re: /\+\s*['"]:?(?:get-state|check-for-updates|apply|quit-and-install|state-changed|[a-z-]*updater)['"]/gi },
@@ -639,25 +849,43 @@ function scanUpdaterSource(relPath, rawSrc, opts) {
         }
     }
 
-    // 3. Inspect all IPC call sites: ipcMain.(handle|handleOnce|on|once), localOnly, send/sendSync/postMessage, and in plugins ipcRenderer.*
-    const callRe = isPlugin
-        ? /\b(ipcMain\.(?:handle|handleOnce|on|once)|localOnly|ipcRenderer\.(?:invoke|send|sendSync|on|once)|(?:[A-Za-z_$][\w$.]*)\.(?:send|sendSync|postMessage))\s*\(/g
-        : /\b(ipcMain\.(?:handle|handleOnce|on|once)|localOnly|(?:[A-Za-z_$][\w$.]*)\.(?:send|sendSync|postMessage))\s*\(/g;
+    // Collect single-file aliases for SB-02 (const reg = ipcMain.handle, destructuring, obj aliases)
+    const aliasInfo = collectIpcAliases(code, isPlugin);
+
+    // 3. Inspect direct dot & bracket IPC call sites (including .call / .apply chaining) for SB-01
+    const ipcMainMethodPart = '(?:(?:[A-Za-z_$][\\w$.]*\\.)?(?:ipcMain|\\[\\s*[\'"]ipcMain[\'"]\\s*\\])(?:\\.(?:handle|handleOnce|on|once)|\\[\\s*[\'"](?:handle|handleOnce|on|once)[\'"]\\s*\\]))';
+    const ipcRendMethodPart = '(?:(?:[A-Za-z_$][\\w$.]*\\.)?(?:ipcRenderer|\\[\\s*[\'"]ipcRenderer[\'"]\\s*\\])(?:\\.(?:invoke|send|sendSync|on|once)|\\[\\s*[\'"](?:invoke|send|sendSync|on|once)[\'"]\\s*\\]))';
+    const genericSendPart = '(?:[A-Za-z_$][\\w$.]*(?:\\.(?:send|sendSync|postMessage)|\\[\\s*[\'"](?:send|sendSync|postMessage)[\'"]\\s*\\]))';
+    const baseCallee = isPlugin
+        ? '(?:' + ipcMainMethodPart + '|localOnly|' + ipcRendMethodPart + '|' + genericSendPart + ')'
+        : '(?:' + ipcMainMethodPart + '|localOnly|' + genericSendPart + ')';
+    const callRe = new RegExp('\\b(' + baseCallee + '(?:\\.(?:call|apply))?)\\s*\\(', 'g');
 
     let m;
     while ((m = callRe.exec(code)) !== null) {
         const callee = m[1];
         const openIdx = m.index + m[0].length - 1;
-        const firstArg = extractFirstCallArg(code, openIdx);
+        const args = extractCallArgs(code, openIdx);
         const ln = lineNumberAt(code, m.index);
-        const lit = parsePlainStringLiteral(firstArg);
 
-        const isIpcMain = callee.indexOf('ipcMain.') === 0;
-        const isLocalOnly = callee === 'localOnly';
-        const isIpcRenderer = callee.indexOf('ipcRenderer.') === 0;
-        const isSend = !isIpcMain && !isLocalOnly && !isIpcRenderer;
+        const isApply = /\.apply$/.test(callee);
+        const isDotCall = !isApply && /\.call$/.test(callee);
+        const baseName = callee.replace(/\.(?:call|apply)$/, '');
+        let firstArg = '';
+        if (isApply) {
+            firstArg = extractFirstArrayElement(args[1] || '') || (args[1] || '');
+        } else if (isDotCall) {
+            firstArg = args[1] || '';
+        } else {
+            firstArg = args[0] || '';
+        }
 
-        // Ignore function declaration forwarders if regex matched inside localOnly(channel, handler) helper
+        const isIpcMain = /(?:^|\.|[\['"])ipcMain[\]'".\[]/i.test(baseName) || /(?:^|\.)ipcMain(?:\.|\[)/.test(baseName);
+        const isLocalOnly = baseName === 'localOnly';
+        const isIpcRenderer = isPlugin && /(?:^|\.|[\['"])ipcRenderer[\]'".\[]/.test(baseName);
+        const kind = isIpcMain ? 'ipcMain' : (isLocalOnly ? 'localOnly' : (isIpcRenderer ? 'ipcRenderer' : 'send'));
+
+        // Ignore function declaration forwarders inside localOnly(channel, handler) helper
         if (isIpcMain && relPath === 'dist/ipcHandlers.js' && firstArg === 'channel') {
             const prefixCtx = code.slice(Math.max(0, m.index - 120), m.index);
             if (/function\s+localOnly\s*\(\s*channel\s*,/.test(prefixCtx)) {
@@ -665,77 +893,64 @@ function scanUpdaterSource(relPath, rawSrc, opts) {
             }
         }
 
-        if (lit !== null) {
-            if (/^updater:/i.test(lit)) {
-                if (isPlugin) {
-                    violations.push({
-                        file: relPath,
-                        line: ln,
-                        kind: 'plugin-updater-ipc',
-                        detail: 'Plugin references updater channel ' + lit + ' via ' + callee,
-                    });
-                    continue;
-                }
-                if (isIpcMain) {
-                    inboundFound.push({ file: relPath, line: ln, channel: lit, via: callee });
-                    violations.push({
-                        file: relPath,
-                        line: ln,
-                        kind: 'unprotected-direct-ipcmain',
-                        detail: 'Direct ' + callee + "('" + lit + "') bypasses localOnly updater adapter",
-                    });
-                } else if (isLocalOnly) {
-                    inboundFound.push({ file: relPath, line: ln, channel: lit, via: 'localOnly' });
-                    if (relPath !== 'dist/ipcHandlers.js') {
-                        violations.push({
-                            file: relPath,
-                            line: ln,
-                            kind: 'unexpected-updater-location',
-                            detail: 'localOnly(' + lit + ') outside dist/ipcHandlers.js',
-                        });
-                    } else if (!hasOwn(UPDATER_CHANNEL_POLICIES, lit)) {
-                        violations.push({
-                            file: relPath,
-                            line: ln,
-                            kind: 'unknown-updater-channel',
-                            detail: 'Unregistered updater channel in localOnly: ' + lit,
-                        });
-                    }
-                } else if (isSend) {
-                    outboundFound.push({ file: relPath, line: ln, channel: lit, via: callee });
-                    if (relPath !== 'dist/updater.js' || lit !== 'updater:state-changed') {
-                        violations.push({
-                            file: relPath,
-                            line: ln,
-                            kind: relPath !== 'dist/updater.js' ? 'unexpected-updater-send-location' : 'unknown-updater-send',
-                            detail: 'Unexpected updater outbound ' + callee + "('" + lit + "') in " + relPath,
-                        });
-                    }
-                }
-            }
-            continue;
-        }
+        inspectIpcChannelExpr(relPath, isPlugin, kind, callee, ln, firstArg, taintedVars, inboundFound, outboundFound, violations);
+    }
 
-        // Non-literal argument at IPC boundary: inspect for updater contamination
-        const looksDynamicUpdater =
-            /`/.test(firstArg) ||
-            /\+/.test(firstArg) ||
-            /\.concat\s*\(/.test(firstArg) ||
-            /\.join\s*\(/.test(firstArg) ||
-            /\bupdater/i.test(firstArg) ||
-            taintedVars.has(firstArg);
-
-        // Inside plugins, disallow ANY dynamic registration on ipcMain or localOnly for updater-related vars
-        if (looksDynamicUpdater) {
-            if (isIpcMain || isLocalOnly || isSend || isPlugin) {
-                violations.push({
-                    file: relPath,
-                    line: ln,
-                    kind: 'dynamic-updater-registration',
-                    detail: 'Dynamic/non-literal updater channel expression in ' + callee + '(' + firstArg.slice(0, 80) + ')',
-                });
+    // 4. Inspect aliased IPC method calls (SB-02: e.g., const reg = ipcMain.handle; reg(...), im.handle(...))
+    if (aliasInfo.methodAliases.size > 0) {
+        const escapedNames = Array.from(aliasInfo.methodAliases.keys()).map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+        const aliasCallRe = new RegExp('\\b(' + escapedNames.join('|') + ')(?:\\.(call|apply))?\\s*\\(', 'g');
+        while ((m = aliasCallRe.exec(code)) !== null) {
+            const prefixBefore = code.slice(Math.max(0, m.index - 20), m.index);
+            if (/\.\s*$/.test(prefixBefore) || /(?:function|const|let|var)\s+$/.test(prefixBefore)) {
+                continue;
             }
+            const aliasName = m[1];
+            const callMode = m[2] || '';
+            const openIdx = m.index + m[0].length - 1;
+            const args = extractCallArgs(code, openIdx);
+            const ln = lineNumberAt(code, m.index);
+            const firstArg = callMode === 'apply'
+                ? (extractFirstArrayElement(args[1] || '') || (args[1] || ''))
+                : (callMode === 'call' ? (args[1] || '') : (args[0] || ''));
+            const kind = aliasInfo.methodAliases.get(aliasName);
+            inspectIpcChannelExpr(relPath, isPlugin, kind, 'alias:' + aliasName + (callMode ? '.' + callMode : ''), ln, firstArg, taintedVars, inboundFound, outboundFound, violations);
         }
+    }
+
+    // Also inspect calls on aliased ipcMain/ipcRenderer objects (e.g., const im = ipcMain; im.handle(...))
+    const extraObjNames = [];
+    aliasInfo.ipcMainObjs.forEach((n) => { if (n !== 'ipcMain') extraObjNames.push(n); });
+    aliasInfo.ipcRendererObjs.forEach((n) => { if (n !== 'ipcRenderer') extraObjNames.push(n); });
+    if (extraObjNames.length > 0) {
+        const escObjs = extraObjNames.map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+        const objCallRe = new RegExp('\\b((' + escObjs.join('|') + ')(?:\\.(?:handle|handleOnce|on|once|invoke|send|sendSync)|\\[\\s*[\'"](?:handle|handleOnce|on|once|invoke|send|sendSync)[\'"]\\s*\\])(?:\\.(?:call|apply))?)\\s*\\(', 'g');
+        while ((m = objCallRe.exec(code)) !== null) {
+            const callee = m[1];
+            const objName = m[2];
+            const openIdx = m.index + m[0].length - 1;
+            const args = extractCallArgs(code, openIdx);
+            const ln = lineNumberAt(code, m.index);
+            const isApply = /\.apply$/.test(callee);
+            const isDotCall = !isApply && /\.call$/.test(callee);
+            const firstArg = isApply ? (extractFirstArrayElement(args[1] || '') || (args[1] || '')) : (isDotCall ? (args[1] || '') : (args[0] || ''));
+            const kind = aliasInfo.ipcMainObjs.has(objName) ? 'ipcMain' : 'ipcRenderer';
+            inspectIpcChannelExpr(relPath, isPlugin, kind, 'objAlias:' + callee, ln, firstArg, taintedVars, inboundFound, outboundFound, violations);
+        }
+    }
+
+    // 5. Inspect Reflect.apply(target, thisArg, [channel, ...]) calls for SB-03
+    const reflectRe = /\bReflect\.apply\s*\(/g;
+    while ((m = reflectRe.exec(code)) !== null) {
+        const openIdx = m.index + m[0].length - 1;
+        const args = extractCallArgs(code, openIdx);
+        const targetExpr = (args[0] || '').trim();
+        const kind = aliasInfo.classifyTarget(targetExpr);
+        if (!kind) continue;
+        const ln = lineNumberAt(code, m.index);
+        const argArr = (args[2] || '').trim();
+        const firstArg = extractFirstArrayElement(argArr) || argArr;
+        inspectIpcChannelExpr(relPath, isPlugin, kind, 'Reflect.apply(' + targetExpr + ')', ln, firstArg, taintedVars, inboundFound, outboundFound, violations);
     }
 
     return {
@@ -782,6 +997,32 @@ function scanUpdaterChannels(targetDir, opts) {
     const pluginFiles = [];
     for (let i = 0; i < pluginRoots.length; i++) {
         collectJsFilesRecursive(fs, path, pluginRoots[i], pluginRoots[i], 'plugins', pluginFiles);
+    }
+
+    // Deduplicate explicit extraPluginFiles (e.g. repo-root platform/agm-plugin-host.js)
+    const seenRealPaths = new Set();
+    let hasPluginHostScanned = false;
+    for (let i = 0; i < pluginFiles.length; i++) {
+        const item = pluginFiles[i];
+        let realP = path.resolve(item.abs);
+        try { realP = fs.realpathSync(item.abs); } catch (_) {}
+        seenRealPaths.add(realP);
+        if (path.basename(item.abs) === 'agm-plugin-host.js') {
+            hasPluginHostScanned = true;
+        }
+    }
+    if (Array.isArray(cfg.extraPluginFiles)) {
+        for (let i = 0; i < cfg.extraPluginFiles.length; i++) {
+            const ep = cfg.extraPluginFiles[i];
+            if (typeof ep !== 'string' || !ep || !fs.existsSync(ep)) continue;
+            let realP = path.resolve(ep);
+            try { realP = fs.realpathSync(ep); } catch (_) {}
+            if (seenRealPaths.has(realP)) continue;
+            if (path.basename(ep) === 'agm-plugin-host.js' && hasPluginHostScanned) continue;
+            seenRealPaths.add(realP);
+            if (path.basename(ep) === 'agm-plugin-host.js') hasPluginHostScanned = true;
+            pluginFiles.push({ abs: ep, rel: 'plugins/' + path.basename(ep) });
+        }
     }
 
     const allViolations = [];

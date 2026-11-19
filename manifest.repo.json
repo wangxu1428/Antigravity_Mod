@@ -93,8 +93,8 @@
         },
         {
             "path": "docs/Full_Handover.md",
-            "size": 23831,
-            "sha256": "7B86D7D935DF168CC95028BF86B3EA2A9A6F961F84DE18B4536EA2EA32332F41"
+            "size": 26714,
+            "sha256": "6925B4F09BACCCF35D65A90FBF91304B2212F26A16C54B958C46666B09A34938"
         },
         {
             "path": "docs/INSTALL.md",
@@ -153,8 +153,8 @@
         },
         {
             "path": "platform/mod_kit/patch.js",
-            "size": 54244,
-            "sha256": "551ACB4FB6EA6EB36228277C6EBF2FD807D4AA5C6B60B996EE30E812724CFD34"
+            "size": 54505,
+            "sha256": "48A4209A6473D7BD915AE14CCD63EA373CAAC1F24C781BC35BC2CED38AE8A0F1"
         },
         {
             "path": "platform/mod_kit/repatch.bat",
@@ -383,13 +383,13 @@
         },
         {
             "path": "platform/mod_kit/agm_updater_auth.js",
-            "size": 33101,
-            "sha256": "8E24831023E83F802B1A8C9BBB070570A74B83FFD5CF85B6B1784A932C4C8993"
+            "size": 44923,
+            "sha256": "B3761D4515CA51BE4963BE52A9D6681BC08D97558BB3095F0075ABCF947B183D"
         },
         {
             "path": "tests/test_updater_auth_unit.js",
-            "size": 59155,
-            "sha256": "875F081D684D1DDFE7D8820A4A521DB4F1639B66DA1175E3DF9123B16177E5A1"
+            "size": 60882,
+            "sha256": "F38270834A7A95817FB2F3E22B62AD32B504B2B266ABE3A8AF71ADDED85E78C9"
         }
     ]
 }

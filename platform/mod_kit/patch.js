@@ -77,7 +77,15 @@ try {
         if (fs.existsSync(siblingPlugins)) explicitPluginsDir = siblingPlugins;
         else if (fs.existsSync(repoPlugins)) explicitPluginsDir = repoPlugins;
     }
-    const scanRes = agmUpdaterAuth.scanUpdaterChannels(targetDir, { pluginsDir: explicitPluginsDir });
+    const extraPluginFiles = [];
+    const repoPluginHost = path.join(__dirname, '..', 'agm-plugin-host.js');
+    if (fs.existsSync(repoPluginHost)) {
+        extraPluginFiles.push(repoPluginHost);
+    }
+    const scanRes = agmUpdaterAuth.scanUpdaterChannels(targetDir, {
+        pluginsDir: explicitPluginsDir,
+        extraPluginFiles: extraPluginFiles,
+    });
     if (!scanRes.ok) {
         console.error('[Patch][AGM][UpdaterScan] FATAL: unknown or unprotected updater:* IPC detected:');
         for (const v of scanRes.violations) {

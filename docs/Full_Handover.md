@@ -210,7 +210,26 @@ docs/
 ### 8.5 未完成事项
 
 1. **真实 SSH E2E：NOT RUN**（本轮仅验证构造的 SSH 窗口拒绝路径与标记逻辑）。
-2. **`updater:*` 统一授权：NOT DONE**。
+2. **`updater:*` 统一授权**：历史遗留项（已于第 9 节按方案 B 完成实施、双底座真实 Electron 验证与 A1 静态扫描加固）。
 3. **`/workspace/agm/`：BLOCKED**（未清理，需在对应 Linux 盒子上另行只读盘点后再决策）。
 4. **2.33.0 正式发布资格：尚未通过**（PR 保持 Draft，未合并、未打 Tag、未发 Release）。
 5. 再次强调：**UI 回归通过不代表全部安全测试通过**；在上述未完成项闭环前，不得把本轮结果表述为 2.33.0 已可正式发布。
+
+
+## 9. 更新器 IPC 统一授权闭环记录（AGM-UPDATER-AUTH Round 2A / 2B / A1）
+
+- **执行环境与底座**：Windows x64 + Antigravity `2.32.1` / `2.33.0`（`Electron 44.9.1`，`isPackaged = true`），全过程保持本机正式 IDE 零改动、`main` 分支未修改。
+- **方案落地（Scheme B + Dual-Base CI，commit `4238ddf`）**：
+  - 新增 `platform/mod_kit/agm_updater_auth.js` 与 `tests/test_updater_auth_unit.js`（`UPD-01` ~ `UPD-12`），复用全局唯一 `__agmIpcGate`；在 `platform/mod_kit/patch.js` 接入 `dist/ipcHandlers.js`（严格遵循 `Auth -> localOnly -> app.isPackaged -> AGM_UPDATE_LOCK -> 业务逻辑`）与 `dist/updater.js` 广播隔离（SSH / 远端窗口零泄漏）。
+  - 已同步 `manifest.repo.json`（63 条目，纯 LF）与 `.github/workflows/test.yml`（11 套测试），PR #10 远端 GitHub Actions（run `44627219384`）在 `ubuntu-latest` 与 `windows-latest` 双矩阵全部 **success**。
+- **双官方底座真实 Electron 实机验证（Round 2B）**：
+  - **Track 1（`2.32.1`）**：Lock ON `T01`–`T14` + `127.0.0.1` 假源 Lock OFF 共 **15 PASS / 0 FAIL / 1 N/A（`T15` 为 `2.33.0` 专属）**；官方更新源外部请求 `0`，真实安装器执行 `0`。
+  - **Track 2（`2.33.0`）**：Lock ON `T01`–`T15`（含 `before-quit-for-update` + `ssh_windows.json` 冻结保留）+ `127.0.0.1` 假源 Lock OFF 共 **16 PASS / 0 FAIL / 0 SKIP**。
+  - **完整 ASAR 覆盖枚举**：`2.32.1`（ASAR 共 `1,068` 文件 / `704` JS；全解包扫描 `104` 非 Mock `dist` = `100%`），`2.33.0`（ASAR 共 `1,156` 文件 / `785` JS；全解包扫描 `162` 非 Mock `dist` = `100%`）。
+- **静态扫描器加固（Scheme A1）**：
+  - 零依赖升级 `scanUpdaterSource` / `scanUpdaterChannels` 与 `patch.js`，补齐 **`SB-01`（方括号下标调用 `ipcMain['handle']` + `.call`/`.apply`）**、**`SB-02`（单文件局部变量别名 / 解构赋值）**、**`SB-03`（`Reflect.apply`）** 及 **`platform/agm-plugin-host.js` 显式纳入扫描**。
+  - 在 `2.32.1`（`114` 文件 = `104 dist + 10 plugins`）与 `2.33.0`（`172` 文件 = `162 dist + 10 plugins`）全解包实测 **0 误报**；`SB-01` ~ `SB-08` 检出提升至 `5/8`（剩余 Base64解码 / 跨文件 `require` / `String.fromCharCode` 属轻量词法扫描已知边界，由运行时 `__agmIpcGate` 兜底拦截）。
+- **仍保留的客观边界**：
+  1. **真实远端 SSH Host E2E**：**NOT RUN**（本机无 Linux `sshd` / WSL / Docker 测试宿主机；构造的 SSH 窗口及 `windowBackends` 全部 3 条隔离路径已实机通过）。
+  2. **`/workspace/agm/`**：**BLOCKED**（仅存在于云端 Linux 盒子）。
+  3. **`main` 合并、Tag 与公开发版**：仍待项目负责人最终批准后执行。
