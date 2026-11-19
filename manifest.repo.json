@@ -79,13 +79,13 @@
         },
         {
             "path": "docs/ARCHITECTURE.md",
-            "size": 53449,
-            "sha256": "56C79E9145D607DC7A2F9AD3C5BED017BAE4D5419600778531B8BB5BF5A5E058"
+            "size": 53988,
+            "sha256": "57D28BA51A0F3FB5B039F926A57B8BE2805B737C36F21BCBA3756DA0284A6CCB"
         },
         {
             "path": "docs/INSTALL.md",
-            "size": 17132,
-            "sha256": "A2D21765B2485C2106AB432E92AC24B0E033B62CEBC0549C41F249135A14113C"
+            "size": 18988,
+            "sha256": "604B82433C28E00BB2653C5F67BC8A2903BF8A19C182E06DB47D2EDCB8A7D101"
         },
         {
             "path": "docs/PLUGIN_DEV_GUIDE.md",
@@ -119,8 +119,8 @@
         },
         {
             "path": "platform/mod_kit/app-update.template.yml",
-            "size": 263,
-            "sha256": "DE77889AD4DA6C6FB8F1C904711710387C3A3CEF6C901AFE5A25908B37CDA151"
+            "size": 259,
+            "sha256": "A582A08422E12E51B72C8CE9706D494CD112C565C252277410F3F759F84E9F87"
         },
         {
             "path": "platform/mod_kit/patch.js",
@@ -129,13 +129,13 @@
         },
         {
             "path": "platform/mod_kit/repatch.bat",
-            "size": 323,
-            "sha256": "8678730D9A527D9217FA207294C4D96CD70A71CCAECA09E28C400E7F95DB5082"
+            "size": 326,
+            "sha256": "AE4DA0831E5A93CCE70CDF7DA6398980619B5858FF1AEC0B6C7B78B36718E64F"
         },
         {
             "path": "platform/mod_kit/repatch.ps1",
-            "size": 4151,
-            "sha256": "820758BD4FD3E783C2997AA76B628F2D4C3E945302E6E8C27BC1CDFF4C080F33"
+            "size": 16563,
+            "sha256": "CCB79DD6898762AB8F50D1DA73C400FA96FDEE773E8BAB630DFB93686B3E6E92"
         },
         {
             "path": "platform/agm-plugin-host.js",
@@ -269,8 +269,8 @@
         },
         {
             "path": "platform/scripts/legacy-rollback/rollback.bat",
-            "size": 178,
-            "sha256": "D579E7F3A36F82E3A017CEA83C7DC5BC8CE1A53492A96C5572D65B983F569420"
+            "size": 174,
+            "sha256": "0B11E83319F0C8487A6491F0452DCE9729049842458BD9CBAC4DD3261A7A2D5C"
         },
         {
             "path": "platform/scripts/legacy-rollback/rollback.ps1",
