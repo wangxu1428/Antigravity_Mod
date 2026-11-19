@@ -84,8 +84,8 @@
         },
         {
             "path": "docs/INSTALL.md",
-            "size": 27020,
-            "sha256": "21F0415F3813FCCC40B011BD3060A02163CFB069D671EF7497ECEB31FF2B386F"
+            "size": 27874,
+            "sha256": "A621C740261C3D5B0BEB9D968EA30FE587A7C1AF00FB8356E5F7F91CCE0AA29F"
         },
         {
             "path": "docs/PLUGIN_DEV_GUIDE.md",
@@ -134,8 +134,8 @@
         },
         {
             "path": "platform/mod_kit/repatch.ps1",
-            "size": 62134,
-            "sha256": "18ADD37DB7EDA940A22B98686E1AE5B855E88F849CE20F489FFE35F414801C22"
+            "size": 63149,
+            "sha256": "0D296B0003B15654D3E7C69CA2077CD3797B97E5ECDA40D7ABCF91AC18CC1C4D"
         },
         {
             "path": "platform/agm-plugin-host.js",
@@ -259,8 +259,8 @@
         },
         {
             "path": "platform/scripts/install-or-update.ps1",
-            "size": 25471,
-            "sha256": "56625068490F5E30765386097C47FD93BA34653E4185FF809B59F7245A11B1C3"
+            "size": 28060,
+            "sha256": "DC32E5AC34FBB2C1E987B6CC7A74707B6EB2B20B111577FD8302A3F902BADBB2"
         },
         {
             "path": "platform/scripts/legacy-rollback/README.md",
@@ -279,8 +279,8 @@
         },
         {
             "path": "platform/scripts/restore-official.ps1",
-            "size": 22111,
-            "sha256": "B880AF3B389AF542A8E6B1844552A6B7C04B83B1518285C764E00CF86161D5B1"
+            "size": 22537,
+            "sha256": "33D0E5DB783F3277CD2CB72B0DDE5FEBC21859ED197CD0E468C4E191EAD99DCA"
         },
         {
             "path": "platform/scripts/启动爆改版.bat",
@@ -314,8 +314,8 @@
         },
         {
             "path": "docs/WINDOWS_TEST_EVIDENCE.md",
-            "size": 31338,
-            "sha256": "6F0A6B31C41B9CEE85E7C1DD85D0286867AD37CC9E6D591EE6D3A89376CF51B8"
+            "size": 34175,
+            "sha256": "C2393250386B99AEE7E685CA0DFAE94FC7C50314DE669868785F4291DAD3C695"
         },
         {
             "path": "tests/test_repatch_unit.js",
@@ -324,8 +324,8 @@
         },
         {
             "path": "tests/test_fault_injection.js",
-            "size": 56534,
-            "sha256": "D05BD557E0C6A131BDA7BBEC2327138D2C5FA1939FCE0FCE2ACD7BEC3FC14EE4"
+            "size": 65806,
+            "sha256": "AF731462011DD5AC7A326D250EF461C027DE18A1323F3AEEC76D478929FE74B4"
         },
         {
             "path": "tests/test_manifest_integrity.js",
