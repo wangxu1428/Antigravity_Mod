@@ -8,21 +8,23 @@
 
 ---
 
-## 当前状态（2026-11-19 更新）
+## 当前状态（2026-11-19 PR #8 R3 更新）
 
-> 以下为 `main` @ `d9dad3f` 之后的最新进展摘要；下文第 1–7 节仍**完整原样保留** `RELEASE_AUDIT_01`（`a8e9c19`）的历史审计记录供对照追溯。
+> 以下为 `main` @ `d9dad3f` 之后截至 `AGM-PR8-HARDENING-R3`（分支 `dev/release-hardening-01`）的最新进展摘要；下文第 1–7 节仍**完整原样保留** `RELEASE_AUDIT_01`（`a8e9c19`）的历史审计记录供对照追溯。
 
-- **当前基线与发行状态**：`main` 已合入 PR #5（CI `offline-tests`）、PR #6（本交接文档）与 PR #7（安装/发布文档、脚本去初稿化、`manifest.repo.json` 按 LF 重算），当前基线提交为 `d9dad3f`。标签 **`platform-v2.1.0`** 已指向 `d9dad3f` 并作为首个公开测试版（Pre-release）发布；尚未发布正式稳定版，也尚未发布独立插件版本。
-- **本次发行加固（`AGM-RELEASE-HARDENING-01`，分支 `dev/release-hardening-01`）**：
-  1. **加固 [`platform/mod_kit/repatch.ps1`](../platform/mod_kit/repatch.ps1)**：对 `asar extract`、`asar pack`（含 `npx asar` 回退）、`asar list` 显式校验 `$LASTEXITCODE`；修复原脚本在缺失 `app.asar.bak.unpacked` 时静默忽视 `asar extract` 报错导致丢失 `chrome-devtools-mcp` 的隐患（临时区自动配对 `app.asar.unpacked` 后解包）；先打包至 `resources\.agm_repatch_tmp_<时间戳>\app.asar` 并完成存在性/非零大小、`asar list` 6 个关键注入文件、`node --check` 与 SHA256 校验；校验全部通过后再备份 `resources\app.asar.prev_<时间戳>` 并以 `Move-Item` 原子替换且二次比对 SHA256；任意步骤失败自动清理临时目录、保持原 `app.asar` 不变、非 0 退出且不打印成功；新增可选 `-TargetAppDir`/`-AppDir` 参数，并在成功与失败时输出回滚命令；[`platform/mod_kit/repatch.bat`](../platform/mod_kit/repatch.bat) 同步透传 `%*`。
-  2. **新增离线单元测试 [`tests/test_repatch_unit.js`](../tests/test_repatch_unit.js)**（RP1–RP7，7/7 PASS）：无需真实 `asar`，覆盖 `pack`/`extract` 失败、0 字节产物、`asar list` 缺项、`.unpacked` 临时配对以及正常原子替换与回滚提示。
-  3. **文档对齐与分工边界**：更新 `CHANGELOG.md`（按 `platform-v2.1.0` @ `d9dad3f` 重新划分 `[2.1.0]` 与 `[Unreleased]`）、`docs/versioning.md`、`docs/INSTALL.md`、`docs/ARCHITECTURE.md`、`docs/README.md`，新增 [`docs/WINDOWS_TEST_EVIDENCE.md`](WINDOWS_TEST_EVIDENCE.md)。本次未改动 `manifest.repo.json`（由仓库管理员按 LF 统一重算）、未改动 `plugins/` 代码、未推远端或改 `main`。
-- **最新实测结果（Windows 10 / PS 5.1 / Node v26.13.1 / asar v4.3.2，详见 [`docs/WINDOWS_TEST_EVIDENCE.md`](WINDOWS_TEST_EVIDENCE.md)）**：
-  - **纯离线单元测试**：`test_host_unit.js` 15/15 PASS、`test_reaper_unit.js` 16/16 PASS、`test_update_lock.js` 9/9 PASS、`test_repatch_unit.js` 7/7 PASS（共 47/47 PASS）。
-  - **安装与两轮升级**：重跑隔离副本实测 `20/20 PASS`（30 个平台文件一致、12 个用户文件 SHA256 全程不变、严格幂等）。
-  - **新版 `repatch.ps1` + `restore-official.ps1`**：Case (a) 首次重铸（`exit 0`，产出 `6F60316D...`）、Case (b) 重复重铸（`exit 0`，`.bak` 哈希与修改时间不变）、Case (c) 官方还原（`exit 0`，还原回 `98A4308C...`）、Case (d) 备份污染复现（`exit 2`）、Case (e) 打包失败保护（`exit 19`，原 `app.asar` 哈希不变）全部 **5/5 PASS**。
-  - **隔离客户端实机验证**：更新锁前置门禁 PASS；客户端以 `--user-data-dir` 独立空目录启动并稳定存活 36s+ 出现主窗口（**PASS**）；通过侧边栏「插件中心」入口打开并截屏验证 AGM Hub v2.1.0 界面（**PASS**）；`F5` 热重载已由运行日志与插件日志证实触发重新初始化，但因 `hakimi-i18n` teardown 不还原已汉化 DOM 且不打印 `enabled`/`customOverrides` 新值，无法闭环确认修改配置生效，诚实标为 **UNKNOWN**。
-- **待跟进遗留项**：由仓库管理员合入前按 LF 重算 `manifest.repo.json` 哈希；补充插件中心无障碍/热重载配置生效日志以便非交互式桌面环境可自动化闭环校验；完善 `index/plugins.json` 正式插件与 CI 覆盖 `test_repatch_unit.js`。
+- **当前基线与发行状态**：`main` 已合入 PR #5（CI `offline-tests`）、PR #6（本交接文档）与 PR #7（安装/发布文档、脚本去初稿化、基线 `d9dad3f`），标签 **`platform-v2.1.0`** 指向 `d9dad3f`（Pre-release）；尚未发布正式稳定版，也尚未发布独立插件版本。PR #8（`dev/release-hardening-01`，R3 代码/测试提交 `5a24044` 及本轮文档/清单对齐提交，本地尚未推送远端）正在修复 Work 独立审计发现的发行阻断项。
+- **PR #8（Round 1–3）核心加固内容**：
+  1. **P0 原子替换与异常恢复（[`platform/mod_kit/repatch.ps1`](../platform/mod_kit/repatch.ps1)、[`platform/scripts/restore-official.ps1`](../platform/scripts/restore-official.ps1)）**：移除 `Move-Item`，改用同卷暂存 + `[System.IO.File]::Replace` 并校验替换后 SHA256；替换抛错后**绝不凭异常类型推断原文件未变化**，而是先实测核验目标状态与恢复材料完整性，再决定是否清理快照；目标被锁/不可读时保留全部可信恢复材料并报告 `UNKNOWN/NEEDS_RECOVERY`（`exit 10`）；可安全回滚场景以同卷暂存 + `File.Replace` 原子恢复并二次校验 SHA256（`RECOVERED_AUTO`）；回滚再次失败时进入 `FAILED_NEEDS_MANUAL_RECOVERY`（`exit 11`），绝不清理唯一可用备份。默认官方白名单严格锁定 Antigravity `2.32.1` 纯净底座 `5B493943E67E500638555315594D5B1ACBC7A02E6DAC3C786651921C1EE8519F`（旧版预置汉化包 `98A4308C...` 为旧改装基准，严禁视为官方原版），缺失或污染 `.bak` 一律报警 `exit 4`。
+  2. **P0 `app.asar.unpacked` 目录状态机与 `finally` 物理保留（`repatch.ps1`）**：目录互换全程追踪显式状态（`NOT_STARTED -> ORIG_MOVED_TO_BACKUP -> NEW_MOVED_IN -> VERIFIED_NEW`），兼容 `>260` 字符长路径；新目录迁移或后置校验失败优先把 `app.asar.unpacked.orig_bak` 移回原位并联动回滚 `app.asar`；`finally` 物理守卫严禁在恢复未完成时删除仍含唯一恢复材料的 `.agm_repatch_tmp_*` 目录，确保不出现未经报告的不一致状态，失败时输出可执行人工恢复命令。
+  3. **P1 `app-update.yml` 事务一致性（`repatch.ps1`、[`platform/mod_kit/agm_locks.js`](../platform/mod_kit/agm_locks.js)、[`platform/scripts/install-or-update.ps1`](../platform/scripts/install-or-update.ps1)）**：操作前记录 YAML 存在性与 SHA256；通过 `--update-yml-out` 与 `-StagedUpdateYmlPath` 保证**在 ASAR 与 `unpacked` 校验替换完成前绝不修改活动 YAML**；已符合锁定配置时执行真 NO-OP（零写盘）；更新时采用外科式行替换保留用户自定义键与注释；兼容首次安装无 YAML 情况；安装或重铸失败时自动还原操作前 YAML 状态且不残留多余 `.bak_*`。
+  4. **P1 Manifest 原始 Git Blob 字节一致性与 CI 补全（[`manifest.repo.json`](../manifest.repo.json)、[`.github/workflows/test.yml`](../.github/workflows/test.yml)）**：将 Git 对象库中残留 CRLF 的 `app-update.template.yml`（259 字节）与 `rollback.bat`（174 字节）统一为纯净 LF Blob；按 `git cat-file blob` 与 `git archive` 原始字节全量重算清单，并正式纳入 `tests/test_repatch_unit.js`、`tests/test_fault_injection.js`、`tests/test_manifest_integrity.js` 与 `docs/WINDOWS_TEST_EVIDENCE.md`。全部测试脚本已接入 Windows / Ubuntu 双矩阵 CI。
+- **最新实测结果（Windows 10 / PS 5.1.19041.3803 / Node v26.13.1 / asar v4.3.2，详见 [`docs/WINDOWS_TEST_EVIDENCE.md`](WINDOWS_TEST_EVIDENCE.md) 第 5–6 节）**：
+  - **纯离线单元测试与故障注入**：`test_host_unit.js` **15/15 PASS**、`test_reaper_unit.js` **16/16 PASS**、`test_update_lock.js` **11/11 PASS**、`test_repatch_unit.js` **14/14 PASS**、`test_fault_injection.js` **23/23 PASS**、`test_manifest_integrity.js` **5/5 PASS**（共 **84 项**全绿；Linux 模拟 `test_repatch_unit` 2/2 与 `test_fault_injection` 2/2 均通过并明确跳过 Windows 专用例；远端 Windows/Ubuntu CI **待推送后由编程确认**）。
+  - **安装与两轮升级回归**：隔离副本实测 **20/20 PASS**（30 个平台文件逐字节一致、12 个用户文件 SHA256 全程不变、64 项快照两轮零差异严幂等）。
+  - **纯净官方底座（`5B493943...`）实机回归与真实故障注入**：`R3-REG-A..E`、`R3-P0-1a/1b` 占用锁、`R3-P0-2` 防污染、`R3-REAL-FI-*` 真实 `@electron/asar` 故障注入共 **14/14 PASS**（首轮重铸产出 `E17875BA...`，`.bak` 恒为 `5B493943...`）。
+  - **自动恢复 vs 人工介入边界**：已在 [`docs/INSTALL.md`](INSTALL.md) 第 8 节明确划分。
+  - **隔离客户端与热重载**：早期客户端启动（`client_f`）与 AGM Hub 插件中心（`client_g`）为 **PASS**；`F5` 热重载配置生效（`client_h`）继续诚实记为 **UNKNOWN**（不在 PR #8 修复范围）。
+  - **D 盘官方目录与进程安全**：`D:\AI_Studio\Apps\Antigravity\` 及 `UserData` 全程只读零修改；实测结束后隔离测试目录无任何残留进程。
 
 ---
 

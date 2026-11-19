@@ -26,13 +26,13 @@
 | 测试批次 | 日期 | 基线 / 脚本版本 | 结论 | 原始证据路径 | 证据文件 SHA256 |
 |---|---|---|---|---|---|
 | `INSTALL_TEST_01` | `2026-11-19 09:55:05 +08:00` | `main` @ `a8e9c19`（`install-or-update.ps1 -SkipRepatch`） | **PASS (20/20)** | `C:\AGM_TestLab\INSTALL_TEST_01\report\result.txt` | `811B7A26DA8617CA88755214C2B21DF60F22654DDB36E04EB403FC943172072C` |
-| `RELEASE_DOCS_01` | `2026-11-19 10:00:19 +08:00` | 旧版 `repatch.ps1` + `restore-official.ps1`（Case a/b/c/d） | **PASS (4/4)**（见上方哈希说明） | `C:\AGM_TestLab\RELEASE_DOCS_01\report\asar_result.txt` | `2A7E79E34D5ADCCF5ACF7F07173EC0BEFB08ED9DFD30EF6BA421E655A3233689` |
+| `RELEASE_DOCS_01` | `2026-11-19 10:00:19 +08:00` | 旧版 `repatch.ps1` + `restore-official.ps1`（Case a/b/c/d，基于旧改装基准 `98A4308C...`） | **PASS (4/4)**（历史记录保留，非纯净官方底座） | `C:\AGM_TestLab\RELEASE_DOCS_01\report\asar_result.txt` | `2A7E79E34D5ADCCF5ACF7F07173EC0BEFB08ED9DFD30EF6BA421E655A3233689` |
 
 ---
 
-## 3. 本次加固实测矩阵（`AGM-RELEASE-HARDENING-01`，`2026-11-19`）
+## 3. 历史首轮加固实测矩阵（`AGM-RELEASE-HARDENING-01` Round 1，`2026-11-19`，旧改装基准记录保留）
 
-> 以下证据均已归档在本次交付证据包 `AGM_RELEASE_HARDENING_01_windows_evidence.zip`（对应测试工作目录 `C:\AGM_TestLab\RELEASE_HARDENING_01\evidence\`）中。
+> 说明：以下第 3–4 节完整保留第 1–2 轮实测历史记录；其中 `repatch_*`、`p0_1*`、`p0_2*` 当时误将 D 盘当前 `app.asar`（`98A4308C...`，预置旧版 `AGY_ZH_ENGINE_START`）视为原版，现统一标记为**旧改装基准（非官方原版）**。官方纯净底座（`5B493943...`）实测见第 5 节与第 6 节。以下证据归档于工作目录 `C:\AGM_TestLab\RELEASE_HARDENING_01\evidence\` 中。
 
 ### 3.1 纯离线 Node.js 单元测试
 
@@ -66,9 +66,9 @@
 
 ---
 
-## 4. 返工加固复测记录（P0-1 / P0-2 / P1，2026-11-19）
+## 4. 历史第 2 轮返工加固复测记录（P0-1 / P0-2 / P1，2026-11-19，旧改装基准记录保留）
 
-> 针对上一轮复核指出的 P0-1（占用锁下 `Move-Item -Force` 先删后移）、P0-2（改装版污染 `.bak`）与 P1（将 `tests/test_repatch_unit.js` 纳入 CI）完成返工加固与全套实测，完整证据同样归档于 `AGM_RELEASE_HARDENING_01_windows_evidence.zip`（更新后大小 `371737` 字节，53 个条目，SHA256 `FC06B1EF29167E6686434C0E0D0235E5ED746942F82D0230920D107AFFFF66AB`）。
+> 注：本节保留第 2 轮返工实测原始记录（当时白名单误用 `98A4308C...` 旧改装基准，故表内 `.bak` 为 `98A4308C...`，非纯净官方版）。以下证据归档于工作目录 `C:\AGM_TestLab\RELEASE_HARDENING_01\evidence\`（`AGM_RELEASE_HARDENING_01_windows_evidence.zip` 大小 `371737` 字节，53 个条目，SHA256 `FC06B1EF29167E6686434C0E0D0235E5ED746942F82D0230920D107AFFFF66AB`）。
 
 ### 4.1 返工离线单元测试与 CI 接入
 
@@ -121,3 +121,60 @@
 | `official_hash_audit` | D 盘只读 SHA256 与 `AGY_ZH_ENGINE_START` 扫描 | `2026-11-19 14:15 +08:00` | **PASS** | 见上文 1–3 条结论；校正后 D 盘 `app.asar`/`app.asar.bak` 的哈希与 mtime 仍未改变 | `official_hash_audit/audit.txt`、`official_hash_correction/post_correction_process_and_d_readonly.txt` | `BC88E37847BD1A3E71589F1EA65AFF609037D62E46B901DCF4F7507B99660A50`、`DBFDD8A20A1892A118D9958DE60B48FA0E0F907D927CB59E5B44095CF6B11562` |
 
 热重载 `h` 仍为 **UNKNOWN**（本轮未改插件，未为此启动客户端）。`RELEASE_HARDENING_01` 目录下无残留本任务进程。
+
+### 5.1 Google 官方 2.32.1 安装包来源、构建号与只读哈希核验过程
+
+在不修改 `D:\AI_Studio\Apps\Antigravity\` 的前提下，对本地留存的只读官方目录与纯洁 `app.asar.bak` 夹具执行元数据与哈希核验：
+
+| 核验项 | 实测观测结果 |
+|---|---|
+| **官方产品名称与网站** | `package.json`（`fixtures/official_clean/app.asar` 内部）：`name = "antigravity"`、`productName = "Antigravity"`、`version = "2.32.1"`、`homepage = "https://antigravity.google"`、`author = "Google <antigravity-support@google.com>"` |
+| **官方更新通道源** | `D:\AI_Studio\Apps\Antigravity\resources\app-update.yml.bak_20261118_233907`（mtime `2026-11-14 06:20:30`）：`provider: generic`、`url: https://antigravity-hub-auto-updater-974169037036.us-central1.run.app/manifest/`、`updaterCacheDirName: antigravity-updater` |
+| **主程序 PE 版本与构建号** | `D:\AI_Studio\Apps\Antigravity\Antigravity.exe`（246,599,680 字节，mtime `2026-11-14 06:20:30`，SHA256 `AEAF47C28AC1B7406F27AE610DDED0E4C8E2F972F553D8840CDEE7DB767BF1E8`）：`ProductName = Antigravity`、`ProductVersion = 2.32.1.0`、`FileVersion = 2.32.1`（`2.32.1.0`）、`CompanyName = Google`、`IsPatched = False`；`Uninstall Antigravity.exe` 同为 `2.32.1`（`Google`）；`version` 文件记载 Electron `44.9.1`。PE 数字签名状态为 `NotSigned`；**原始 `.exe` 安装器二进制文件本地未留存，其安装包文件哈希为 `UNKNOWN`**。 |
+| **官方纯净底座 `app.asar.bak` 核验** | `D:\AI_Studio\Apps\Antigravity\resources\app.asar.bak`（5,656,861 字节，mtime `2026-11-14 06:20:30`，SHA256 `5B493943E67E500638555315594D5B1ACBC7A02E6DAC3C786651921C1EE8519F`）：解包扫描 `AGY_ZH_ENGINE_START` 命中 `0` 次，且与历史文档 `docs/WHITEPAPER.md` 第 141 行记载（`5,656,861` 字节、`5b493943...`）一致，确认为官方纯净底座。 |
+| **旧改装基准 `98A4308C...` 鉴别** | `D:\AI_Studio\Apps\Antigravity\resources\app.asar`（7,521,517 字节，mtime `2026-11-16 04:01:07`，SHA256 `98A4308C8820A4A73F157B036FCCAA37F642B4C6F916BFA855F44A34A14F5C46`）：显式检出 `AGY_ZH_ENGINE_START`，确认为预置旧版汉化引擎的旧改装基准，严禁视为官方原版。 |
+
+---
+
+## 6. PR #8 第三轮阻断项加固与故障注入实测（`AGM-PR8-HARDENING-R3`，`2026-11-19`）
+
+> 本轮围绕原子替换与异常恢复、`app.asar.unpacked` 状态机回滚、`app-update.yml` 事务一致性以及 `manifest.repo.json` 原始 Git Blob 字节一致性完成代码加固，所有实测证据均保存在隔离目录 `C:\AGM_TestLab\RELEASE_HARDENING_01\evidence\r3\`（并打包为 `AGM_PR8_HARDENING_R3_evidence.zip`）。
+
+### 6.1 离线单元测试与新增故障注入套件
+
+| 测试 ID | 测试内容 | 结果 | 关键指标 / 证据路径 |
+|---|---|---|---|
+| `offline_host_r3` | `node tests/test_host_unit.js` | **PASS (15/15, exit=0, 74ms)** | `evidence/r3/offline_tests/results.txt` |
+| `offline_reaper_r3` | `node tests/test_reaper_unit.js` | **PASS (16/16, exit=0, 367ms)** | `evidence/r3/offline_tests/results.txt` |
+| `offline_update_lock_r3` | `node tests/test_update_lock.js`（UL1–UL9，含无修改 NO-OP、保留自定义键、`--update-yml-out`） | **PASS (11/11, exit=0, 275ms)** | `evidence/r3/offline_tests/results.txt` |
+| `offline_repatch_r3` | `node tests/test_repatch_unit.js`（RP1–RP13 + RP6b，基于 `5B493943...` 白名单） | **PASS (14/14, exit=0, 21665ms)** | `evidence/r3/offline_tests/results.txt` |
+| `offline_fault_injection_r3` | `node tests/test_fault_injection.js`（FI-S1/S2、FI-R1..R8b 替换与还原故障、FI-U1..U5b 目录互换与占用故障、FI-Y1..Y6 YAML 事务故障） | **PASS (23/23, exit=0, 46990ms)** | `evidence/r3/fault_injection_unit/fault_injection_matrix.json` 及 `FI-*.txt` |
+| `offline_manifest_r3` | `node tests/test_manifest_integrity.js`（MF1–MF5：全部原有 52 条 + 新增文件 Git Blob 原始字节与 `git archive` 逐条校验） | **PASS (5/5, exit=0)**（提交后于 `post_commit_all_tests.txt` 复核） | `evidence/r3/manifest/manifest_raw_and_archive_audit.txt` |
+| `ci_linux_sim_r3` | Linux 平台模拟执行 `test_repatch_unit.js`（2/2）与 `test_fault_injection.js`（2/2，明确输出非 Windows 跳过原因） | **PASS (4/4, exit=0)** | `evidence/r3/offline_tests/results.txt` |
+| `ci_remote_r3` | GitHub Actions `.github/workflows/test.yml`（已新增 `test_fault_injection.js` 与 `test_manifest_integrity.js` 至 Windows/Ubuntu 双矩阵） | **待推送后由编程确认** | 本轮严格不 `git push`，远端 Runner 待推送触发 |
+
+### 6.2 纯净官方夹具实机回归、安装器 20/20 与真实故障注入（`5B493943...` + `@electron/asar v4.3.2`）
+
+| 用例 ID | 测试内容 | 退出码 | 恢复状态 (`RECOVERY_STATE`) | 目标 / 备份关键 SHA256 与结论 | 原始证据路径 |
+|---|---|---|---|---|---|
+| `install_upgrade_r3` | `install-or-update.ps1 -SkipRepatch` 隔离回归（`-DryRun` + 首次安装 + 两轮升级幂等） | `exit 0` | — | **20/20 PASS**；64 项快照 diff=0，12 个用户文件不变 | `evidence/r3/install_upgrade/result.txt` |
+| `R3-REG-A` | 官方 `5B493943...` + 非默认自定义 `app-update.yml` 首次重铸 | `exit 0` | `SUCCESS` (`CONSISTENT_NEW`) | `.bak`=`5B493943...`，产出=`E17875BA...`，YAML 更新并保留 `customUserFlag` | `evidence/r3/real_official_regression/R3-REG-A.txt` |
+| `R3-REG-B` | 重复重铸（已符合配置 YAML + 已有 `.bak`） | `exit 0` | `SUCCESS` (`CONSISTENT_NEW`) | `.bak` mtime/哈希不变，`.modded_prev_*` 落盘，YAML NO-OP 零写盘 | `evidence/r3/real_official_regression/R3-REG-B.txt` |
+| `R3-REG-C` | `restore-official.ps1` 还原官方原版 | `exit 0` | `SUCCESS` | 目标还原回 `5B493943...`，旧改装版归档于 `displaced_mod_*` | `evidence/r3/real_official_regression/R3-REG-C.txt` |
+| `R3-REG-D` | 无 `.bak` + 已改装 `app.asar` 拒绝写 `.bak` | `exit 4` | `CLEAN_NO_CHANGE` | 打印 `ALARM`，未生成 `.bak`，目标维持 `E17875BA...` | `evidence/r3/real_official_regression/R3-REG-D.txt` |
+| `R3-P0-2-POLLUTED` | 污染 `.bak` 触发双脚本拒绝 | `exit 4` | `CLEAN_NO_CHANGE` | `repatch.ps1` 与 `restore-official.ps1` 均 `ALARM` + `exit 4` | `evidence/r3/real_official_regression/R3-P0-2-POLLUTED.txt` |
+| `R3-REG-E` | 真实解包后模拟 `asar pack` 失败（`exit 19`）+ 非默认 YAML | `exit 19` | `CLEAN_NO_CHANGE` | 目标保持 `5B493943...`，YAML 未变动，临时目录清理 | `evidence/r3/real_official_regression/R3-REG-E.txt` |
+| `R3-P0-1a/1b` | 真实 `FileStream` 锁（`FileShare.None` / `FileShare.Read`） | `exit 10` | `CLEAN_NO_CHANGE` | 两类锁均安全中止，目标保持 `5B493943...`，YAML 不变 | `evidence/r3/real_official_regression/R3-P0-1a-LOCK-NONE.txt`、`R3-P0-1b-LOCK-READ.txt` |
+| `R3-REAL-FI-POST-EXC` | 真实 `asar` 替换成功后抛出异常 (`post_replace_exception`) | `exit 9` | `RECOVERED_AUTO` | 自动原子回滚至 `5B493943...`，无残留临时目录 | `evidence/r3/real_official_regression/R3-REAL-FI-POST-EXC.txt` |
+| `R3-REAL-FI-LOCKED` | 真实 `asar` 替换后目标被锁 (`post_replace_target_locked`) | `exit 10` | `UNKNOWN/NEEDS_RECOVERY` | 保留 `.agm_repatch_tmp_*` 与完整 `5B493943...` 备份材料 | `evidence/r3/real_official_regression/R3-REAL-FI-LOCKED.txt` |
+| `R3-REAL-FI-UNPACKED-FAIL` | 真实 `unpacked` 互换与恢复失败 | `exit 11` | `FAILED_NEEDS_MANUAL_RECOVERY` | `INCONSISTENT_ASAR_UNPACKED`，`finally` 物理保留 `app.asar.unpacked.orig_bak` | `evidence/r3/real_official_regression/R3-REAL-FI-UNPACKED-FAIL.txt` |
+| `R3-REAL-FI-YAML-PARTIAL` | 真实 `asar` 后 YAML 写入部分损坏 (`yaml_write_partial_fail`) | `exit 12` | `RECOVERED_AUTO` | YAML、ASAR、`unpacked` 三者同步自动回滚至原态 | `evidence/r3/real_official_regression/R3-REAL-FI-YAML-PARTIAL.txt` |
+| `R3-REAL-FI-RESTORE-MISMATCH` | 真实 `restore-official.ps1` 还原后哈希不一致 | `exit 4` | `RECOVERED_AUTO` | 安全原子回滚至还原前改装版 `E17875BA...`，`.bak` 不变 | `evidence/r3/real_official_regression/R3-REAL-FI-RESTORE-MISMATCH.txt` |
+| `R3-REAL-FI-INSTALLER-FAIL` | 安装器调用 `repatch.ps1` 失败（含自定义上游 YAML） | `exit 19` | `CLEAN_NO_CHANGE` | 活动 YAML SHA256 原封不动，无多余 `.bak_*` | `evidence/r3/real_official_regression/R3-REAL-FI-INSTALLER-FAIL.txt` |
+
+### 6.3 Manifest 原始字节一致性与纳入清单评估
+
+- **Blob 统一与原始字节复核**：修正前检查发现 Git 对象库中 `platform/mod_kit/app-update.template.yml`（263 字节）与 `platform/scripts/legacy-rollback/rollback.bat`（178 字节）存在 CRLF Blob，导致与按 LF 计算的 `manifest.repo.json`（259 / 174 字节）不一致。本轮已将该 2 个文件以纯 LF Blob 规范入库，全量清单实现 **100% 原始 Git Blob 与 `git archive` 零归一化逐字节一致**。
+- **是否将 `tests/test_repatch_unit.js`（及 R3 新增发行测试）纳入 Manifest 的评估结论**：**应当纳入**。理由：`tests/test_repatch_unit.js`、`tests/test_fault_injection.js`、`tests/test_manifest_integrity.js` 与 `docs/WINDOWS_TEST_EVIDENCE.md` 均通过 `git archive` 随发行仓库分发并直接参与 CI 与本地发行门禁校验（已有 `test_host_unit.js`、`test_reaper_unit.js`、`test_update_lock.js` 也均在 `manifest.repo.json` 内），纳入清单可保证测试门禁代码本身的完整性与可溯源性；而 `manifest.repo.json` 自身不可自引用（SHA256 无法包含自身）。
+- **自动恢复 vs 人工介入边界**：详见 [`docs/INSTALL.md`](INSTALL.md) 第 8 节对照表。
+- **热重载状态**：`client_h` 维持 **UNKNOWN**（不在本 PR 修复范围，未修改插件）。

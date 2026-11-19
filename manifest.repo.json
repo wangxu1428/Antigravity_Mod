@@ -84,8 +84,8 @@
         },
         {
             "path": "docs/INSTALL.md",
-            "size": 22273,
-            "sha256": "5715B7ABE03FC08F03E3D96D587BBC7217C89123B8E7CCE4BD4B40E05BBF117D"
+            "size": 27020,
+            "sha256": "21F0415F3813FCCC40B011BD3060A02163CFB069D671EF7497ECEB31FF2B386F"
         },
         {
             "path": "docs/PLUGIN_DEV_GUIDE.md",
@@ -109,8 +109,8 @@
         },
         {
             "path": "platform/mod_kit/agm_locks.js",
-            "size": 10506,
-            "sha256": "FF4A184830609B6F6E6704BD3444413888FDF2BA7DA7AA4079096E1A430C6C94"
+            "size": 12893,
+            "sha256": "DA12202342359C91BF910F93B0D4E961B252A9D318B127A414B484F135FA1922"
         },
         {
             "path": "platform/mod_kit/agm_sidecar_reaper_core.js",
@@ -134,8 +134,8 @@
         },
         {
             "path": "platform/mod_kit/repatch.ps1",
-            "size": 34049,
-            "sha256": "BE25A7068473E97A81576A8763FAA89952CC1165B42A8767E64BF1159EFFA522"
+            "size": 62134,
+            "sha256": "18ADD37DB7EDA940A22B98686E1AE5B855E88F849CE20F489FFE35F414801C22"
         },
         {
             "path": "platform/agm-plugin-host.js",
@@ -259,8 +259,8 @@
         },
         {
             "path": "platform/scripts/install-or-update.ps1",
-            "size": 11996,
-            "sha256": "5EC9CDBE0E91F039FA85FB9A16FE3880F34B93AFD8C2A6FE5B54030D1E807FBA"
+            "size": 25471,
+            "sha256": "56625068490F5E30765386097C47FD93BA34653E4185FF809B59F7245A11B1C3"
         },
         {
             "path": "platform/scripts/legacy-rollback/README.md",
@@ -279,8 +279,8 @@
         },
         {
             "path": "platform/scripts/restore-official.ps1",
-            "size": 10034,
-            "sha256": "7979128226A821B46C41AE76654EBB665B2EABECB52BA59287D419D36166EFF4"
+            "size": 22111,
+            "sha256": "B880AF3B389AF542A8E6B1844552A6B7C04B83B1518285C764E00CF86161D5B1"
         },
         {
             "path": "platform/scripts/启动爆改版.bat",
@@ -309,8 +309,28 @@
         },
         {
             "path": "tests/test_update_lock.js",
-            "size": 10730,
-            "sha256": "6602C6FC8089E65399B6F085A1418EAE116ECACF66F40E84DBEA7A611D524120"
+            "size": 14198,
+            "sha256": "3392F026B23916404ACD05617CD2B171D9A7DBA9447348FE43B765AE91BE818F"
+        },
+        {
+            "path": "docs/WINDOWS_TEST_EVIDENCE.md",
+            "size": 30951,
+            "sha256": "BC08820310DAAB8B8D8867D66ADF99495219C466B8C702AD01C898B4E7C5577D"
+        },
+        {
+            "path": "tests/test_repatch_unit.js",
+            "size": 32891,
+            "sha256": "6122870BF2B06027167886F358B9FC9C74251DA34D175B55D042A77F0C34B3F4"
+        },
+        {
+            "path": "tests/test_fault_injection.js",
+            "size": 56534,
+            "sha256": "D05BD557E0C6A131BDA7BBEC2327138D2C5FA1939FCE0FCE2ACD7BEC3FC14EE4"
+        },
+        {
+            "path": "tests/test_manifest_integrity.js",
+            "size": 9145,
+            "sha256": "60FFD0EE4FD61C7DECCD774972DFCA1CB792D6F0C28A13BDA51E38ACC5037D0E"
         }
     ]
 }
