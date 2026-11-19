@@ -78,9 +78,9 @@
 | `offline_host` | `node tests/test_host_unit.js`（宿主校验/SemVer/Schema/权限网关） | `2026-11-19 13:56` | **PASS (15/15, exit=0, 57ms)** | `offline_tests/results.txt` | `71115367C15C14FD4C37DCE262B4F0797A35C3674BEC27265885E5DDCB073C3C` |
 | `offline_reaper` | `node tests/test_reaper_unit.js`（Sidecar 快照与单 PID 收割 RU1–RU16） | `2026-11-19 13:56` | **PASS (16/16, exit=0, 327ms)** | `offline_tests/results.txt` | `71115367C15C14FD4C37DCE262B4F0797A35C3674BEC27265885E5DDCB073C3C` |
 | `offline_update_lock` | `node tests/test_update_lock.js`（自动更新锁注入与拦截 UL1–UL7） | `2026-11-19 13:56` | **PASS (9/9, exit=0, 256ms)** | `offline_tests/results.txt` | `71115367C15C14FD4C37DCE262B4F0797A35C3674BEC27265885E5DDCB073C3C` |
-| `offline_repatch` | `node tests/test_repatch_unit.js`（RP1–RP7，已接入 CI `ubuntu-latest`/`windows-latest`） | `2026-11-19 13:56` | **PASS (7/7, exit=0, 9171ms)** | `offline_tests/results.txt` | `71115367C15C14FD4C37DCE262B4F0797A35C3674BEC27265885E5DDCB073C3C` |
+| `offline_repatch` | `node tests/test_repatch_unit.js`（RP1–RP7，本机实测；接入 CI 改由 PR #8 返工） | `2026-11-19 13:56` | **PASS (7/7, exit=0, 9171ms)** | `offline_tests/results.txt` | `71115367C15C14FD4C37DCE262B4F0797A35C3674BEC27265885E5DDCB073C3C` |
 | `repatch_linux_sim` | `process.platform='linux'` 模拟非 Windows 跳过（仅跑 RP6、跳过 RP1–RP5/RP7） | `2026-11-19 13:56` | **PASS (1/1, exit=0, 89ms)** | `offline_tests/repatch_linux_sim.txt` | `CE09858EBB37B5A317051BD5EB7004A1791AD4D55ED459D9CA57B0DC2682E9E0` |
-| `offline_i18n_teardown` | `node tests/test_i18n_teardown_unit.js`（IT1–IT6：构造同步、teardown 调用 `restoreEnglish()` 先于 `stop()`、`enabled=false` 阻断启动与日志、异常容错） | `2026-11-19 13:56` | **PASS (6/6, exit=0, 370ms)** | `offline_tests/results.txt` | `71115367C15C14FD4C37DCE262B4F0797A35C3674BEC27265885E5DDCB073C3C` |
+| `offline_i18n_teardown` | `node tests/test_i18n_teardown_unit.js`（IT1–IT6：构造同步、teardown 调用 `restoreEnglish()` 先于 `stop()`、`enabled=false` 阻断启动与日志、异常容错；已接入 CI `ubuntu-latest`/`windows-latest`） | `2026-11-19 13:56` | **PASS (6/6, exit=0, 370ms)** | `offline_tests/results.txt` | `71115367C15C14FD4C37DCE262B4F0797A35C3674BEC27265885E5DDCB073C3C` |
 
 ### 4.2 隔离客户端副本实测 `client_h`（`hakimi-i18n` 热重载关闭还原英文）
 

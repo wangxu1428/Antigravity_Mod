@@ -16,7 +16,7 @@
 
 ### Added
 
-- 新增离线单元测试 [`tests/test_i18n_teardown_unit.js`](tests/test_i18n_teardown_unit.js)（IT1–IT6），将 [`tests/test_repatch_unit.js`](tests/test_repatch_unit.js)（补全非 Windows 跳过提示中的 `RP7`）与 [`tests/test_i18n_teardown_unit.js`](tests/test_i18n_teardown_unit.js) 接入 [`.github/workflows/test.yml`](.github/workflows/test.yml)（`ubuntu-latest` / `windows-latest` 双矩阵），并在 [`docs/WINDOWS_TEST_EVIDENCE.md`](docs/WINDOWS_TEST_EVIDENCE.md) 追加 `AGM-HARDENING-FOLLOWUP-01` 实测记录。
+- 新增离线单元测试 [`tests/test_i18n_teardown_unit.js`](tests/test_i18n_teardown_unit.js)（IT1–IT6），并将其接入 [`.github/workflows/test.yml`](.github/workflows/test.yml)（`ubuntu-latest` / `windows-latest` 双矩阵）。[`tests/test_repatch_unit.js`](tests/test_repatch_unit.js) 仅补全非 Windows 跳过提示中的 `RP7`；将该测试接入 CI 的工作改到 PR #8 返工，本分支 `test.yml` 不再添加 `test_repatch_unit.js` 步骤。并在 [`docs/WINDOWS_TEST_EVIDENCE.md`](docs/WINDOWS_TEST_EVIDENCE.md) 追加 `AGM-HARDENING-FOLLOWUP-01` 实测记录。
 - 新增不需要真实 `asar` 的离线单元测试 [`tests/test_repatch_unit.js`](tests/test_repatch_unit.js)（RP1–RP7），覆盖 `pack`/`extract` 失败、0 字节产物、`asar list` 缺项、`.unpacked` 临时配对以及正常原子替换与回滚提示。
 
 ## [2.1.0] - 2026-11-19
