@@ -154,8 +154,8 @@
         },
         {
             "path": "plugins/builtin/hakimi-i18n/hakimi-i18n.js",
-            "size": 1991094,
-            "sha256": "5305954C7D90D6A00458DAB9FA25D7A28A9DB31536AD5B585275FBCD8DFC7EE5"
+            "size": 1991978,
+            "sha256": "4AE53E01849DE3CFB54903F8FAC2A96EFA4FB6B180283B5F7431E9C5AAF40913"
         },
         {
             "path": "plugins/builtin/hakimi-i18n/hakimi-i18n/adapters/dom-adapter.js",
@@ -164,8 +164,8 @@
         },
         {
             "path": "plugins/builtin/hakimi-i18n/hakimi-i18n/build.js",
-            "size": 12099,
-            "sha256": "03DF08F4519A35229F30E8C26293CAD40A71DD21EAB10D9A6BB8E8FC7FCC4214"
+            "size": 12983,
+            "sha256": "CE2170C92E7713FA2A644A9D5D3FA8120CC4E814BBBDAE4495A2D8980B1DCE96"
         },
         {
             "path": "plugins/builtin/hakimi-i18n/hakimi-i18n/core/discovery.js",
@@ -301,6 +301,11 @@
             "path": "tests/test_host_unit.js",
             "size": 12733,
             "sha256": "D923DBC42E1A057F87CA445B56F0864150E2C471ABDE9C6C26B9928DD9A42CF0"
+        },
+        {
+            "path": "tests/test_i18n_teardown_unit.js",
+            "size": 20202,
+            "sha256": "7731654038D98C317D02C6C84B5B6FFDF6E5FCC1501E7FF2F04E601C126B2310"
         },
         {
             "path": "tests/test_reaper_unit.js",
