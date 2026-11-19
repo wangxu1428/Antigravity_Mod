@@ -3,7 +3,10 @@
 //
 // Main-process-only allow-list for privileged `hakimi:*` IPC. The trust decision
 // is based on the identity of the WebContents object that was registered by the
-// local window factory (utils.createWindow), plus the sender frame identity.
+// local window factory (utils.createWindow), plus the sender frame identity,
+// creation options / webPreferences inspection, and official backend markers
+// (remoteWindowSecurity / windowBackends) when available. Fail-closed on any
+// missing, unreadable, throwing, or uncertain backend determination.
 // URLs are only an *additional* sanity check; renderer supplied flags/ids/URLs
 // are never trusted.
 //
@@ -16,10 +19,10 @@
 const DENY_MESSAGE = 'unauthorized';
 const MARKER = 'AGM_IPC_SEC_GATE_V1';
 
-function isClearlyRemoteUrl(url) {
-    if (typeof url !== 'string' || !url) return false;
+function extractHttpHost(url) {
+    if (typeof url !== 'string' || !url) return null;
     const m = /^(https?):\/\/([^/?#]+)/i.exec(url);
-    if (!m) return false;
+    if (!m) return null;
     let host = m[2].toLowerCase();
     if (host.startsWith('[')) {
         const end = host.indexOf(']');
@@ -27,9 +30,175 @@ function isClearlyRemoteUrl(url) {
     } else {
         host = host.split(':')[0];
     }
-    if (host === 'localhost' || host.endsWith('.localhost')) return false;
-    if (host === '127.0.0.1' || host === '[::1]' || host === '::1') return false;
-    return true;
+    return host;
+}
+
+function isLoopbackHost(host) {
+    if (!host) return false;
+    if (host === 'localhost' || host.endsWith('.localhost')) return true;
+    if (host === '127.0.0.1' || host === '[::1]' || host === '::1') return true;
+    return false;
+}
+
+function isClearlyRemoteUrl(url) {
+    const host = extractHttpHost(url);
+    if (!host) return false;
+    return !isLoopbackHost(host);
+}
+
+function isExplicitLocalUrl(url) {
+    if (typeof url !== 'string' || !url) return false;
+    if (/^file:\/\//i.test(url)) return true;
+    const host = extractHttpHost(url);
+    if (!host) return false;
+    return isLoopbackHost(host);
+}
+
+function inspectAdditionalArgs(rawArgs) {
+    if (rawArgs === undefined) {
+        return { ok: true, explicitLocal: false, present: false };
+    }
+    if (!Array.isArray(rawArgs)) {
+        return { ok: false, reason: 'invalid-additional-args', explicitLocal: false, present: true };
+    }
+    let explicitLocal = false;
+    for (let i = 0; i < rawArgs.length; i++) {
+        const item = rawArgs[i];
+        if (typeof item !== 'string') {
+            return { ok: false, reason: 'invalid-additional-args', explicitLocal: false, present: true };
+        }
+        const arg = item.trim().toLowerCase();
+        if (arg === '--agy-backend' || arg === '--backend') {
+            if (i + 1 >= rawArgs.length || typeof rawArgs[i + 1] !== 'string') {
+                return { ok: false, reason: 'remote-backend-arg', explicitLocal: false, present: true };
+            }
+            const nextVal = rawArgs[i + 1].trim().toLowerCase();
+            if (nextVal !== 'local') {
+                return { ok: false, reason: 'remote-backend-arg', explicitLocal: false, present: true };
+            }
+            explicitLocal = true;
+            i += 1;
+            continue;
+        }
+        const agyIdx = arg.indexOf('--agy-backend=');
+        if (agyIdx >= 0) {
+            const val = arg.slice(agyIdx + '--agy-backend='.length);
+            if (val !== 'local') {
+                return { ok: false, reason: 'remote-backend-arg', explicitLocal: false, present: true };
+            }
+            explicitLocal = true;
+            continue;
+        }
+        if (arg.indexOf('--backend=') === 0) {
+            const val = arg.slice('--backend='.length);
+            if (val !== 'local') {
+                return { ok: false, reason: 'remote-backend-arg', explicitLocal: false, present: true };
+            }
+            explicitLocal = true;
+            continue;
+        }
+        if (arg === '--remote') {
+            return { ok: false, reason: 'remote-flag-arg', explicitLocal: false, present: true };
+        }
+        if (arg.indexOf('--remote=') === 0) {
+            const rVal = arg.slice('--remote='.length);
+            if (rVal !== 'false' && rVal !== '0') {
+                return { ok: false, reason: 'remote-flag-arg', explicitLocal: false, present: true };
+            }
+            continue;
+        }
+        if (arg === '--ssh' || arg.indexOf('--ssh=') === 0) {
+            return { ok: false, reason: 'ssh-flag-arg', explicitLocal: false, present: true };
+        }
+    }
+    return { ok: true, explicitLocal: explicitLocal, present: true };
+}
+
+function inspectOptionsObject(obj) {
+    try {
+        if (!obj || typeof obj !== 'object' || Array.isArray(obj)) {
+            return { ok: false, reason: 'invalid-options', explicitLocal: false, hasLocalUrl: false };
+        }
+        let explicitLocal = false;
+        let hasLocalUrl = false;
+
+        const inspectFields = function (target) {
+            if (target.additionalArguments !== undefined) {
+                const argsCheck = inspectAdditionalArgs(target.additionalArguments);
+                if (!argsCheck.ok) return argsCheck;
+                if (argsCheck.explicitLocal) explicitLocal = true;
+            }
+            const backendKeys = ['backend', 'backendType', 'windowBackend'];
+            for (let i = 0; i < backendKeys.length; i++) {
+                const val = target[backendKeys[i]];
+                if (val !== undefined) {
+                    if (typeof val !== 'string' || val.trim().toLowerCase() !== 'local') {
+                        return { ok: false, reason: 'remote-backend-option' };
+                    }
+                    explicitLocal = true;
+                }
+            }
+            const remoteBoolKeys = [
+                'remote', 'isRemote', 'isRemoteWindow', 'remoteBackend',
+                'ssh', 'isSsh', 'sshHost', 'remoteHost', 'remoteSession', 'hostId',
+            ];
+            for (let i = 0; i < remoteBoolKeys.length; i++) {
+                const val = target[remoteBoolKeys[i]];
+                if (val !== undefined && val !== false) {
+                    return { ok: false, reason: 'remote-flag-option' };
+                }
+            }
+            const localBoolKeys = ['isLocal', 'local', 'localBackend'];
+            for (let i = 0; i < localBoolKeys.length; i++) {
+                const val = target[localBoolKeys[i]];
+                if (val !== undefined) {
+                    if (val !== true) {
+                        return { ok: false, reason: 'non-local-option' };
+                    }
+                    explicitLocal = true;
+                }
+            }
+            if (target.partition !== undefined) {
+                if (typeof target.partition !== 'string' || target.partition.trim() !== '') {
+                    return { ok: false, reason: 'non-default-partition' };
+                }
+            }
+            if (target.titleSuffix !== undefined && typeof target.titleSuffix === 'string') {
+                if (/\bssh\b/i.test(target.titleSuffix)) {
+                    return { ok: false, reason: 'remote-title-option' };
+                }
+            }
+            const urlKeys = ['url', 'initialUrl'];
+            for (let i = 0; i < urlKeys.length; i++) {
+                const u = target[urlKeys[i]];
+                if (u !== undefined) {
+                    if (typeof u !== 'string' || !isExplicitLocalUrl(u)) {
+                        return { ok: false, reason: 'non-local-url-option' };
+                    }
+                    hasLocalUrl = true;
+                }
+            }
+            return { ok: true };
+        };
+
+        const topRes = inspectFields(obj);
+        if (!topRes.ok) {
+            return { ok: false, reason: topRes.reason, explicitLocal: false, hasLocalUrl: false };
+        }
+        if (obj.webPreferences !== undefined) {
+            const wp = obj.webPreferences;
+            if (!wp || typeof wp !== 'object' || Array.isArray(wp)) {
+                return { ok: false, reason: 'invalid-web-preferences', explicitLocal: false, hasLocalUrl: false };
+            }
+            const wpRes = inspectFields(wp);
+            if (!wpRes.ok) {
+                return { ok: false, reason: wpRes.reason, explicitLocal: false, hasLocalUrl: false };
+            }
+        }
+        return { ok: true, explicitLocal: explicitLocal, hasLocalUrl: hasLocalUrl };
+    } catch (_) {
+        return { ok: false, reason: 'options-inspection-error', explicitLocal: false, hasLocalUrl: false };
+    }
 }
 
 function createIpcAuthorizer(options) {
@@ -38,6 +207,11 @@ function createIpcAuthorizer(options) {
     const attached = typeof WeakSet === 'function' ? new WeakSet() : null;
     const logger = typeof opts.logger === 'function' ? opts.logger : function () {};
     const ipcState = new WeakMap();
+    const hasRemoteSecurityOpt = opts.remoteWindowSecurity !== undefined && opts.remoteWindowSecurity !== null;
+    const remoteWindowSecurity = opts.remoteWindowSecurity;
+    const hasWindowBackendsOpt = opts.windowBackends !== undefined && opts.windowBackends !== null;
+    const windowBackends = opts.windowBackends;
+    const requireOfficialBackendChecks = opts.requireOfficialBackendChecks === true;
 
     function safeIsDestroyed(wc) {
         try {
@@ -65,6 +239,134 @@ function createIpcAuthorizer(options) {
             if (wc && typeof wc.getURL === 'function') return wc.getURL();
         } catch (_) {}
         return '';
+    }
+
+    function checkOfficialBackend(wc, win) {
+        let confirmedLocal = false;
+        if (hasRemoteSecurityOpt) {
+            if (typeof remoteWindowSecurity !== 'object' || typeof remoteWindowSecurity.isRemoteContents !== 'function') {
+                return { ok: false, reason: 'remote-check-unavailable', confirmedLocal: false };
+            }
+            let isRemote;
+            try {
+                isRemote = remoteWindowSecurity.isRemoteContents(wc);
+            } catch (_) {
+                return { ok: false, reason: 'remote-check-failed', confirmedLocal: false };
+            }
+            if (isRemote !== false) {
+                return {
+                    ok: false,
+                    reason: isRemote === true ? 'remote-sender' : 'remote-check-uncertain',
+                    confirmedLocal: false,
+                };
+            }
+            if (typeof remoteWindowSecurity.isRemoteSession === 'function') {
+                let ses;
+                try {
+                    ses = wc.session;
+                } catch (_) {
+                    return { ok: false, reason: 'remote-check-failed', confirmedLocal: false };
+                }
+                if (ses !== undefined && ses !== null) {
+                    let remoteSes;
+                    try {
+                        remoteSes = remoteWindowSecurity.isRemoteSession(ses);
+                    } catch (_) {
+                        return { ok: false, reason: 'remote-check-failed', confirmedLocal: false };
+                    }
+                    if (remoteSes !== false) {
+                        return {
+                            ok: false,
+                            reason: remoteSes === true ? 'remote-session' : 'remote-check-uncertain',
+                            confirmedLocal: false,
+                        };
+                    }
+                }
+            }
+            confirmedLocal = true;
+        }
+        if (hasWindowBackendsOpt) {
+            const hasRemoteBackendOf = typeof windowBackends === 'object' && typeof windowBackends.remoteBackendOf === 'function';
+            const hasIsLocalAppWindow = typeof windowBackends === 'object' && typeof windowBackends.isLocalAppWindow === 'function';
+            if (!hasRemoteBackendOf && !hasIsLocalAppWindow) {
+                return { ok: false, reason: 'backend-check-unavailable', confirmedLocal: false };
+            }
+            if (hasRemoteBackendOf) {
+                let rb;
+                try {
+                    rb = windowBackends.remoteBackendOf(wc);
+                } catch (_) {
+                    return { ok: false, reason: 'backend-check-failed', confirmedLocal: false };
+                }
+                if (rb !== undefined && rb !== null) {
+                    return { ok: false, reason: 'remote-sender', confirmedLocal: false };
+                }
+            }
+            if (win && win !== wc && typeof windowBackends.remoteBackendOfWindow === 'function') {
+                let rbw;
+                try {
+                    rbw = windowBackends.remoteBackendOfWindow(win);
+                } catch (_) {
+                    return { ok: false, reason: 'backend-check-failed', confirmedLocal: false };
+                }
+                if (rbw !== undefined && rbw !== null) {
+                    return { ok: false, reason: 'remote-sender', confirmedLocal: false };
+                }
+            }
+            if (win && hasIsLocalAppWindow) {
+                let isLocalWin;
+                try {
+                    isLocalWin = windowBackends.isLocalAppWindow(win);
+                } catch (_) {
+                    return { ok: false, reason: 'backend-check-failed', confirmedLocal: false };
+                }
+                if (isLocalWin !== true) {
+                    return { ok: false, reason: 'non-local-window', confirmedLocal: false };
+                }
+                confirmedLocal = true;
+            } else if (hasRemoteBackendOf) {
+                confirmedLocal = true;
+            }
+        }
+        if (requireOfficialBackendChecks && !confirmedLocal) {
+            return { ok: false, reason: 'backend-check-unavailable', confirmedLocal: false };
+        }
+        return { ok: true, reason: null, confirmedLocal: confirmedLocal };
+    }
+
+    function inspectWebPreferences(wc) {
+        let getter;
+        try {
+            getter = wc.getLastWebPreferences;
+        } catch (_) {
+            return { ok: false, reason: 'webprefs-unavailable', available: false, hasArgs: false, explicitLocal: false };
+        }
+        if (getter === undefined) {
+            return { ok: true, reason: null, available: false, hasArgs: false, explicitLocal: false };
+        }
+        if (typeof getter !== 'function') {
+            return { ok: false, reason: 'webprefs-unavailable', available: false, hasArgs: false, explicitLocal: false };
+        }
+        let prefs;
+        try {
+            prefs = getter.call(wc);
+        } catch (_) {
+            return { ok: false, reason: 'webprefs-error', available: true, hasArgs: false, explicitLocal: false };
+        }
+        if (!prefs || typeof prefs !== 'object' || Array.isArray(prefs)) {
+            return { ok: false, reason: 'webprefs-missing', available: true, hasArgs: false, explicitLocal: false };
+        }
+        const optCheck = inspectOptionsObject(prefs);
+        if (!optCheck.ok) {
+            return { ok: false, reason: optCheck.reason, available: true, hasArgs: false, explicitLocal: false };
+        }
+        let hasArgs = false;
+        try {
+            hasArgs = Array.isArray(prefs.additionalArguments);
+        } catch (_) {
+            return { ok: false, reason: 'webprefs-error', available: true, hasArgs: false, explicitLocal: false };
+        }
+        return { ok: true, reason: null, available: true, hasArgs: hasArgs, explicitLocal: optCheck.explicitLocal };
     }
 
     function revoke(target, reason) {
@@ -152,8 +454,15 @@ function createIpcAuthorizer(options) {
     function register(wc, source) {
         if (!wc || typeof wc !== 'object') return false;
         if (safeIsDestroyed(wc)) return false;
-        const id = wc.id;
+        let id;
+        try {
+            id = wc.id;
+        } catch (_) {
+            return false;
+        }
         if (id === undefined || id === null) return false;
+        const officialCheck = checkOfficialBackend(wc, null);
+        if (!officialCheck.ok) return false;
         const existing = registry.get(id);
         if (existing && existing.wc === wc) return true;
         registry.set(id, { wc: wc, loaded: false, source: typeof source === 'string' ? source : 'explicit' });
@@ -171,6 +480,11 @@ function createIpcAuthorizer(options) {
         try { senderId = sender.id; } catch (_) { return 'sender-unavailable'; }
         const entry = registry.get(senderId);
         if (!entry || entry.wc !== sender) return 'untrusted-sender';
+        const officialCheck = checkOfficialBackend(sender, null);
+        if (!officialCheck.ok) {
+            registry.delete(senderId);
+            return officialCheck.reason;
+        }
         let frame;
         try { frame = event.senderFrame; } catch (_) { return 'frame-unavailable'; }
         if (frame === null || frame === undefined) return 'missing-frame';
@@ -245,35 +559,71 @@ function createIpcAuthorizer(options) {
         return wrapped;
     }
 
-    function hasRemoteBackendFlag(wc) {
+    function evaluateCreatedWindow(args, win, hookSource) {
+        if (!win) return;
+        let wc = null;
         try {
-            const prefs = typeof wc.getLastWebPreferences === 'function' ? wc.getLastWebPreferences() : null;
-            const extra = prefs && Array.isArray(prefs.additionalArguments) ? prefs.additionalArguments : [];
-            for (const arg of extra) {
-                if (String(arg).toLowerCase().indexOf('--agy-backend=ssh') >= 0) return true;
+            wc = win.webContents || (win.id !== undefined && win.mainFrame ? win : null);
+        } catch (_) {
+            return;
+        }
+        if (!wc || safeIsDestroyed(wc)) return;
+
+        let hasLocalInitialUrl = false;
+        let hasExplicitLocalOption = false;
+        try {
+            for (let i = 0; i < args.length; i++) {
+                const a = args[i];
+                if (typeof a === 'string') {
+                    if (a.length > 0) {
+                        if (!isExplicitLocalUrl(a)) return;
+                        hasLocalInitialUrl = true;
+                    }
+                } else if (a !== undefined && a !== null && typeof a === 'object') {
+                    const optRes = inspectOptionsObject(a);
+                    if (!optRes.ok) return;
+                    if (optRes.explicitLocal) hasExplicitLocalOption = true;
+                    if (optRes.hasLocalUrl) hasLocalInitialUrl = true;
+                }
             }
-        } catch (_) {}
-        return false;
+        } catch (_) {
+            return;
+        }
+
+        const wpCheck = inspectWebPreferences(wc);
+        if (!wpCheck.ok) return;
+        if (wpCheck.explicitLocal) hasExplicitLocalOption = true;
+
+        const officialCheck = checkOfficialBackend(wc, win);
+        if (!officialCheck.ok) return;
+
+        if (isClearlyRemoteUrl(mainFrameUrl(wc))) return;
+
+        // Fail closed when Electron omits additionalArguments from getLastWebPreferences()
+        // (observed on Electron 44.9.1) unless official backend checks or explicit local options confirm locality.
+        if (wpCheck.available && !wpCheck.hasArgs && !officialCheck.confirmedLocal && !hasExplicitLocalOption) {
+            return;
+        }
+
+        // Fail closed when no reliable locality determination source is available.
+        if (!officialCheck.confirmedLocal && !hasExplicitLocalOption && !hasLocalInitialUrl) {
+            return;
+        }
+
+        register(wc, typeof hookSource === 'string' ? hookSource : 'utils.createWindow');
     }
 
     function installCreateWindowHook(utilsModule, source) {
         if (!utilsModule || typeof utilsModule.createWindow !== 'function') return false;
         const current = utilsModule.createWindow;
         if (current.__agmIpcSecWrapped) return true;
+        const hookSource = typeof source === 'string' ? source : 'utils.createWindow';
         const original = current;
         const wrapped = function () {
             const args = Array.prototype.slice.call(arguments);
             const result = original.apply(this, args);
-            const initialUrl = args.filter(function (a) { return typeof a === 'string' && /^[a-z][a-z0-9+.-]*:/i.test(a); })[0] || '';
             const registerWindow = function (win) {
-                if (!win) return;
-                const wc = win.webContents || (win.id !== undefined && win.mainFrame ? win : null);
-                if (!wc) return;
-                if (isClearlyRemoteUrl(initialUrl)) return;
-                // The remote (SSH) backend is marked by the main process via
-                // webPreferences.additionalArguments; never register those.
-                if (hasRemoteBackendFlag(wc)) return;
-                register(wc, typeof source === 'string' ? source : 'utils.createWindow');
+                evaluateCreatedWindow(args, win, hookSource);
             };
             try {
                 if (result && typeof result.then === 'function') {
@@ -299,8 +649,12 @@ function createIpcAuthorizer(options) {
         revoke: revoke,
         isRegistered: function (wc) {
             if (!wc) return false;
-            const entry = registry.get(wc.id);
-            return !!(entry && entry.wc === wc);
+            try {
+                const entry = registry.get(wc.id);
+                return !!(entry && entry.wc === wc);
+            } catch (_) {
+                return false;
+            }
         },
         size: function () { return registry.size; },
         denyReason: denyReason,
@@ -315,6 +669,7 @@ const api = {
     MARKER: MARKER,
     DENY_MESSAGE: DENY_MESSAGE,
     isClearlyRemoteUrl: isClearlyRemoteUrl,
+    isExplicitLocalUrl: isExplicitLocalUrl,
     createIpcAuthorizer: createIpcAuthorizer,
 };
 

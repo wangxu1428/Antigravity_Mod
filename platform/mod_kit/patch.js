@@ -143,12 +143,22 @@ const __agmIpcAuth = (function () {
 ${agmIpcAuthSource}
     return module.exports;
 })();
+const __agmRemoteWindowSecurity = (function () {
+    if (typeof remoteWindowSecurity_1 !== 'undefined' && remoteWindowSecurity_1) return remoteWindowSecurity_1;
+    try { return require('./remote/remoteWindowSecurity'); } catch (_) { return null; }
+})();
+const __agmWindowBackends = (function () {
+    if (typeof windowBackends_1 !== 'undefined' && windowBackends_1) return windowBackends_1;
+    try { return require('./remote/windowBackends'); } catch (_) { return null; }
+})();
 const __agmIpcGate = __agmIpcAuth.createIpcAuthorizer({
     logger: function (channel, reason) {
         try {
             console.warn('[Hakimi IPC] denied channel=' + channel + ' reason=' + reason);
         } catch (_) {}
-    }
+    },
+    remoteWindowSecurity: __agmRemoteWindowSecurity,
+    windowBackends: __agmWindowBackends,
 });
 try {
     __agmIpcGate.installCreateWindowHook(utils_1, 'utils.createWindow');

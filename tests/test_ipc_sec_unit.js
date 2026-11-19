@@ -395,6 +395,8 @@ async function loadPatchedMain(mainSrc, options = {}) {
       if (id === './ipcHandlers') return { registerIpcHandlers: () => ({ closeContextMenu: () => {} }) };
       if (id === './utils') return utilsModule;
       if (id === './hostStores') return { HostStores: function HostStores() { this.forSender = () => ({}); } };
+      if (id === './remote/remoteWindowSecurity' && options.remoteWindowSecurity) return options.remoteWindowSecurity;
+      if (id === './remote/windowBackends' && options.windowBackends) return options.windowBackends;
       throw new Error('Unexpected require in synthetic main: ' + id);
     },
     process: fakeProcess,
@@ -805,6 +807,265 @@ async function runAll() {
     // The patch must have succeeded before the VM tests were meaningful.
     check('SEC-00', '2.33.0 合成夹具补丁成功（前置条件）', patch2330.status === 0, { status: patch2330.status, stderr: patch2330.stderr.slice(0, 300) });
     check('SEC-00b', 'spy 合成夹具补丁成功（前置条件）', spyPatch.status === 0, { status: spyPatch.status });
+
+    // SEC-19: additionalArguments only in options / options.webPreferences while getLastWebPreferences returns undefined or lacks additionalArguments (A01 Electron 44.9.1 reality)
+    {
+      const g19 = AUTH_CORE.createIpcAuthorizer({ logger: () => {} });
+      const ipc19 = makeIpcMain();
+      let exec19 = 0;
+      for (const ch of CHANNELS) {
+        g19.wrapHandle(ipc19, ch, () => { exec19++; return 'LEAK'; });
+      }
+      const mkWc = (id, mode) => {
+        const w = makeWebContents(id, 'http://127.0.0.1:4321/');
+        if (mode === 'undef') w.getLastWebPreferences = () => undefined;
+        else if (mode === 'noargs') w.getLastWebPreferences = () => ({ contextIsolation: true, sandbox: true });
+        return w;
+      };
+      const cases19 = [
+        { name: 'opts_additionalArguments_undef', wc: mkWc(1901, 'undef'), opts: { additionalArguments: ['--agy-backend=ssh'], builtInBrowser: false } },
+        { name: 'opts_additionalArguments_noargs', wc: mkWc(1902, 'noargs'), opts: { additionalArguments: ['--agy-backend=ssh'], builtInBrowser: false } },
+        { name: 'opts_webPrefs_additionalArguments_undef', wc: mkWc(1903, 'undef'), opts: { webPreferences: { additionalArguments: ['--agy-backend=ssh'] } } },
+        { name: 'opts_webPrefs_additionalArguments_noargs', wc: mkWc(1904, 'noargs'), opts: { webPreferences: { additionalArguments: ['--agy-backend=ssh'] } } },
+        { name: 'opts_backend_ssh', wc: makeWebContents(1905, 'http://127.0.0.1:4321/'), opts: { backend: 'ssh' } },
+        { name: 'opts_remote_true', wc: makeWebContents(1906, 'http://127.0.0.1:4321/'), opts: { remote: true } },
+        { name: 'opts_isRemote_true', wc: makeWebContents(1907, 'http://127.0.0.1:4321/'), opts: { isRemote: true } },
+        { name: 'opts_partition_ssh', wc: makeWebContents(1908, 'http://127.0.0.1:4321/'), opts: { partition: 'persist:ssh-host1' } },
+        { name: 'opts_titleSuffix_ssh', wc: makeWebContents(1909, 'http://127.0.0.1:4321/'), opts: { titleSuffix: ' (SSH: prod)' } },
+      ];
+      const failedCases19 = [];
+      let all13Denied = true;
+      for (const c of cases19) {
+        const u = { createWindow: () => ({ webContents: c.wc }) };
+        g19.installCreateWindowHook(u, 'test.sec19');
+        u.createWindow('http://127.0.0.1:4321/', {}, c.opts);
+        const reg = g19.isRegistered(c.wc);
+        const denied13 = CHANNELS.every((ch) => expectDenied(ipc19, ch, eventFor(c.wc)).denied);
+        if (reg || !denied13) {
+          failedCases19.push({ name: c.name, reg, denied13 });
+          all13Denied = false;
+        }
+      }
+      check(
+        'SEC-19',
+        'A01 实测 Electron 44 场景：additionalArguments 仅在 options 且 getLastWebPreferences 返回 undefined/无该字段时必须拒绝并拦截 13 通道',
+        all13Denied && exec19 === 0 && failedCases19.length === 0,
+        { exec19, failedCases19 }
+      );
+    }
+
+    // SEC-20: Default deny when all locality determination sources are missing or uncertain
+    {
+      const g20 = AUTH_CORE.createIpcAuthorizer({ logger: () => {} });
+      const wcNoUrlNoOpts = makeWebContents(2001, '');
+      const u20a = { createWindow: () => ({ webContents: wcNoUrlNoOpts }) };
+      g20.installCreateWindowHook(u20a, 'test.sec20a');
+      u20a.createWindow();
+
+      const wcUndefPrefs = makeWebContents(2002, 'http://127.0.0.1:1/');
+      wcUndefPrefs.getLastWebPreferences = () => undefined;
+      const u20b = { createWindow: () => ({ webContents: wcUndefPrefs }) };
+      g20.installCreateWindowHook(u20b, 'test.sec20b');
+      u20b.createWindow('http://127.0.0.1:1/');
+
+      const wcNoArgsPrefs = makeWebContents(2003, 'http://127.0.0.1:1/');
+      wcNoArgsPrefs.getLastWebPreferences = () => ({ contextIsolation: true });
+      const u20c = { createWindow: () => ({ webContents: wcNoArgsPrefs }) };
+      g20.installCreateWindowHook(u20c, 'test.sec20c');
+      u20c.createWindow('http://127.0.0.1:1/');
+
+      const wcAboutBlank = makeWebContents(2004, 'about:blank');
+      const u20d = { createWindow: () => ({ webContents: wcAboutBlank }) };
+      g20.installCreateWindowHook(u20d, 'test.sec20d');
+      u20d.createWindow('about:blank');
+
+      const sec20Ok =
+        !g20.isRegistered(wcNoUrlNoOpts) &&
+        !g20.isRegistered(wcUndefPrefs) &&
+        !g20.isRegistered(wcNoArgsPrefs) &&
+        !g20.isRegistered(wcAboutBlank) &&
+        g20.size() === 0;
+      check('SEC-20', '所有判定来源缺失或不确定时默认拒绝（fail-closed）', sec20Ok, {
+        regNoUrl: g20.isRegistered(wcNoUrlNoOpts),
+        regUndefPrefs: g20.isRegistered(wcUndefPrefs),
+        regNoArgsPrefs: g20.isRegistered(wcNoArgsPrefs),
+        regAboutBlank: g20.isRegistered(wcAboutBlank),
+      });
+    }
+
+    // SEC-21: Fail-closed whenever any backend/preferences/options check throws or returns non-boolean/uncertain values
+    {
+      const failCases = [];
+      const tryHook = (name, authOpts, argsToCreate, wcMutator) => {
+        const g = AUTH_CORE.createIpcAuthorizer({ logger: () => {}, ...authOpts });
+        const wc = makeWebContents(2100 + failCases.length, 'http://127.0.0.1:1/');
+        if (wcMutator) wcMutator(wc);
+        const u = { createWindow: () => ({ webContents: wc }) };
+        g.installCreateWindowHook(u, 'test.sec21');
+        u.createWindow(...argsToCreate);
+        if (g.isRegistered(wc)) failCases.push(name);
+      };
+
+      tryHook('isRemoteContents_throws', { remoteWindowSecurity: { isRemoteContents: () => { throw new Error('boom'); } } }, ['http://127.0.0.1:1/', {}]);
+      tryHook('isRemoteContents_undefined', { remoteWindowSecurity: { isRemoteContents: () => undefined } }, ['http://127.0.0.1:1/', {}]);
+      tryHook('isLocalAppWindow_throws', { windowBackends: { remoteBackendOf: () => undefined, isLocalAppWindow: () => { throw new Error('boom'); } } }, ['http://127.0.0.1:1/', {}]);
+      tryHook('isLocalAppWindow_false', { windowBackends: { remoteBackendOf: () => undefined, isLocalAppWindow: () => false } }, ['http://127.0.0.1:1/', {}]);
+      tryHook('isLocalAppWindow_undefined', { windowBackends: { remoteBackendOf: () => undefined, isLocalAppWindow: () => undefined } }, ['http://127.0.0.1:1/', {}]);
+      tryHook('remoteBackendOf_throws', { windowBackends: { remoteBackendOf: () => { throw new Error('boom'); }, isLocalAppWindow: () => true } }, ['http://127.0.0.1:1/', {}]);
+      tryHook('remoteBackendOf_object', { windowBackends: { remoteBackendOf: () => ({ kind: 'ssh' }), isLocalAppWindow: () => true } }, ['http://127.0.0.1:1/', {}]);
+      tryHook('getLastWebPreferences_throws', {}, ['http://127.0.0.1:1/', {}], (wc) => { wc.getLastWebPreferences = () => { throw new Error('boom'); }; });
+      tryHook('options_getter_throws', {}, ['http://127.0.0.1:1/', { get additionalArguments() { throw new Error('getter'); } }]);
+      tryHook('additionalArguments_not_array', {}, ['http://127.0.0.1:1/', { additionalArguments: '--agy-backend=local' }]);
+      tryHook('remoteWindowSecurity_empty_obj', { remoteWindowSecurity: {} }, ['http://127.0.0.1:1/', {}]);
+      tryHook('windowBackends_empty_obj', { windowBackends: {} }, ['http://127.0.0.1:1/', {}]);
+
+      check('SEC-21', '任意判定来源抛异常或返回不确定值时必须 fail-closed 拒绝', failCases.length === 0, { failCases });
+    }
+
+    // SEC-22: Integration with official remoteWindowSecurity + windowBackends (local allow, remote deny, dynamic registerRemoteWindow revoke, runtime throw)
+    {
+      const defaultSession = { name: 'default' };
+      const sshSession = { name: 'ssh-session' };
+      const remoteIds = new Map();
+      const windowBackendsMock = {
+        registerRemoteWindow: (win, info) => { remoteIds.set(win.webContents.id, info); },
+        remoteBackendOf: (wc) => (wc && typeof wc.id === 'number' ? remoteIds.get(wc.id) : undefined),
+        remoteBackendOfWindow: (win) => (win && win.webContents ? remoteIds.get(win.webContents.id) : undefined),
+        isLocalAppWindow: (win) => {
+          if (!win || !win.webContents) return false;
+          if (win.webContents.session && win.webContents.session !== defaultSession) return false;
+          return !remoteIds.has(win.webContents.id);
+        },
+      };
+      let forceThrow = false;
+      const remoteWindowSecurityMock = {
+        isRemoteSession: (ses) => ses === sshSession,
+        isRemoteContents: (wc) => {
+          if (forceThrow) throw new Error('runtime check failed');
+          if (!wc) return false;
+          return Boolean(windowBackendsMock.remoteBackendOf(wc)) || wc.session === sshSession;
+        },
+      };
+      const logs22 = [];
+      const g22 = AUTH_CORE.createIpcAuthorizer({
+        logger: (ch, reason) => logs22.push({ ch, reason }),
+        remoteWindowSecurity: remoteWindowSecurityMock,
+        windowBackends: windowBackendsMock,
+      });
+      const ipc22 = makeIpcMain();
+      g22.wrapHandle(ipc22, 'hakimi:get-host-info', () => ({ ok: true }));
+
+      // 22a: Legitimate local window in Electron 44.9.1 (getLastWebPreferences omits additionalArguments)
+      const localWc22 = makeWebContents(2201, 'https://127.0.0.1:12345/');
+      localWc22.session = defaultSession;
+      localWc22.getLastWebPreferences = () => ({ contextIsolation: true, sandbox: false });
+      const u22 = { createWindow: () => ({ webContents: localWc22 }) };
+      g22.installCreateWindowHook(u22, 'test.sec22');
+      u22.createWindow('https://127.0.0.1:12345/', {}, { cascade: true });
+      const localAllowed22 = g22.isRegistered(localWc22) && invokeSync(ipc22, 'hakimi:get-host-info', eventFor(localWc22)).ok === true;
+
+      // 22b: Window on SSH session without --agy-backend=ssh option is still denied by official modules
+      const sshSessionWc22 = makeWebContents(2202, 'https://127.0.0.1:12345/');
+      sshSessionWc22.session = sshSession;
+      sshSessionWc22.getLastWebPreferences = () => ({ contextIsolation: true });
+      const u22b = { createWindow: () => ({ webContents: sshSessionWc22 }) };
+      g22.installCreateWindowHook(u22b, 'test.sec22b');
+      u22b.createWindow('https://127.0.0.1:12345/', {}, { cascade: true });
+      const sshDenied22 = !g22.isRegistered(sshSessionWc22) && expectDenied(ipc22, 'hakimi:get-host-info', eventFor(sshSessionWc22)).denied;
+
+      // 22c: Post-creation registerRemoteWindow immediately revokes trust on next IPC
+      const dynWc22 = makeWebContents(2203, 'https://127.0.0.1:12345/');
+      dynWc22.session = defaultSession;
+      dynWc22.getLastWebPreferences = () => ({ contextIsolation: true });
+      const dynWin22 = { webContents: dynWc22 };
+      const u22c = { createWindow: () => dynWin22 };
+      g22.installCreateWindowHook(u22c, 'test.sec22c');
+      u22c.createWindow('https://127.0.0.1:12345/', {}, { cascade: true });
+      const dynBefore = g22.isRegistered(dynWc22);
+      windowBackendsMock.registerRemoteWindow(dynWin22, { kind: 'ssh', hostId: 'h1', label: 'prod' });
+      const dynCallDenied = expectDenied(ipc22, 'hakimi:get-host-info', eventFor(dynWc22)).denied;
+      const dynAfter = g22.isRegistered(dynWc22);
+      const dynReasonMatch = logs22.some((l) => l.reason === 'remote-sender');
+
+      // 22d: Runtime throw in isRemoteContents revokes & fails closed
+      forceThrow = true;
+      const throwDenied = expectDenied(ipc22, 'hakimi:get-host-info', eventFor(localWc22)).denied;
+      const localAfterThrow = g22.isRegistered(localWc22);
+      const throwReasonMatch = logs22.some((l) => l.reason === 'remote-check-failed');
+
+      check(
+        'SEC-22',
+        '接入官方 remoteWindowSecurity + windowBackends 后：Electron 44 本地合法放行、远程拦截、动态登记即撤销、运行期异常 fail-closed',
+        localAllowed22 && sshDenied22 && dynBefore && dynCallDenied && !dynAfter && dynReasonMatch && throwDenied && !localAfterThrow && throwReasonMatch,
+        { localAllowed22, sshDenied22, dynBefore, dynCallDenied, dynAfter, dynReasonMatch, throwDenied, localAfterThrow, throwReasonMatch }
+      );
+    }
+
+    // SEC-23: End-to-end patched main.js VM test for 2.32.1 & 2.33.0 with Electron 44.9.1 getLastWebPreferences behavior + official backend modules
+    {
+      const sec23Details = {};
+      let sec23Ok = true;
+      for (const ver of ['2.32.1', '2.33.0']) {
+        const d23 = path.join(rootTmp, 'sec23_' + ver.replace(/\./g, '_'));
+        const y23 = writeSyntheticTargetDir(d23, ver);
+        const pr23 = runPatcher(d23, y23);
+        const m23 = fs.readFileSync(path.join(d23, 'dist', 'main.js'), 'utf8');
+
+        const defaultSes23 = { name: 'default' };
+        const sshSes23 = { name: 'persist:ssh-host' };
+        const remoteMap23 = new Map();
+        const wbMock23 = {
+          registerRemoteWindow: (w, info) => remoteMap23.set(w.webContents.id, info),
+          remoteBackendOf: (wc) => (wc && typeof wc.id === 'number' ? remoteMap23.get(wc.id) : undefined),
+          remoteBackendOfWindow: (w) => (w && w.webContents ? remoteMap23.get(w.webContents.id) : undefined),
+          isLocalAppWindow: (w) => Boolean(w && w.webContents && w.webContents.session === defaultSes23 && !remoteMap23.has(w.webContents.id)),
+        };
+        const rwsMock23 = {
+          isRemoteSession: (s) => s === sshSes23,
+          isRemoteContents: (wc) => Boolean(wc && (remoteMap23.has(wc.id) || wc.session === sshSes23)),
+        };
+
+        const localWc23 = makeWebContents(2301, 'http://127.0.0.1:1/');
+        localWc23.session = defaultSes23;
+        localWc23.getLastWebPreferences = () => ({ contextIsolation: true, sandbox: false });
+
+        const sshWc23 = makeWebContents(2302, 'http://127.0.0.1:2/');
+        sshWc23.session = sshSes23;
+        sshWc23.getLastWebPreferences = () => ({ contextIsolation: true, sandbox: false });
+
+        const vm23 = await loadPatchedMain(m23, {
+          rootDir: path.join(rootTmp, 'vm23_' + ver.replace(/\./g, '_')),
+          spyFs: true,
+          remoteWindowSecurity: rwsMock23,
+          windowBackends: wbMock23,
+          createWindow: (_url, _storage, opts) => {
+            if (opts && Array.isArray(opts.additionalArguments) && opts.additionalArguments.includes('--agy-backend=ssh')) {
+              return { webContents: sshWc23 };
+            }
+            return { webContents: localWc23 };
+          },
+        });
+
+        vm23.utilsModule.createWindow('http://127.0.0.1:2/', {}, {
+          partition: 'persist:ssh-host',
+          additionalArguments: ['--agy-backend=ssh'],
+          builtInBrowser: false,
+          titleSuffix: ' (SSH: prod)',
+        });
+
+        const writesBefore = vm23.writeOps.length;
+        const spawnsBefore = vm23.spawnOps.length;
+        const localAllowed23 = invokeSync({ handlers: vm23.handlers }, 'hakimi:get-host-info', eventFor(localWc23)).appVersion === '2.33.0-mock';
+        const ssh13Denied23 = CHANNELS.every((ch) => expectDenied({ handlers: vm23.handlers }, ch, eventFor(sshWc23), {}).denied);
+        const writesAfter = vm23.writeOps.length;
+        const spawnsAfter = vm23.spawnOps.length;
+
+        const verOk = pr23.status === 0 && !vm23.fatal && localAllowed23 && ssh13Denied23 && writesAfter === writesBefore && spawnsAfter === spawnsBefore;
+        sec23Ok = sec23Ok && verOk;
+        sec23Details[ver] = { patchStatus: pr23.status, fatal: vm23.fatal && vm23.fatal.message, localAllowed23, ssh13Denied23, sideWrites: writesAfter - writesBefore, sideSpawns: spawnsAfter - spawnsBefore };
+      }
+      check('SEC-23', '2.32.1 与 2.33.0 补丁后 main.js VM 端到端验证：本地放行、SSH 构造窗口 13 通道全拒且零副作用', sec23Ok, sec23Details);
+    }
   } finally {
     fs.rmSync(rootTmp, { recursive: true, force: true });
   }

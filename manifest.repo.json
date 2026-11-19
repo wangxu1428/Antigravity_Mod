@@ -138,8 +138,8 @@
         },
         {
             "path": "platform/mod_kit/agm_ipc_auth.js",
-            "size": 12751,
-            "sha256": "F26B973C6642D1387C19FBD98D85260870C4A695C50EFF6D40BCE481F6613301"
+            "size": 27838,
+            "sha256": "09DF8F21AFEF879FAF1C609788C70C41C29D77E9B861B122A9DD0B75EAD87E49"
         },
         {
             "path": "platform/mod_kit/agm_sidecar_reaper_core.js",
@@ -153,8 +153,8 @@
         },
         {
             "path": "platform/mod_kit/patch.js",
-            "size": 40584,
-            "sha256": "3C7B98183061441A223F502949BBEB609F5039397FBF94C5F502771C5A8D3023"
+            "size": 41159,
+            "sha256": "8630BC8F465E382F66305FAEB68019E63CAF7F1AE36BF184D8B933FCDD4BE034"
         },
         {
             "path": "platform/mod_kit/repatch.bat",
@@ -378,8 +378,8 @@
         },
         {
             "path": "tests/test_ipc_sec_unit.js",
-            "size": 40118,
-            "sha256": "5599D894A2BFF842901460C915DFD392D1250C83FE985AFA1922A29B105CB645"
+            "size": 55935,
+            "sha256": "BD8B8B7A89EDC5D7DC699D1AE3A4DEBA8530B14E8716ABAED452EF0EBE25276C"
         }
     ]
 }
