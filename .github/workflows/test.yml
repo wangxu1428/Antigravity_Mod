@@ -36,3 +36,11 @@ jobs:
         run: node tests/test_manifest_integrity.js
       - name: i18n teardown unit tests
         run: node tests/test_i18n_teardown_unit.js
+      - name: Compat 2.33.0 unit tests
+        run: node tests/test_compat_233_unit.js
+      - name: Compat version declaration tests
+        run: node tests/test_compat_versions_unit.js
+      - name: IPC authorization security tests (SEC-01..18)
+        run: node tests/test_ipc_sec_unit.js
+      - name: Updater IPC authorization tests (UPD-01..12)
+        run: node tests/test_updater_auth_unit.js

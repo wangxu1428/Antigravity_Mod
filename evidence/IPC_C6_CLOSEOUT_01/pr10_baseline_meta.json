@@ -1,0 +1,13 @@
+{
+  "number": 10,
+  "title": "AGM-233-COMPAT-01 / STAGE-B：Antigravity 2.33.0 最小兼容修复（方案 A 精准加固版）",
+  "headRefName": "dev/compat-233-stage-b",
+  "baseRefName": "main",
+  "headRefOid": "29600a9a8b1b40051ea988c97e81871f423dbcb6",
+  "isDraft": true,
+  "state": "OPEN",
+  "mergedAt": null,
+  "url": "https://github.com/wangxu1428/Antigravity_Mod/pull/10",
+  "body_bytes": 11965,
+  "body_sha256": "A7B99BFF003A16DAC97B3FB8AA004C4F9E7989DF61F9769019C072E3F85CCF3A"
+}

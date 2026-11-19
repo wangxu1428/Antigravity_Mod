@@ -1,0 +1,23 @@
+IPC-C6-CLOSEOUT-01 一致性审计（生成时间：2026-11-20 01:53:56 CST）
+
+[PASS] PR #10 headRefOid 基线=当前=29600a9a8b1b40051ea988c97e81871f423dbcb6
+[PASS] 远程分支 dev/compat-233-stage-b 基线=当前=29600a9a8b1b40051ea988c97e81871f423dbcb6
+[PASS] 远程 main 基线=当前=923110e60cdb928b41a28ad2994f71bbed4bf730
+[PASS] PR #10 仍为 Draft/OPEN/未合并
+[PASS] PR #10 提交数=5，最后一提交=29600a9a8b1b40051ea988c97e81871f423dbcb6（无新增提交）
+[PASS] 全部 PR 最大编号=10（无新 PR）
+[PASS] PR 正文前缀逐字节等于修改前正文（仅追加，appended=1234B）
+[PASS] 报告与 PR 正文均含：135720835573
+[PASS] 报告与 PR 正文均含：135720836179
+[PASS] 报告与 PR 正文均含：116 PASS / 0 FAIL / 1 SKIP
+[PASS] 报告与 PR 正文均含：153 PASS / 0 FAIL / 0 SKIP
+[PASS] 报告与 PR 正文均含：44569636560
+[PASS] CI 实测 run_number=19、headSha=29600a9a8b1b40051ea988c97e81871f423dbcb6、计数与期望一致
+[PASS] 新 Job ID 135720835573 / 135720836179 API 均 HTTP 200
+[PASS] 旧 Job ID 135699184600 / 135699184591 API 均 HTTP 404
+[PASS] W/input 原始报告 SHA256 与旭给定值一致（未移动/未改写）
+[PASS] 备份 W/backups/AGM_IPC_C6_FIX_01_report.md.orig 与原件逐字节一致
+[PASS] 无产品源码修改：本轮无任何 git commit/push，PR head 未变（仅 PR 描述与仓库外文件变更）
+[PASS] 原始 PC 证据与 Drive 证据文件夹本轮未触碰：未执行任何 PC/Drive 写操作，未访问/上传 Drive URL；W/input 副本哈希与原件一致
+
+审计结论：PASS（除已明确列出的 NOT RUN / NOT DONE / PENDING 外）

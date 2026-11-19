@@ -1,0 +1,293 @@
+{
+    "Version":  "2.33.0",
+    "GeneratedAtLocal":  "2026-11-20T00:51:35.6586490+08:00",
+    "ObserveTargetSec":  65,
+    "ColdStartCount":  2,
+    "SuccessCount":  2,
+    "Runs":  [
+                 {
+                     "Seq":  1,
+                     "RootPid":  3172,
+                     "TrackedPids":  [
+                                         1260,
+                                         1668,
+                                         3172,
+                                         5452,
+                                         7296,
+                                         7888,
+                                         10292,
+                                         13704,
+                                         20392,
+                                         21756,
+                                         24864,
+                                         24880
+                                     ],
+                     "WindowAppeared":  true,
+                     "WindowReadyMs":  1154,
+                     "WindowVisible":  true,
+                     "MainTitle":  "Antigravity",
+                     "WindowRect":  {
+                                        "Left":  572,
+                                        "Top":  250,
+                                        "Right":  1988,
+                                        "Bottom":  1158,
+                                        "Width":  1416,
+                                        "Height":  908
+                                    },
+                     "UIAutomation":  {
+                                          "Ok":  true,
+                                          "Name":  "Antigravity",
+                                          "IsEnabled":  true,
+                                          "ControlType":  "ControlType.Window",
+                                          "ClassName":  "Chrome_WidgetWin_1",
+                                          "BoundingRect":  "1416x908"
+                                      },
+                     "Screenshot":  {
+                                        "Width":  1416,
+                                        "Height":  908,
+                                        "Method":  "PrintWindow(2)",
+                                        "Path":  "C:\\AGM_TestLab\\IPC_SEC_A02\\evidence\\screenshot_2.33.0_cold1.png",
+                                        "Size":  667095,
+                                        "SHA256":  "DE0F2FE9930AA05E3C90DD9F68D5456FB41576005BDB4769C4AEACD9D1A31EEF"
+                                    },
+                     "ObservedSec":  67.8,
+                     "SurvivedFullWindow":  true,
+                     "CrashedEarly":  false,
+                     "EarlyExitCode":  null,
+                     "PeakMainWsMB":  132.78,
+                     "PeakTreeWsMB":  1024.27,
+                     "Samples":  [
+                                     {
+                                         "ElapsedSec":  11.8,
+                                         "AliveCount":  10,
+                                         "MainWsMB":  132.76,
+                                         "TreeWsMB":  1023.3
+                                     },
+                                     {
+                                         "ElapsedSec":  16.9,
+                                         "AliveCount":  10,
+                                         "MainWsMB":  132.76,
+                                         "TreeWsMB":  1022.48
+                                     },
+                                     {
+                                         "ElapsedSec":  22,
+                                         "AliveCount":  10,
+                                         "MainWsMB":  132.77,
+                                         "TreeWsMB":  1023.44
+                                     },
+                                     {
+                                         "ElapsedSec":  27.1,
+                                         "AliveCount":  10,
+                                         "MainWsMB":  132.78,
+                                         "TreeWsMB":  1024.27
+                                     },
+                                     {
+                                         "ElapsedSec":  32.2,
+                                         "AliveCount":  10,
+                                         "MainWsMB":  119.27,
+                                         "TreeWsMB":  966.19
+                                     },
+                                     {
+                                         "ElapsedSec":  37.2,
+                                         "AliveCount":  10,
+                                         "MainWsMB":  119.27,
+                                         "TreeWsMB":  963.7
+                                     },
+                                     {
+                                         "ElapsedSec":  42.3,
+                                         "AliveCount":  10,
+                                         "MainWsMB":  119.27,
+                                         "TreeWsMB":  961.96
+                                     },
+                                     {
+                                         "ElapsedSec":  47.4,
+                                         "AliveCount":  10,
+                                         "MainWsMB":  119.27,
+                                         "TreeWsMB":  962.4
+                                     },
+                                     {
+                                         "ElapsedSec":  52.5,
+                                         "AliveCount":  10,
+                                         "MainWsMB":  119.27,
+                                         "TreeWsMB":  963.12
+                                     },
+                                     {
+                                         "ElapsedSec":  57.6,
+                                         "AliveCount":  10,
+                                         "MainWsMB":  119.28,
+                                         "TreeWsMB":  963.56
+                                     },
+                                     {
+                                         "ElapsedSec":  62.7,
+                                         "AliveCount":  10,
+                                         "MainWsMB":  118.35,
+                                         "TreeWsMB":  948.85
+                                     },
+                                     {
+                                         "ElapsedSec":  67.8,
+                                         "AliveCount":  10,
+                                         "MainWsMB":  117.45,
+                                         "TreeWsMB":  945.99
+                                     }
+                                 ],
+                     "HakimiIpcDeniedCnt":  0,
+                     "HakimiHostLogHits":  6,
+                     "HakimiI18nLogHits":  4,
+                     "UpdateLockLogHits":  2,
+                     "StopInfo":  {
+                                      "CloseMethod":  "CloseMainWindow",
+                                      "KilledPids":  [
+                                                         1260,
+                                                         1668,
+                                                         21756
+                                                     ],
+                                      "StillAlive":  [
+
+                                                     ]
+                                  },
+                     "LogEvidenceFile":  "launch_2.33.0_cold1.log"
+                 },
+                 {
+                     "Seq":  2,
+                     "RootPid":  9644,
+                     "TrackedPids":  [
+                                         9644,
+                                         10272,
+                                         10516,
+                                         13356,
+                                         17972,
+                                         18140,
+                                         20184,
+                                         21480,
+                                         23280,
+                                         23900,
+                                         24140,
+                                         24812
+                                     ],
+                     "WindowAppeared":  true,
+                     "WindowReadyMs":  1123,
+                     "WindowVisible":  true,
+                     "MainTitle":  "Antigravity",
+                     "WindowRect":  {
+                                        "Left":  572,
+                                        "Top":  250,
+                                        "Right":  1988,
+                                        "Bottom":  1158,
+                                        "Width":  1416,
+                                        "Height":  908
+                                    },
+                     "UIAutomation":  {
+                                          "Ok":  true,
+                                          "Name":  "Antigravity",
+                                          "IsEnabled":  true,
+                                          "ControlType":  "ControlType.Window",
+                                          "ClassName":  "Chrome_WidgetWin_1",
+                                          "BoundingRect":  "1416x908"
+                                      },
+                     "Screenshot":  {
+                                        "Width":  1416,
+                                        "Height":  908,
+                                        "Method":  "PrintWindow(2)",
+                                        "Path":  "C:\\AGM_TestLab\\IPC_SEC_A02\\evidence\\screenshot_2.33.0_cold2.png",
+                                        "Size":  666531,
+                                        "SHA256":  "9FBC6B929B13458831CB917842FC68E11475598BEB341EC9AEF864C6AC4B17C9"
+                                    },
+                     "ObservedSec":  67.8,
+                     "SurvivedFullWindow":  true,
+                     "CrashedEarly":  false,
+                     "EarlyExitCode":  null,
+                     "PeakMainWsMB":  135.18,
+                     "PeakTreeWsMB":  1027.06,
+                     "Samples":  [
+                                     {
+                                         "ElapsedSec":  11.8,
+                                         "AliveCount":  10,
+                                         "MainWsMB":  135.15,
+                                         "TreeWsMB":  1025.95
+                                     },
+                                     {
+                                         "ElapsedSec":  16.9,
+                                         "AliveCount":  10,
+                                         "MainWsMB":  135.15,
+                                         "TreeWsMB":  1025.21
+                                     },
+                                     {
+                                         "ElapsedSec":  22,
+                                         "AliveCount":  10,
+                                         "MainWsMB":  135.17,
+                                         "TreeWsMB":  1026.24
+                                     },
+                                     {
+                                         "ElapsedSec":  27.1,
+                                         "AliveCount":  10,
+                                         "MainWsMB":  135.18,
+                                         "TreeWsMB":  1027.06
+                                     },
+                                     {
+                                         "ElapsedSec":  32.1,
+                                         "AliveCount":  10,
+                                         "MainWsMB":  121.5,
+                                         "TreeWsMB":  966.96
+                                     },
+                                     {
+                                         "ElapsedSec":  37.2,
+                                         "AliveCount":  10,
+                                         "MainWsMB":  121.5,
+                                         "TreeWsMB":  964.36
+                                     },
+                                     {
+                                         "ElapsedSec":  42.3,
+                                         "AliveCount":  10,
+                                         "MainWsMB":  121.5,
+                                         "TreeWsMB":  962.96
+                                     },
+                                     {
+                                         "ElapsedSec":  47.4,
+                                         "AliveCount":  10,
+                                         "MainWsMB":  121.5,
+                                         "TreeWsMB":  963.47
+                                     },
+                                     {
+                                         "ElapsedSec":  52.5,
+                                         "AliveCount":  10,
+                                         "MainWsMB":  121.5,
+                                         "TreeWsMB":  964.02
+                                     },
+                                     {
+                                         "ElapsedSec":  57.6,
+                                         "AliveCount":  10,
+                                         "MainWsMB":  121.5,
+                                         "TreeWsMB":  964.5
+                                     },
+                                     {
+                                         "ElapsedSec":  62.7,
+                                         "AliveCount":  10,
+                                         "MainWsMB":  120.3,
+                                         "TreeWsMB":  953.2
+                                     },
+                                     {
+                                         "ElapsedSec":  67.8,
+                                         "AliveCount":  10,
+                                         "MainWsMB":  119.52,
+                                         "TreeWsMB":  950.43
+                                     }
+                                 ],
+                     "HakimiIpcDeniedCnt":  0,
+                     "HakimiHostLogHits":  6,
+                     "HakimiI18nLogHits":  4,
+                     "UpdateLockLogHits":  2,
+                     "StopInfo":  {
+                                      "CloseMethod":  "CloseMainWindow",
+                                      "KilledPids":  [
+                                                         24812,
+                                                         10272,
+                                                         18140
+                                                     ],
+                                      "StillAlive":  [
+
+                                                     ]
+                                  },
+                     "LogEvidenceFile":  "launch_2.33.0_cold2.log"
+                 }
+             ]
+}

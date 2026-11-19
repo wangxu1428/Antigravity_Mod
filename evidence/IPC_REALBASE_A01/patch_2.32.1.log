@@ -1,0 +1,32 @@
+=== patch.js execution for 2.32.1 ===
+Timestamp: 2026-11-19 23:51:21 +08:00
+Command: node.exe "C:\AGM_TestLab\IPC_SEC_A01\repo\platform\mod_kit\patch.js" "C:\AGM_TestLab\IPC_SEC_A01\tmp\unpacked_2.32.1" --update-yml "C:\AGM_TestLab\IPC_SEC_A01\bases\2.32.1\resources\app-update.yml"
+ExitCode: 0
+--- STDOUT ---
+[Patch] Patching target dir: C:\AGM_TestLab\IPC_SEC_A01\tmp\unpacked_2.32.1
+[Patch] main.js: Injected Portable UserData Lock.
+[Patch] main.js: Injected IPC handlers and session manager.
+[Patch] main.js: Hooked session-created.
+[Patch] main.js: Hooked whenReady.
+[Patch] utils.js: Enabled webviewTag & devTools.
+[Patch] preload.js: Exposed hakimiHost API.
+[Patch] preload.js: Appended HakimiPluginHost Initializer.
+[Patch][AGM] dist/updater.js: injected U1 require electron-updater
+[Patch][AGM] dist/updater.js: injected U2 initAutoUpdater autoDownload/autoInstallOnAppQuit
+[Patch][AGM] dist/updater.js: injected U3 setAutoUpdateChecking (timer entry)
+[Patch][AGM] dist/updater.js: injected U4 checkForUpdates (menu / IPC check entry)
+[Patch][AGM] dist/updater.js: injected U5 quitAndInstall (menu Restart to Update)
+[Patch][AGM] dist/updater.js: injected U6 applyHostUpdate (language server / host bridge entry)
+[Patch][AGM] dist/updater.js: injected U7 headlessQuitAndInstall (headless install path)
+[Patch][AGM] dist/ipcHandlers.js: injected I1 IPC updater:quit-and-install
+[Patch][AGM] dist/ipcHandlers.js: injected I2 IPC updater:apply
+[Patch][AGM] dist/ipcHandlers.js: injected I3 IPC updater:check-for-updates
+[Patch][AGM] dist/languageServer.js: injected R1 module state (_lsProcess declaration)
+[Patch][AGM] dist/languageServer.js: injected R2 LS spawn
+[Patch][AGM] dist/languageServer.js: injected R3 killLanguageServer pre-SIGTERM snapshot (after exit listener)
+[Patch][AGM] dist/languageServer.js: injected R4 killLanguageServer post-exit reap
+[Patch][AGM] app-update.yml: already locked (no-op, unchanged)
+[Patch] Validating syntax with node --check...
+[Patch] All files passed syntax check successfully!
+--- STDERR ---
+

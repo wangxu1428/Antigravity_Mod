@@ -1,0 +1,10 @@
+test (windows-latest)	Host unit tests	2026-11-19T16:45:29.9315367Z UNIT_SUMMARY passed=15 failed=0
+test (windows-latest)	Reaper unit tests	2026-11-19T16:45:30.5129396Z SUMMARY pass=16 fail=0
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9944067Z SUMMARY pass=11 fail=0
+test (windows-latest)	Repatch unit tests	2026-11-19T16:45:54.1335943Z SUMMARY pass=14 fail=0
+test (windows-latest)	Fault injection tests	2026-11-19T16:46:39.6611354Z SUMMARY pass=26 fail=0
+test (windows-latest)	Manifest raw-byte integrity tests	2026-11-19T16:46:42.0166632Z SUMMARY pass=5 fail=0
+test (windows-latest)	i18n teardown unit tests	2026-11-19T16:46:42.7922377Z SUMMARY pass=6 fail=0
+test (windows-latest)	Compat 2.33.0 unit tests	2026-11-19T16:46:49.0336574Z SUMMARY pass=15 fail=0 skip=0
+test (windows-latest)	Compat version declaration tests	2026-11-19T16:46:49.3809738Z SUMMARY pass=15 fail=0 skip=0
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:52.5075808Z SUMMARY pass=30 fail=0 skip=0

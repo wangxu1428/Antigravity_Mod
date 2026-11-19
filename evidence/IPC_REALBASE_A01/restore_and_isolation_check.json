@@ -1,0 +1,36 @@
+{
+    "CheckedAtLocal":  "2026-11-20T00:07:26.1679146+08:00",
+    "LeftoverBaseProcessCount":  0,
+    "TmpDirRemoved":  true,
+    "RestoredVersions":  [
+                             {
+                                 "Version":  "2.32.1",
+                                 "AsarBackupSHA256":  "5B493943E67E500638555315594D5B1ACBC7A02E6DAC3C786651921C1EE8519F",
+                                 "AsarRestoredSHA256":  "5B493943E67E500638555315594D5B1ACBC7A02E6DAC3C786651921C1EE8519F",
+                                 "AsarRestoredMatch":  true,
+                                 "YmlBackupSHA256":  "7F5E7ECAE74C2A2483979D085B39F59DF66A908988D46D73DEA8EEFC038DE2BA",
+                                 "YmlRestoredSHA256":  "7F5E7ECAE74C2A2483979D085B39F59DF66A908988D46D73DEA8EEFC038DE2BA",
+                                 "YmlRestoredMatch":  true,
+                                 "PortableUserDataExists":  false
+                             },
+                             {
+                                 "Version":  "2.33.0",
+                                 "AsarBackupSHA256":  "B33C81600E82E65593AA8430EF01B37D6B28D9D98F0FAF45E25957783B71E64B",
+                                 "AsarRestoredSHA256":  "B33C81600E82E65593AA8430EF01B37D6B28D9D98F0FAF45E25957783B71E64B",
+                                 "AsarRestoredMatch":  true,
+                                 "YmlBackupSHA256":  "7F5E7ECAE74C2A2483979D085B39F59DF66A908988D46D73DEA8EEFC038DE2BA",
+                                 "YmlRestoredSHA256":  "7F5E7ECAE74C2A2483979D085B39F59DF66A908988D46D73DEA8EEFC038DE2BA",
+                                 "YmlRestoredMatch":  true,
+                                 "PortableUserDataExists":  false
+                             }
+                         ],
+    "FormalIdeKeyFileChanges":  0,
+    "MissingFormalIdePids":  [
+
+                             ],
+    "GeminiMetaAddedCount":  0,
+    "GeminiMetaRemovedCount":  2,
+    "GeminiMetaModifiedCount":  17,
+    "ForbiddenBinariesInEvidence":  0,
+    "ForbiddenBinariesInDeliver":  0
+}

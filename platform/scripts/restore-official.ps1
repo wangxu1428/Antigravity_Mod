@@ -35,6 +35,7 @@ $AsarActivePath = Join-Path $ResourcesDir 'app.asar'
 
 $KnownOfficialAsarHashes = @(
     '5B493943E67E500638555315594D5B1ACBC7A02E6DAC3C786651921C1EE8519F' # Antigravity 2.32.1 official clean app.asar (resources/app.asar.bak); 98A4308C is current app.asar with preloaded AGY_ZH_ENGINE, not official
+    'B33C81600E82E65593AA8430EF01B37D6B28D9D98F0FAF45E25957783B71E64B' # Antigravity 2.33.0 official clean app.asar
 )
 
 $AllowedOfficialHashes = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)

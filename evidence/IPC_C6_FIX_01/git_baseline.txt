@@ -1,0 +1,7 @@
+CapturedAtLocal: 2026-11-20T00:38:27.9492113+08:00
+HEAD: 84dc8e989b301f387561cceec97617f28612c2a0
+origin/main: 923110e60cdb928b41a28ad2994f71bbed4bf730
+--- git ls-remote ---
+84dc8e989b301f387561cceec97617f28612c2a0	refs/heads/dev/compat-233-stage-b
+923110e60cdb928b41a28ad2994f71bbed4bf730	refs/heads/main
+84dc8e989b301f387561cceec97617f28612c2a0	refs/pull/10/head

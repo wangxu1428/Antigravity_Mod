@@ -1,0 +1,178 @@
+{
+  "run_id": 44569636560,
+  "run_number": 19,
+  "head_sha": "29600a9a8b1b40051ea988c97e81871f423dbcb6",
+  "conclusion": "success",
+  "method": "按 10 个测试套件各自输出的汇总行累加：test_host_unit.js 取 UNIT_SUMMARY passed/failed；其余套件取 SUMMARY pass/fail/skip。未把 setup/checkout/post 等非测试步骤计入断言数。",
+  "ubuntu": {
+    "name": "test (ubuntu-latest)",
+    "job_id": 135720835573,
+    "suites": [
+      {
+        "step": "Host unit tests",
+        "pass": 15,
+        "fail": 0,
+        "skip": 0,
+        "format": "UNIT_SUMMARY"
+      },
+      {
+        "step": "Reaper unit tests",
+        "pass": 16,
+        "fail": 0,
+        "skip": 0,
+        "format": "SUMMARY"
+      },
+      {
+        "step": "Update lock tests",
+        "pass": 11,
+        "fail": 0,
+        "skip": 0,
+        "format": "SUMMARY"
+      },
+      {
+        "step": "Repatch unit tests",
+        "pass": 2,
+        "fail": 0,
+        "skip": 0,
+        "format": "SUMMARY"
+      },
+      {
+        "step": "Fault injection tests",
+        "pass": 2,
+        "fail": 0,
+        "skip": 0,
+        "format": "SUMMARY"
+      },
+      {
+        "step": "Manifest raw-byte integrity tests",
+        "pass": 5,
+        "fail": 0,
+        "skip": 0,
+        "format": "SUMMARY"
+      },
+      {
+        "step": "i18n teardown unit tests",
+        "pass": 6,
+        "fail": 0,
+        "skip": 0,
+        "format": "SUMMARY"
+      },
+      {
+        "step": "Compat 2.33.0 unit tests",
+        "pass": 14,
+        "fail": 0,
+        "skip": 1,
+        "format": "SUMMARY"
+      },
+      {
+        "step": "Compat version declaration tests",
+        "pass": 15,
+        "fail": 0,
+        "skip": 0,
+        "format": "SUMMARY"
+      },
+      {
+        "step": "IPC authorization security tests (SEC-01..18)",
+        "pass": 30,
+        "fail": 0,
+        "skip": 0,
+        "format": "SUMMARY"
+      }
+    ],
+    "pass": 116,
+    "fail": 0,
+    "skip": 1
+  },
+  "windows": {
+    "name": "test (windows-latest)",
+    "job_id": 135720836179,
+    "suites": [
+      {
+        "step": "Host unit tests",
+        "pass": 15,
+        "fail": 0,
+        "skip": 0,
+        "format": "UNIT_SUMMARY"
+      },
+      {
+        "step": "Reaper unit tests",
+        "pass": 16,
+        "fail": 0,
+        "skip": 0,
+        "format": "SUMMARY"
+      },
+      {
+        "step": "Update lock tests",
+        "pass": 11,
+        "fail": 0,
+        "skip": 0,
+        "format": "SUMMARY"
+      },
+      {
+        "step": "Repatch unit tests",
+        "pass": 14,
+        "fail": 0,
+        "skip": 0,
+        "format": "SUMMARY"
+      },
+      {
+        "step": "Fault injection tests",
+        "pass": 26,
+        "fail": 0,
+        "skip": 0,
+        "format": "SUMMARY"
+      },
+      {
+        "step": "Manifest raw-byte integrity tests",
+        "pass": 5,
+        "fail": 0,
+        "skip": 0,
+        "format": "SUMMARY"
+      },
+      {
+        "step": "i18n teardown unit tests",
+        "pass": 6,
+        "fail": 0,
+        "skip": 0,
+        "format": "SUMMARY"
+      },
+      {
+        "step": "Compat 2.33.0 unit tests",
+        "pass": 15,
+        "fail": 0,
+        "skip": 0,
+        "format": "SUMMARY"
+      },
+      {
+        "step": "Compat version declaration tests",
+        "pass": 15,
+        "fail": 0,
+        "skip": 0,
+        "format": "SUMMARY"
+      },
+      {
+        "step": "IPC authorization security tests (SEC-01..18)",
+        "pass": 30,
+        "fail": 0,
+        "skip": 0,
+        "format": "SUMMARY"
+      }
+    ],
+    "pass": 153,
+    "fail": 0,
+    "skip": 0
+  },
+  "expected": {
+    "ubuntu": {
+      "pass": 116,
+      "fail": 0,
+      "skip": 1
+    },
+    "windows": {
+      "pass": 153,
+      "fail": 0,
+      "skip": 0
+    }
+  },
+  "matches_expected": true
+}

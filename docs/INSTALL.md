@@ -26,7 +26,7 @@
 
 | 条件 | 说明 |
 | --- | --- |
-| **独立 Antigravity 副本** | 从官方客户端完整复制出的独立目录（兼容基线 `2.32.x` / Electron `44.9.1`），目录内必须存在 `resources\` 子目录与**官方未修改的纯净 `resources\app.asar`**（便携启动还需要根目录存在 `Antigravity.exe`）。 |
+| **独立 Antigravity 副本** | 从官方客户端完整复制出的独立目录（已验证 `2.32.1`、`2.33.0` / Electron `44.9.1`），目录内必须存在 `resources\` 子目录与**官方未修改的纯净 `resources\app.asar`**（便携启动还需要根目录存在 `Antigravity.exe`）。 |
 | **Windows PowerShell 5.1+** | 运行 `.ps1` 安装、重铸与还原脚本（推荐 `powershell -NoProfile -ExecutionPolicy Bypass`）。 |
 | **Node.js** | 供 `mod_kit\patch.js` 注入补丁并执行 `node --check` 语法校验，也可用于运行离线单元测试。 |
 | **`asar` 或 `npx`** | `mod_kit\repatch.ps1` 需要解包和重打包 `app.asar`：优先使用 `PATH` 中的全局 `asar`（可通过 `npm i -g @electron/asar` 安装）；若无全局 `asar`，脚本会自动回退为 `npx asar`。 |
@@ -66,7 +66,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\platform\scripts\install-o
 
 脚本会依次完成：
 1. 校验 `<TargetAppDir>\resources\` 存在，并确认 `<TargetAppDir>\` 下没有运行中进程；记录当前 `resources\app-update.yml` 的存在性与 SHA256，并在同卷暂存区保留原配置备份；
-2. 同步 `platform/mod_kit/` 核心文件（`patch.js`、`agm_locks.js`、`agm_sidecar_reaper_core.js`、`repatch.ps1`、`repatch.bat`、`app-update.template.yml`）到 `<TargetAppDir>\mod_kit\`；
+2. 同步 `platform/mod_kit/` 核心文件（`patch.js`、`agm_ipc_auth.js`、`agm_locks.js`、`agm_sidecar_reaper_core.js`、`repatch.ps1`、`repatch.bat`、`app-update.template.yml`）到 `<TargetAppDir>\mod_kit\`；
 3. 同步 `platform/agm-plugin-host.js`、`platform/config.default.json`、内置插件（`hakimi-i18n`、`ai-sidedock`）与可选插件包（`agm-hello-guard`）到运行时 `plugins\` 布局；
 4. 若 `<TargetAppDir>\plugins\config.json` 不存在，则从 `config.default.json` 初始化一份；**若已存在则原样保留**；
 5. 复制 `platform/scripts/启动爆改版.bat` 到 `<TargetAppDir>\启动爆改版.bat`；

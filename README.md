@@ -35,6 +35,7 @@ Antigravity_Mod/
 │   ├── config.default.json                    #   纯净默认配置模板（不是运行态 config.json）
 │   ├── mod_kit/                               #   补丁重铸工具箱
 │   │   ├── patch.js                           #     8 锚点预检 + 13 个受限 hakimi:* IPC 注入器
+│   │   ├── agm_ipc_auth.js                    #     hakimi:* 主进程 IPC 调用方授权核心
 │   │   ├── agm_locks.js                       #     AGM_UPDATE_LOCK (10 锚点) + AGM_SIDECAR_REAPER (4 锚点)
 │   │   ├── agm_sidecar_reaper_core.js         #     会话级 Sidecar 进程树快照与单 PID 收割核心
 │   │   ├── repatch.ps1                        #     非破坏式解包、注入、node --check 与重打包流水线
@@ -135,7 +136,7 @@ set AGM_DEBUG_PORT=9224
 
 ## English Summary
 
-**Antigravity_Mod (AGM)** is an external plugin platform and localization suite for Antigravity IDE (compatible with v2.32.x / Electron 44.9.1).
+**Antigravity_Mod (AGM)** is an external plugin platform and localization suite for Antigravity IDE (verified with v2.32.1 and v2.33.0 / Electron 44.9.1).
 - **No Proprietary Binaries**: Only the platform core (`platform/`, including `mod_kit/` and the host `platform/agm-plugin-host.js` v2.1.0), built-in plugins (`plugins/builtin/`), optional plugin packages (`plugins/optional/`), tests, and documentation are distributed.
 - **Strict User Data Isolation**: **User data is stored outside the platform distribution directory (or in `.gitignore`-protected runtime paths within the installation tree); platform upgrades never overwrite or delete user configurations (`plugins/config.json`), plugin state (`plugins/state/`), installed packages (`plugins/packages/`), or browser profile data (`UserData/`).** The repository layout change does not move those runtime directories. The installer copies sources back onto the previous load paths and never deletes user files.
 

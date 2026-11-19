@@ -1,0 +1,125 @@
+# [Draft] AGM-233-COMPAT-01 / STAGE-B：Antigravity 2.33.0 最小兼容修复（方案 A 精准加固版）
+
+> **重要声明：本 PR 为 Draft PR，尚未获得合并批准。严禁合并 `main`、创建 Tag 或发布 Release。本阶段仅完成隔离分支编码与离线双版本验证，尚未进行 2.33.0 实机安装启动验收（待 Stage-C 隔离实机测试）。**
+
+- **基线 `main` 提交 SHA**：`923110e60cdb928b41a28ad2994f71bbed4bf730`
+- **开发分支**：`dev/compat-233-stage-b`
+- **最新提交 SHA**：`26923e4f4b7a5e6def7ca696a544d299a8cabefd`
+
+---
+
+## 1. 改动范围（仅 6 个任务相关文件）
+
+| 文件 | 变更类型 | 改动内容说明 |
+| --- | --- | --- |
+| `platform/mod_kit/patch.js` | 修改 | 1. **`H_MAIN_4` 非破坏式匹配与注入**：将 `readyTargetRe` 升级为严格单语句多行正则（禁止跨语句 `{}`/`；`，支持可选 `const <id> =` 与参数动态变化），移除旧版硬编码参数覆盖块，改为 `(m, indent) => m + readyHakimiSetupCode...` 追加注入；完整保留 `2.33.0` 的 `const ipc = (0, ipcHandlers_1.registerIpcHandlers)(...)`、`hostQuestionBusy`、`openFromRemote` 与 `ipc.closeContextMenu` 调用时序。<br>2. **`H_PRELOAD_1` 收敛至本地 `else` 分支内部**：将 `bridgeMarkerRe` 锚定到 `createLocalSshRemoteAPI()` 所在行并移除尾随 `\r?\n\}`，改为缩进对齐非破坏式追加；使 `hakimiHost` 在 `2.32.1` 与 `2.33.0` 均严格位于 `else` 分支内部，保留 `agyComputerPreview`，不触碰 SSH 远程分支，消除 `2.32.1` 历史越界暴露问题。 |
+| `platform/mod_kit/repatch.ps1` | 修改 | 在 `$KnownOfficialAsarHashes` 保留 `2.32.1`（`5B493943E67E500638555315594D5B1ACBC7A02E6DAC3C786651921C1EE8519F`），追加经本机隔离校验的官方 `2.33.0` `app.asar` SHA256（`B33C81600E82E65593AA8430EF01B37D6B28D9D98F0FAF45E25957783B71E64B`）；不改 R3 状态机、不改 `exit 3/4/9/10/11/12` 语义、不放宽校验。 |
+| `platform/scripts/restore-official.ps1` | 修改 | 同上，仅在 `$KnownOfficialAsarHashes` 追加 `2.33.0` 官方纯净 `app.asar` SHA256（`B33C81600E82E65593AA8430EF01B37D6B28D9D98F0FAF45E25957783B71E64B`），其余还原逻辑与恢复语义零改动。 |
+| `tests/test_compat_233_unit.js` | 新增 | 纯手写最小合成夹具双版本离线单测（`C233-1` .. `C233-15`，**不含任何官方源码片段、`asar` 或解包产物**），覆盖语法、词法块作用域、Node `vm` 运行模拟（含 `const ipc` 与 `isRemoteWindow=true` 不暴露 `hakimiHost`）、幂等性、负向响亮失败与零写盘、白名单 `-VerifyOnly`/合成 `repatch.ps1` 重复执行。 |
+| `.github/workflows/test.yml` | 修改 | 在 `offline-tests` 矩阵（`ubuntu-latest` / `windows-latest`）末尾新增 `node tests/test_compat_233_unit.js`。 |
+| `manifest.repo.json` | 修改 | 按 Git Blob 原始 LF 字节更新上述 3 个已改文件与 1 个新增测试文件的 `size` 与 `sha256`。**注：`platform.compatibleAppVersion` 字段仍维持 `"2.32.x"` 未改（标 `UNKNOWN` 待审批，详见第 3 节）**。 |
+
+> **严格保持未改动**：`platform/mod_kit/agm_locks.js`、R3 事务替换与回滚状态机、AGM 安全锁核心逻辑均零改动。
+
+---
+
+## 2. 测试结果（真实底座本地测试与 CI 合成夹具测试严格分开列明）
+
+### 2.1 本机真实纯净官方底座离线回归（仅在本机隔离目录 `C:\AGM_TestLab\COMPAT_233_02\evidence\` 运行，未入库）
+- **底座校验**：
+  - `2.32.1`：`5B493943E67E500638555315594D5B1ACBC7A02E6DAC3C786651921C1EE8519F`（核验一致）
+  - `2.33.0`：`B33C81600E82E65593AA8430EF01B37D6B28D9D98F0FAF45E25957783B71E64B`（核验一致）
+- **总计 25/25 PASS（0 失败）**：
+  - **锚点命中**：`2.32.1` 与 `2.33.0` 均达到 AGM 安全锁 **14/14**、Hakimi 8 项按预期命中（`H_MAIN_4 = 1/1`、`H_PRELOAD_1 = 1/1`、`H_PRELOAD_2 = 2`），`patch.js` 实跑均 exit `0`。
+  - **语法与顺序**：`patch.js` 及两版生成的 12 个 `dist/*.js` 文件全部通过 `node --check`；`2.33.0` `dist/main.js` 保留 `const ipc`、`hostQuestionBusy`、`openFromRemote` 与 `ipc.closeContextMenu`，且 Hakimi 初始化早于向导/主窗口创建。
+  - **桥接安全（词法作用域 + `vm` 实跑）**：两版 `hakimiHost` 均严格注入 `else` 本地分支内部，`if (isRemoteWindow)` 分支逐字节未变，`2.33.0` 完整保留 `agyComputerPreview`；`isRemoteWindow=true` 时两版均 0 暴露 `hakimiHost`（并实证对比修复前 `patch.js` 在 `2.32.1` 下越界暴露的问题已彻底消除）。
+  - **幂等性**：Hakimi 层二次运行 exit `0` 逐字节一致；全量二次运行以 exit `2` 响亮拒绝并零写盘。
+  - **负向用例（4 项）**：篡改/跨语句破坏 `H_MAIN_4`、删除 `createLocalSshRemoteAPI()` 均以 exit `2` 中止、提示具体锚点名、磁盘文件 SHA256 零变动。
+  - **白名单 `-VerifyOnly`**：`restore-official.ps1 -VerifyOnly` 接受真实 `2.32.1` / `2.33.0`（exit `0`），拒绝未知哈希（exit `4` + `ALARM`）。
+
+### 2.2 仓库既有 7 套离线回归（旧用例：93/93 PASS，0 失败）
+1. `node tests/test_host_unit.js`：15/15 PASS
+2. `node tests/test_reaper_unit.js`：16/16 PASS
+3. `node tests/test_update_lock.js`：11/11 PASS
+4. `node tests/test_repatch_unit.js`：14/14 PASS
+5. `node tests/test_fault_injection.js`：26/26 PASS
+6. `node tests/test_manifest_integrity.js`：5/5 PASS（54 条登记文件 + 4 条插件校验 100% 原始 Git Blob LF 匹配）
+7. `node tests/test_i18n_teardown_unit.js`：6/6 PASS
+
+### 2.3 仓库新增 CI 合成夹具回归（新用例：15/15 PASS，0 失败）
+- `node tests/test_compat_233_unit.js`：15/15 PASS（`C233-1` .. `C233-15`）
+
+### 2.4 Manifest 原始 Git Blob 字节审计（`git cat-file -p HEAD:<path>`）
+- 仓库追踪文件总数：`67`（基线 `66` + 新增 `1`）
+- `manifest.repo.json` `files[]` 登记数：`54` -> **通过 `54` / 失败 `0`**（全部纯 LF 无 CR）
+- 插件子文件校验：`4/4` PASS
+- 未登记追踪文件：`13` 个（与基线完全一致，仅元文件/说明/CI 配置）
+
+---
+
+## 3. 未解决风险、`UNKNOWN` 与证据说明
+
+1. **【正式发行前阻断项】主进程 `hakimi:*` IPC 调用方授权未加固**：
+   - 本轮按最小范围仅收敛了 `preload.js` 的 `window.hakimiHost` 暴露边界；主进程 13 个 `hakimi:*` IPC 仍未做 `isRemoteContents(event.sender)` 服务端硬拦截，**不得**将 preload 静态/模拟隔离冒充为远程 IPC 服务端安全证明。该项需在正式面向 `2.33.0` 发布前作为独立安全加固任务闭环。
+2. **`manifest.repo.json` `compatibleAppVersion` 字段状态为 `UNKNOWN（待审批）`**：
+   - 当前 `"compatibleAppVersion": "2.32.x"` 为单字符串字段，仓库中不存在多版本列表/区间解析契约（`agm-plugin-host.js:satisfiesRange` 也不支持 `||` 或逗号列表）。依据规范本轮未擅自修改或自创破坏旧解析器的格式，待审批通过后采用向后兼容最小扩展方案（如保留 `"compatibleAppVersion"` 并新增 `"compatibleAppVersions": ["2.32.1", "2.33.0"]`）。
+3. **本阶段未执行的实机运行项（`UNKNOWN / NOT RUN`）**：
+   - `2.33.0` 实机冷启动、真实 Web UI 渲染、`ai-sidedock` 排版兼容、`hakimi-i18n` 新界面覆盖率、真实热重载、真实远程窗口 IPC 拒绝行为、真实 `restore-official.ps1` 回滚（仅验证了 `-VerifyOnly` 哈希校验）。
+4. **本地隔离证据路径**：`C:\AGM_TestLab\COMPAT_233_02\evidence\`（含 `real_bases_regression.json`、`real_bases_regression.log`、`manifest_audit.json`、`test_*.log` 等）。
+
+---
+
+## 4. B-CLOSEOUT 收尾（2026-11-19，执行者 dsh / DeepSeek 云端盒子）
+
+- **CLOSEOUT HEAD**：`a22f044fef898a93a8faccbb69be9314dc1aceb3`（在 `26923e4` 之上普通推送，未 force push / rebase）
+- **基线 main**：`923110e60cdb928b41a28ad2994f71bbed4bf730`（本轮未前进、未合并）
+- **PR 状态**：仍为 Draft、OPEN、未合并
+- **manifest 最终双字段**：`"compatibleAppVersion": "2.32.1"` + `"compatibleAppVersions": ["2.32.1", "2.33.0"]`，`schemaVersion` 仍为 `1`，未引入区间/OR 语法
+- **C233-15 三态**：Windows `15 PASS / 0 FAIL / 0 SKIP`；Ubuntu `14 PASS / 0 FAIL / 1 SKIP`；SKIP 仅在非 Windows 出现，Windows 上出现 SKIP 判 FAIL
+- **新增兼容声明正反向测试**：`tests/test_compat_versions_unit.js`（META-1/2 + V1-V13，共 15 项）双平台 `15/0/0`；严格精确字符串匹配，不 trim、不加/去 `v`、不接受构建号后缀
+- **CI run**：[`44529327546`](https://github.com/wangxu1428/Antigravity_Mod/actions/runs/44529327546)
+  - `test (ubuntu-latest)`：86 PASS / 0 FAIL / 1 SKIP（旧套件 57/0/0 + C233 14/0/1 + 新声明测试 15/0/0；36 个 Windows 专用用例在 Ubuntu 上未运行、未记 PASS）
+  - `test (windows-latest)`：123 PASS / 0 FAIL / 0 SKIP（旧套件 93/0/0 + C233 15/0/0 + 新声明测试 15/0/0）
+- **Manifest Git Blob 校验**：58 个登记文件 + 2 个内置插件条目 = 60/60 PASS、0 FAIL；上轮 54 项 -> 本轮 58 项（新增 4、变更 4、删除 0），全部纯 LF
+- **历史真实底座验证**：Stage-B 的 2.32.1 / 2.33.0 真实双底座 `25/25 PASS` 为**历史结果，本轮未重跑**（本机无真实官方底座）；本轮未将其冒充为实跑结果
+- **未解决安全风险（保持阻断）**：主进程 13 个 `hakimi:*` IPC 调用方授权仍未做 `isRemoteContents(event.sender)` 服务端硬拦截，正式面向 2.33.0 发行前必须独立闭环；Stage-C 仍为 BLOCKED
+- **交付物**：`W/deliver/AGM_233_COMPAT_STAGE_B_CLOSEOUT_report.md`、`AGM_233_COMPAT_STAGE_B_CLOSEOUT_preview.png`；原始证据在 `W/evidence/`
+
+---
+
+## IPC-SEC-01（2026-11-19，Linux 云端盒子执行；非 Windows 实机）
+
+- **提交**：`5afa3c47c2dfac04832c68afc60ca9357dbbdf8d`（安全加固主提交，父提交 `a22f044fef898a93a8faccbb69be9314dc1aceb3`）；`84dc8e989b301f387561cceec97617f28612c2a0`（第 1 次最小 CI 修复：安装清单与 Windows 测试夹具补齐 `agm_ipc_auth.js`）
+- **范围**：13 个 `hakimi:*` 主进程 IPC 全部增加调用方授权；新增 `platform/mod_kit/agm_ipc_auth.js`；`patch.js` 在 `dist/main.js` 注入授权核心并将 13 处 `ipcMain.handle` 统一改为 `secureHandle`；新增 `tests/test_ipc_sec_unit.js`（SEC-01..18）并接入 Ubuntu/Windows CI。
+- **策略**：仅登记本地窗口工厂 `utils.createWindow` 创建的 WebContents；每次调用校验 `event.sender` 未销毁、`event.senderFrame` 非空且严格等于 `event.sender.mainFrame`；主帧跨文档导航（`did-start-navigation`）与 `destroyed` 撤销登记；`--agy-backend=ssh` 远程窗口不登记；URL 仅作附加条件，不作为唯一授权依据。
+- **拒绝语义**：统一 `Error('unauthorized')`（`AGM_IPC_UNAUTHORIZED`），handler 不执行；日志仅记录通道名与短原因，不含路径/用户名/Token/Cookie。
+- **离线测试**：新增 IPC 安全测试 25 PASS / 0 FAIL / 0 SKIP；旧测试 Host、Reaper、Update lock、Repatch、Fault injection、Manifest raw-byte、i18n teardown、Compat 2.33.0、Compat versions 全部通过（旧/新分开统计）。
+- **真实 Electron**：Electron `44.9.1` + `xvfb-run`（仓库外 `W/electron_sandbox/`），SEC-01/02/03/04/05/08/09/10/LOG 共 9 PASS / 0 FAIL，证据在 `W/evidence/electron_results.json`。
+- **真实底座**：`REAL_BASE_2321 = NOT RUN`、`REAL_BASE_2330 = NOT RUN`；未复用 Stage-B 历史 25/25。
+- **CI**：最终 HEAD `84dc8e9`，run `44548574146` 双 job success：Ubuntu **111 PASS / 0 FAIL / 1 SKIP**；Windows **148 PASS / 0 FAIL / 0 SKIP**。首轮 `5afa3c4` 的 Windows Repatch 夹具缺少 `agm_ipc_auth.js`，已由 `84dc8e9` 最小修复（1 次，未改测试预期/断言）。
+- **PR 状态**：仍为 Draft、OPEN、未合并；未创建新 PR、未改 Draft 状态、未 Tag/Release。
+
+
+
+## AGM-IPC-C6-FIX-01
+
+> 本节由 IPC-C6-CLOSEOUT-01 仅追加，原描述内容与字节未改动；数据以 `C:\AGM_TestLab\IPC_SEC_A02\deliver\AGM_IPC_C6_FIX_01_report.md`（修正版）为准。
+
+- **目标提交**：`29600a9a8b1b40051ea988c97e81871f423dbcb6`
+- **CI Run**：`44569636560`（`offline-tests`，`run_number: 19`，结论 `success`）
+  - `test (ubuntu-latest)` Job `135720835573`：`116 PASS / 0 FAIL / 1 SKIP`
+  - `test (windows-latest)` Job `135720836179`：`153 PASS / 0 FAIL / 0 SKIP`
+- **双版本 Windows 冷启动**：2.32.1 与 2.33.0 均 `2 / 2` 成功
+- **合法 IPC**：`11 / 11` 成功（0 误拒）
+- **A01 非法调用回归**：`31 / 31` 拒绝
+- **C-6a/b/c/d**：均 `13 / 13` 拒绝（A01 修复前 C-6a/b 为 `0 / 13`）
+- **SSH 窗口**：`13 / 13` 拒绝
+- **越权写盘**：`4 → 0`
+- **原始证据位置**：
+  - PC：`C:\AGM_TestLab\IPC_SEC_A02\evidence`
+  - Drive 证据文件夹：https://drive.google.com/drive/folders/1ohWu0rthsUCLaSK-m9Z41S_yMrAV9ihP
+- **未完成项**：
+  - 真实 SSH E2E：NOT RUN
+  - updater:* 统一授权：NOT DONE
+  - 托盘新窗口及整页刷新功能：PENDING INTERACTIVE VALIDATION
+- **发布阻断**：PR 保持 Draft，2.33.0 发布仍不就绪。

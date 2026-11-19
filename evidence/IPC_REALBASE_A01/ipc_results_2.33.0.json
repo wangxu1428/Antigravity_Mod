@@ -1,0 +1,994 @@
+{
+  "generatedAtLocal": "2026-11-19T16:06:51.183Z",
+  "productVsProbe": {
+    "productCodeUntouchedInRepo": true,
+    "probeMode": "env-gated test probe in isolated copy only (AGM_TEST_PROBE_FILE)"
+  },
+  "electronVersion": "44.9.1",
+  "appVersion": "2.33.0",
+  "specialChecks": {
+    "check1_installCreateWindowHook": {
+      "hookInstalledAtBoot": true,
+      "utilsCreateWindowWrapped": true,
+      "mainHubWindowFound": true,
+      "mainHubWcId": 2,
+      "mainHubRegistered": true,
+      "gateSizeAtBoot": 1,
+      "note": "exports.createWindow is wrapped; internal lexical createWindow() calls inside utils.js (e.g. showOrCreateWindow) bypass exports.createWindow (fail-closed behavior)."
+    },
+    "check4_normalNavigationAndReload": {
+      "mainHubWcId": 2,
+      "mainHubObservedNavEvents": [
+        {
+          "tag": "wc#2(window)",
+          "event": "did-start-navigation",
+          "url": "https://127.0.0.1:61647/",
+          "isMainFrame": true,
+          "isSameDocument": false,
+          "isRegistered": false
+        },
+        {
+          "tag": "wc#2(window)",
+          "event": "did-finish-load",
+          "url": "https://127.0.0.1:61647/",
+          "isRegistered": true
+        },
+        {
+          "tag": "wc#2(window)",
+          "event": "did-start-navigation",
+          "url": "https://127.0.0.1:61647/#agm-probe-hash",
+          "isMainFrame": true,
+          "isSameDocument": true,
+          "isRegistered": true
+        },
+        {
+          "tag": "wc#2(window)",
+          "event": "did-start-navigation",
+          "url": "https://127.0.0.1:61647/",
+          "isMainFrame": true,
+          "isSameDocument": true,
+          "isRegistered": true
+        },
+        {
+          "tag": "wc#2(window)",
+          "event": "did-start-navigation",
+          "url": "https://127.0.0.1:61647/",
+          "isMainFrame": true,
+          "isSameDocument": true,
+          "isRegistered": true
+        },
+        {
+          "tag": "wc#2(window)",
+          "event": "did-start-navigation",
+          "url": "https://127.0.0.1:61647/onboarding",
+          "isMainFrame": true,
+          "isSameDocument": true,
+          "isRegistered": true
+        }
+      ],
+      "sameDocPushStatePreservesAuth": true,
+      "crossDocReloadRegisteredBefore": true,
+      "crossDocReloadRegisteredAfter": false,
+      "crossDocReloadCallAfter": {
+        "error": "Error invoking remote method 'hakimi:get-host-info': Error: unauthorized",
+        "ok": false
+      },
+      "finding": "Cross-document wc.reload() revokes registration (expected fail-closed behavior in agm_ipc_auth.js; same-doc SPA navigation & Hakimi F5/Ctrl+R JS plugin hot-reload preserve auth, while Ctrl+Shift+R window.location.reload() revokes until window recreation)."
+    },
+    "check3_initialLoadAndRedirectGap": {
+      "gapObserved": false,
+      "timeline": [
+        {
+          "stage": "after_createWindow_sync",
+          "registered": true
+        },
+        {
+          "stage": "will-redirect_after_emit",
+          "url": "http://evil.example.test/landing?agm_early=1",
+          "registered": false
+        },
+        {
+          "stage": "did-finish-load",
+          "url": "http://evil.example.test/landing?agm_early=1",
+          "registered": false
+        }
+      ],
+      "note": "Initial remote URL is never registered; 302 redirect from local to remote revokes trust on will-redirect before landing page preload runs."
+    },
+    "check2_sshRemoteMarker": {
+      "realSshHostConnected": false,
+      "realRemoteSshResult": "NOT RUN",
+      "constructedSshWindowTested": true,
+      "C6a_browserWindow": {
+        "getLastWebPreferencesAvailable": true,
+        "additionalArgumentsObserved": null,
+        "lastWebPreferencesKeys": [
+          "allowRunningInsecureContent",
+          "contextIsolation",
+          "disableDialogs",
+          "disablePopups",
+          "enableBlinkFeatures",
+          "experimentalFeatures",
+          "javascript",
+          "nodeIntegration",
+          "nodeIntegrationInSubFrames",
+          "nodeIntegrationInWorker",
+          "safeDialogs",
+          "safeDialogsMessage",
+          "sandbox",
+          "webSecurity",
+          "webviewTag"
+        ],
+        "constructedSshRegistered": true,
+        "channelsRejected": 0,
+        "result": "FAIL (constructed)"
+      },
+      "C6b_webContentsView": {
+        "getLastWebPreferencesAvailable": true,
+        "additionalArgumentsObserved": null,
+        "lastWebPreferencesKeys": [
+          "allowRunningInsecureContent",
+          "contextIsolation",
+          "disableDialogs",
+          "disablePopups",
+          "enableBlinkFeatures",
+          "experimentalFeatures",
+          "javascript",
+          "nodeIntegration",
+          "nodeIntegrationInSubFrames",
+          "nodeIntegrationInWorker",
+          "safeDialogs",
+          "safeDialogsMessage",
+          "sandbox",
+          "webSecurity",
+          "webviewTag"
+        ],
+        "constructedSshRegistered": true,
+        "channelsRejected": 0,
+        "result": "FAIL (constructed)"
+      }
+    }
+  },
+  "partB_legitFunctionality": {
+    "mainHubFound": true,
+    "legitTotalTested": 11,
+    "legitSuccessCount": 11,
+    "legitFailCount": 0,
+    "skippedChannelsLegitCall": [
+      {
+        "channel": "hakimi:launch-desktop-gpt",
+        "reason": "Skipped in legit flow to avoid launching external ChatGPT desktop app; covered in all unauthorized rejection suites."
+      }
+    ],
+    "unauthorizedFalsePositivesCount": 0,
+    "unauthorizedFalsePositives": [],
+    "operations": [
+      {
+        "name": "HakimiPluginHost_present",
+        "ok": true,
+        "detail": {
+          "hasHost": true,
+          "hasHakimiHost": true,
+          "hostInfo": "2.1.0"
+        }
+      },
+      {
+        "name": "hakimi:get-plugins-dir",
+        "ok": true,
+        "detail": {
+          "dir": "C:\\AGM_TestLab\\IPC_SEC_A01\\bases\\2.33.0\\plugins"
+        }
+      },
+      {
+        "name": "hakimi:list-plugins",
+        "ok": true,
+        "detail": {
+          "plugins": [
+            "agm-plugin-host.js",
+            "ai-sidedock.js",
+            "hakimi-i18n.js"
+          ]
+        }
+      },
+      {
+        "name": "hakimi:read-plugin",
+        "ok": true,
+        "detail": {
+          "len": 169469,
+          "ok": true
+        }
+      },
+      {
+        "name": "hakimi:read-config",
+        "ok": true,
+        "detail": {
+          "hasSidedock": true,
+          "hasI18n": true
+        }
+      },
+      {
+        "name": "hakimi:save-config_and_readback",
+        "ok": true,
+        "detail": {
+          "saved": true,
+          "roundtripMatch": true
+        }
+      },
+      {
+        "name": "hakimi:get-host-info",
+        "ok": true,
+        "detail": {
+          "appVersion": "2.33.0",
+          "electronVersion": "44.9.1",
+          "hostSocketVersion": "2.0.0",
+          "ok": true
+        }
+      },
+      {
+        "name": "hakimi:list-packages_repo",
+        "ok": true,
+        "detail": {
+          "count": 1,
+          "ids": [
+            "agm-hello-guard"
+          ]
+        }
+      },
+      {
+        "name": "hakimi:install_read_uninstall_package",
+        "ok": true,
+        "detail": {
+          "instOk": true,
+          "installedHasHello": true,
+          "entryOk": true,
+          "uninstOk": true,
+          "removedAfterUninstall": true
+        }
+      },
+      {
+        "name": "hakimi:write_read_state",
+        "ok": true,
+        "detail": {
+          "w1": true,
+          "r1Ok": true,
+          "w2": true,
+          "cleaned": true
+        }
+      },
+      {
+        "name": "same_document_nav_keeps_auth",
+        "ok": true,
+        "detail": {
+          "ok": true,
+          "appVersion": "2.33.0"
+        }
+      }
+    ]
+  },
+  "partC_securityTests": {
+    "C1_unregisteredRemoteWebContents": {
+      "pass": true,
+      "preloadApi": "registerPreloadScript",
+      "url": "http://evil.example.test/remote-attacker.html",
+      "isRegistered": false,
+      "channelsTested": 13,
+      "channelsRejected": 13,
+      "channelResults": [
+        {
+          "channel": "hakimi:get-plugins-dir",
+          "ok": false,
+          "rejected": true,
+          "error": "Error invoking remote method 'hakimi:get-plugins-dir': Error: unauthorized",
+          "missingPreload": false
+        },
+        {
+          "channel": "hakimi:list-plugins",
+          "ok": false,
+          "rejected": true,
+          "error": "Error invoking remote method 'hakimi:list-plugins': Error: unauthorized",
+          "missingPreload": false
+        },
+        {
+          "channel": "hakimi:read-plugin",
+          "ok": false,
+          "rejected": true,
+          "error": "Error invoking remote method 'hakimi:read-plugin': Error: unauthorized",
+          "missingPreload": false
+        },
+        {
+          "channel": "hakimi:read-config",
+          "ok": false,
+          "rejected": true,
+          "error": "Error invoking remote method 'hakimi:read-config': Error: unauthorized",
+          "missingPreload": false
+        },
+        {
+          "channel": "hakimi:save-config",
+          "ok": false,
+          "rejected": true,
+          "error": "Error invoking remote method 'hakimi:save-config': Error: unauthorized",
+          "missingPreload": false
+        },
+        {
+          "channel": "hakimi:launch-desktop-gpt",
+          "ok": false,
+          "rejected": true,
+          "error": "Error invoking remote method 'hakimi:launch-desktop-gpt': Error: unauthorized",
+          "missingPreload": false
+        },
+        {
+          "channel": "hakimi:get-host-info",
+          "ok": false,
+          "rejected": true,
+          "error": "Error invoking remote method 'hakimi:get-host-info': Error: unauthorized",
+          "missingPreload": false
+        },
+        {
+          "channel": "hakimi:list-packages",
+          "ok": false,
+          "rejected": true,
+          "error": "Error invoking remote method 'hakimi:list-packages': Error: unauthorized",
+          "missingPreload": false
+        },
+        {
+          "channel": "hakimi:read-package-entry",
+          "ok": false,
+          "rejected": true,
+          "error": "Error invoking remote method 'hakimi:read-package-entry': Error: unauthorized",
+          "missingPreload": false
+        },
+        {
+          "channel": "hakimi:install-package",
+          "ok": false,
+          "rejected": true,
+          "error": "Error invoking remote method 'hakimi:install-package': Error: unauthorized",
+          "missingPreload": false
+        },
+        {
+          "channel": "hakimi:uninstall-package",
+          "ok": false,
+          "rejected": true,
+          "error": "Error invoking remote method 'hakimi:uninstall-package': Error: unauthorized",
+          "missingPreload": false
+        },
+        {
+          "channel": "hakimi:read-state",
+          "ok": false,
+          "rejected": true,
+          "error": "Error invoking remote method 'hakimi:read-state': Error: unauthorized",
+          "missingPreload": false
+        },
+        {
+          "channel": "hakimi:write-state",
+          "ok": false,
+          "rejected": true,
+          "error": "Error invoking remote method 'hakimi:write-state': Error: unauthorized",
+          "missingPreload": false
+        }
+      ],
+      "deniedLogCount": 13,
+      "deniedLogsSample": [
+        {
+          "ts": 1795104414322,
+          "msg": "[Hakimi IPC] denied channel=hakimi:get-plugins-dir reason=untrusted-sender"
+        },
+        {
+          "ts": 1795104414324,
+          "msg": "[Hakimi IPC] denied channel=hakimi:list-plugins reason=untrusted-sender"
+        },
+        {
+          "ts": 1795104414325,
+          "msg": "[Hakimi IPC] denied channel=hakimi:read-plugin reason=untrusted-sender"
+        },
+        {
+          "ts": 1795104414326,
+          "msg": "[Hakimi IPC] denied channel=hakimi:read-config reason=untrusted-sender"
+        },
+        {
+          "ts": 1795104414326,
+          "msg": "[Hakimi IPC] denied channel=hakimi:save-config reason=untrusted-sender"
+        }
+      ],
+      "sideEffects": {
+        "pluginsDirChanges": {
+          "added": [],
+          "removed": [],
+          "modified": [],
+          "totalChanges": 0
+        },
+        "userDataDirNonSideEffectNote": "Chromium userData internal cache/prefs files may be touched by BrowserWindow creation; pluginsDir changes and process spawns are strictly checked for 0 side effects.",
+        "userDataDiffSummary": {
+          "totalChanges": 1,
+          "added": [],
+          "modified": [
+            "logs/main.log"
+          ]
+        },
+        "processDiff": {
+          "beforeCount": 276,
+          "afterCount": 276,
+          "newlySpawned": []
+        }
+      }
+    },
+    "C2_nonMainFrameIframe": {
+      "pass": true,
+      "C2a_defaultCreateWindowDefenseInDepth": {
+        "pass": true,
+        "preloadApi": "registerPreloadScript",
+        "parentRegistered": true,
+        "parentMainFrameLegitCall": {
+          "appVersion": "2.33.0",
+          "ok": true
+        },
+        "subFrameUrl": "http://evil.example.test/child-frame.html",
+        "subFrameHakimiHostType": "undefined",
+        "subFrameProbePreloadType": "undefined",
+        "note": "Product utils.createWindow omits nodeIntegrationInSubFrames (defaults false), so cross-origin subframes do not receive preloads."
+      },
+      "C2b_mainGateNotMainFrame": {
+        "pass": true,
+        "parentRegistered": true,
+        "parentMainFrameLegitCall": {
+          "appVersion": "2.33.0",
+          "ok": true
+        },
+        "subFrameUrl": "http://evil.example.test/child-frame.html",
+        "subFrameChannelsTested": 13,
+        "subFrameChannelsRejected": 13,
+        "subFrameResults": [
+          {
+            "channel": "hakimi:get-plugins-dir",
+            "ok": false,
+            "rejected": true,
+            "error": "Error invoking remote method 'hakimi:get-plugins-dir': Error: unauthorized",
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:list-plugins",
+            "ok": false,
+            "rejected": true,
+            "error": "Error invoking remote method 'hakimi:list-plugins': Error: unauthorized",
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:read-plugin",
+            "ok": false,
+            "rejected": true,
+            "error": "Error invoking remote method 'hakimi:read-plugin': Error: unauthorized",
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:read-config",
+            "ok": false,
+            "rejected": true,
+            "error": "Error invoking remote method 'hakimi:read-config': Error: unauthorized",
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:save-config",
+            "ok": false,
+            "rejected": true,
+            "error": "Error invoking remote method 'hakimi:save-config': Error: unauthorized",
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:launch-desktop-gpt",
+            "ok": false,
+            "rejected": true,
+            "error": "Error invoking remote method 'hakimi:launch-desktop-gpt': Error: unauthorized",
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:get-host-info",
+            "ok": false,
+            "rejected": true,
+            "error": "Error invoking remote method 'hakimi:get-host-info': Error: unauthorized",
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:list-packages",
+            "ok": false,
+            "rejected": true,
+            "error": "Error invoking remote method 'hakimi:list-packages': Error: unauthorized",
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:read-package-entry",
+            "ok": false,
+            "rejected": true,
+            "error": "Error invoking remote method 'hakimi:read-package-entry': Error: unauthorized",
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:install-package",
+            "ok": false,
+            "rejected": true,
+            "error": "Error invoking remote method 'hakimi:install-package': Error: unauthorized",
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:uninstall-package",
+            "ok": false,
+            "rejected": true,
+            "error": "Error invoking remote method 'hakimi:uninstall-package': Error: unauthorized",
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:read-state",
+            "ok": false,
+            "rejected": true,
+            "error": "Error invoking remote method 'hakimi:read-state': Error: unauthorized",
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:write-state",
+            "ok": false,
+            "rejected": true,
+            "error": "Error invoking remote method 'hakimi:write-state': Error: unauthorized",
+            "missingPreload": false
+          }
+        ],
+        "deniedLogCount": 13,
+        "deniedLogsSample": [
+          {
+            "ts": 1795104415270,
+            "msg": "[Hakimi IPC] denied channel=hakimi:get-plugins-dir reason=not-main-frame"
+          },
+          {
+            "ts": 1795104415272,
+            "msg": "[Hakimi IPC] denied channel=hakimi:list-plugins reason=not-main-frame"
+          },
+          {
+            "ts": 1795104415273,
+            "msg": "[Hakimi IPC] denied channel=hakimi:read-plugin reason=not-main-frame"
+          },
+          {
+            "ts": 1795104415273,
+            "msg": "[Hakimi IPC] denied channel=hakimi:read-config reason=not-main-frame"
+          },
+          {
+            "ts": 1795104415274,
+            "msg": "[Hakimi IPC] denied channel=hakimi:save-config reason=not-main-frame"
+          }
+        ],
+        "pluginsDirChanges": {
+          "added": [],
+          "removed": [],
+          "modified": [],
+          "totalChanges": 0
+        }
+      },
+      "subFrameChannelsRejected": 13
+    },
+    "C3_navigationRevokesTrust": {
+      "pass": true,
+      "beforeNav": {
+        "registered": true,
+        "call": {
+          "ok": true
+        }
+      },
+      "afterSameDocNav": {
+        "registered": true,
+        "call": {
+          "ok": true
+        }
+      },
+      "afterCrossDocNav": {
+        "registered": false,
+        "getHostInfo": {
+          "error": "Error invoking remote method 'hakimi:get-host-info': Error: unauthorized",
+          "ok": false
+        },
+        "saveConfig": {
+          "error": "Error invoking remote method 'hakimi:save-config': Error: unauthorized",
+          "ok": false
+        }
+      }
+    },
+    "C4_initialLoadAndRedirect": {
+      "pass": true,
+      "directRemote": {
+        "registeredImmediately": false,
+        "earlyPreloadCall": {
+          "error": "Error invoking remote method 'hakimi:get-host-info': Error: unauthorized",
+          "href": "http://evil.example.test/remote-initial.html?agm_early=1",
+          "ok": false,
+          "readyState": "loading",
+          "ts": 1795104415641
+        }
+      },
+      "redirectToRemote": {
+        "timeline": [
+          {
+            "stage": "after_createWindow_sync",
+            "registered": true
+          },
+          {
+            "stage": "will-redirect_after_emit",
+            "url": "http://evil.example.test/landing?agm_early=1",
+            "registered": false
+          },
+          {
+            "stage": "did-finish-load",
+            "url": "http://evil.example.test/landing?agm_early=1",
+            "registered": false
+          }
+        ],
+        "earlyPreloadCallOnRedirectedRemote": {
+          "error": "Error invoking remote method 'hakimi:get-host-info': Error: unauthorized",
+          "href": "http://evil.example.test/landing?agm_early=1",
+          "ok": false,
+          "readyState": "loading",
+          "ts": 1795104415747
+        },
+        "postLoadCallOnRedirectedRemote": {
+          "error": "Error invoking remote method 'hakimi:get-host-info': Error: unauthorized",
+          "ok": false
+        }
+      }
+    },
+    "C5_destroyedWindowRevokesTrust": {
+      "pass": true,
+      "savedWcId": 22,
+      "regBeforeDestroy": true,
+      "callBeforeDestroy": {
+        "ok": true
+      },
+      "sizeBeforeDestroy": 2,
+      "isWcDestroyed": true,
+      "regAfterDestroy": false,
+      "sizeAfterDestroy": 1,
+      "staleAuthAttempt": {
+        "ok": false,
+        "reason": "sender-destroyed"
+      },
+      "staleIdAuthAttempt": {
+        "ok": false,
+        "reason": "untrusted-sender"
+      }
+    },
+    "C6_constructedSshBackendWindow": {
+      "classification": "CONSTRUCTED_SSH_MARKER_WINDOW",
+      "realRemoteSshStatus": "NOT RUN",
+      "pass": false,
+      "channelsTested": 26,
+      "channelsRejected": 0,
+      "C6a_browserWindow_remoteManagerParity": {
+        "pass": false,
+        "builtInBrowser": false,
+        "windowClass": "BrowserWindow (remoteManager.js parity)",
+        "hasGetLastWebPreferences": true,
+        "lastWebPreferencesKeys": [
+          "allowRunningInsecureContent",
+          "contextIsolation",
+          "disableDialogs",
+          "disablePopups",
+          "enableBlinkFeatures",
+          "experimentalFeatures",
+          "javascript",
+          "nodeIntegration",
+          "nodeIntegrationInSubFrames",
+          "nodeIntegrationInWorker",
+          "safeDialogs",
+          "safeDialogsMessage",
+          "sandbox",
+          "webSecurity",
+          "webviewTag"
+        ],
+        "observedAdditionalArguments": null,
+        "isRegistered": true,
+        "hakimiHostTypeInRenderer": "undefined",
+        "channelsTested": 13,
+        "channelsRejected": 0,
+        "channelResults": [
+          {
+            "channel": "hakimi:get-plugins-dir",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:list-plugins",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:read-plugin",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:read-config",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:save-config",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:launch-desktop-gpt",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:get-host-info",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:list-packages",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:read-package-entry",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:install-package",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:uninstall-package",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:read-state",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:write-state",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          }
+        ],
+        "deniedLogCount": 0,
+        "deniedLogsSample": [],
+        "unauthorizedSideEffects": {
+          "pluginsDirChanges": {
+            "added": [
+              "state/configs/agm_evil_probe.json"
+            ],
+            "removed": [],
+            "modified": [
+              "config.json"
+            ],
+            "totalChanges": 2
+          },
+          "evilConfigFlagWritten": true,
+          "evilStateFileCreated": true
+        }
+      },
+      "C6b_webContentsView": {
+        "pass": false,
+        "builtInBrowser": true,
+        "windowClass": "BaseWindow+WebContentsView",
+        "hasGetLastWebPreferences": true,
+        "lastWebPreferencesKeys": [
+          "allowRunningInsecureContent",
+          "contextIsolation",
+          "disableDialogs",
+          "disablePopups",
+          "enableBlinkFeatures",
+          "experimentalFeatures",
+          "javascript",
+          "nodeIntegration",
+          "nodeIntegrationInSubFrames",
+          "nodeIntegrationInWorker",
+          "safeDialogs",
+          "safeDialogsMessage",
+          "sandbox",
+          "webSecurity",
+          "webviewTag"
+        ],
+        "observedAdditionalArguments": null,
+        "isRegistered": true,
+        "hakimiHostTypeInRenderer": "undefined",
+        "channelsTested": 13,
+        "channelsRejected": 0,
+        "channelResults": [
+          {
+            "channel": "hakimi:get-plugins-dir",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:list-plugins",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:read-plugin",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:read-config",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:save-config",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:launch-desktop-gpt",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:get-host-info",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:list-packages",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:read-package-entry",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:install-package",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:uninstall-package",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:read-state",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          },
+          {
+            "channel": "hakimi:write-state",
+            "ok": true,
+            "rejected": false,
+            "error": null,
+            "missingPreload": false
+          }
+        ],
+        "deniedLogCount": 0,
+        "deniedLogsSample": [],
+        "unauthorizedSideEffects": {
+          "pluginsDirChanges": {
+            "added": [
+              "state/configs/agm_evil_probe.json"
+            ],
+            "removed": [],
+            "modified": [
+              "config.json"
+            ],
+            "totalChanges": 2
+          },
+          "evilConfigFlagWritten": true,
+          "evilStateFileCreated": true
+        }
+      }
+    },
+    "deniedLogSanitization": {
+      "pass": true,
+      "totalDeniedLogs": 43,
+      "allMatchStrictEnumFormat": true,
+      "sample": [
+        {
+          "ts": 1795104414322,
+          "msg": "[Hakimi IPC] denied channel=hakimi:get-plugins-dir reason=untrusted-sender"
+        },
+        {
+          "ts": 1795104414324,
+          "msg": "[Hakimi IPC] denied channel=hakimi:list-plugins reason=untrusted-sender"
+        },
+        {
+          "ts": 1795104414325,
+          "msg": "[Hakimi IPC] denied channel=hakimi:read-plugin reason=untrusted-sender"
+        },
+        {
+          "ts": 1795104414326,
+          "msg": "[Hakimi IPC] denied channel=hakimi:read-config reason=untrusted-sender"
+        },
+        {
+          "ts": 1795104414326,
+          "msg": "[Hakimi IPC] denied channel=hakimi:save-config reason=untrusted-sender"
+        },
+        {
+          "ts": 1795104414327,
+          "msg": "[Hakimi IPC] denied channel=hakimi:launch-desktop-gpt reason=untrusted-sender"
+        },
+        {
+          "ts": 1795104414327,
+          "msg": "[Hakimi IPC] denied channel=hakimi:get-host-info reason=untrusted-sender"
+        },
+        {
+          "ts": 1795104414328,
+          "msg": "[Hakimi IPC] denied channel=hakimi:list-packages reason=untrusted-sender"
+        },
+        {
+          "ts": 1795104414329,
+          "msg": "[Hakimi IPC] denied channel=hakimi:read-package-entry reason=untrusted-sender"
+        },
+        {
+          "ts": 1795104414330,
+          "msg": "[Hakimi IPC] denied channel=hakimi:install-package reason=untrusted-sender"
+        }
+      ]
+    }
+  },
+  "summary": {
+    "legitSuccessCount": 11,
+    "legitFailCount": 0,
+    "unauthorizedFalsePositives": 0,
+    "securitySuitesPassed": 6,
+    "securitySuitesTotal": 7,
+    "illegalCallsRejectedCount": 31,
+    "coveredHakimiChannels": 13,
+    "c1AndC2UnauthorizedPluginsDirSideEffects": 0,
+    "c6ConstructedSshPluginsDirSideEffects": 4,
+    "unauthorizedProcessSpawnSideEffects": 0,
+    "realSshStatus": "NOT RUN"
+  }
+}

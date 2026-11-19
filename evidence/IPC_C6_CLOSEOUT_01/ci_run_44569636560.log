@@ -1,0 +1,782 @@
+test (ubuntu-latest)	Set up job	﻿2026-11-19T16:45:18.9080358Z Current runner version: '2.338.2'
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9096165Z ##[group]Runner Image Provisioner
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9097195Z Hosted Compute Agent
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9097633Z Version: 20261103.629
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9098112Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9098647Z Build Date: 2026-11-03T17:26:59Z
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9099121Z Worker ID: {abec83ac-8caa-4c6a-b969-299214e99fb0}
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9099613Z Region: us-west-2
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9100016Z Cloud: AWS
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9100401Z ##[endgroup]
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9101314Z ##[group]Operating System
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9101743Z Ubuntu
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9102118Z 26.04.1
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9102491Z LTS
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9102858Z ##[endgroup]
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9103237Z ##[group]Runner Image
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9103645Z Image: ubuntu-26.04
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9104038Z Version: 20261111.82.6
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9104773Z Included Software: https://github.com/actions/runner-images/blob/ubuntu26/20261111.82/images/ubuntu/Ubuntu2604-Readme.md
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9106212Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu26%2F20261111.82
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9107133Z ##[endgroup]
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9107961Z ##[group]GITHUB_TOKEN Permissions
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9109429Z Contents: read
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9109844Z Metadata: read
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9110259Z ##[endgroup]
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9111648Z Secret source: Actions
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9112307Z Cache mode: write
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9112796Z Prepare workflow directory
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9334869Z Prepare all required actions
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:18.9370419Z Getting action download info
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:19.2759856Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:21.5683928Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+test (ubuntu-latest)	Set up job	2026-11-19T16:45:21.9517945Z Complete job name: test (ubuntu-latest)
+test (ubuntu-latest)	Run actions/checkout@v4	﻿2026-11-19T16:45:22.0155337Z ##[group]Run actions/checkout@v4
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.0155928Z with:
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.0156236Z   repository: wangxu1428/Antigravity_Mod
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.0158642Z   token: ***
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.0158925Z   ssh-strict: true
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.0159184Z   ssh-user: git
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.0159488Z   persist-credentials: true
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.0159770Z   clean: true
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.0160032Z   sparse-checkout-cone-mode: true
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.0160347Z   fetch-depth: 1
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.0160604Z   fetch-tags: false
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.0160871Z   show-progress: true
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.0161162Z   lfs: false
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.0161420Z   submodules: false
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.0161724Z   set-safe-directory: true
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.0162021Z   allow-unsafe-pr-checkout: false
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.0162536Z ##[endgroup]
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.1729809Z Syncing repository: wangxu1428/Antigravity_Mod
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.1731665Z ##[group]Getting Git version info
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.1732379Z Working directory is '/home/runner/work/Antigravity_Mod/Antigravity_Mod'
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.1733456Z [command]/usr/bin/git version
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.1734457Z git version 2.56.1
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.1748484Z ##[endgroup]
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.1757789Z Temporarily overriding HOME='/home/runner/work/_temp/8acfc205-15f7-4f75-a727-3222ac83f593' before making global git config changes
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.1758850Z Adding repository directory to the temporary git global config as a safe directory
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.1761178Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Antigravity_Mod/Antigravity_Mod
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.1844390Z Deleting the contents of '/home/runner/work/Antigravity_Mod/Antigravity_Mod'
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.1846806Z ##[group]Initializing the repository
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.1850605Z [command]/usr/bin/git init /home/runner/work/Antigravity_Mod/Antigravity_Mod
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.2941197Z hint: Using 'master' as the name for the initial branch. This default branch name
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.2942055Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.2942786Z hint: to use in all of your new repositories, which will suppress this warning,
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.2943224Z hint: call:
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.2943480Z hint:
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.2943842Z hint: 	git config --global init.defaultBranch <name>
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.2944202Z hint:
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.2944546Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.2945034Z hint: 'development'. The just-created branch can be renamed via this command:
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.2945428Z hint:
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.2945685Z hint: 	git branch -m <name>
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.2945965Z hint:
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.2946550Z hint: Disable this message with "git config set advice.defaultBranchName false"
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.2971834Z Initialized empty Git repository in /home/runner/work/Antigravity_Mod/Antigravity_Mod/.git/
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.2981081Z [command]/usr/bin/git remote add origin https://github.com/wangxu1428/Antigravity_Mod
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.3045335Z ##[endgroup]
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.3046130Z ##[group]Disabling automatic garbage collection
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.3048600Z [command]/usr/bin/git config --local gc.auto 0
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.3070331Z ##[endgroup]
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.3071154Z ##[group]Setting up auth
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.3076069Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.3098538Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.5267268Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.5289744Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.5467645Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.5488889Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.5663610Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.5688419Z ##[endgroup]
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.5688828Z ##[group]Fetching the repository
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:26.5694055Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +aa83636d6cb11eb1faac6656d3004b6e46c2f3b6:refs/remotes/pull/10/merge
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3389304Z From https://github.com/wangxu1428/Antigravity_Mod
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3390003Z  * [new ref]         aa83636d6cb11eb1faac6656d3004b6e46c2f3b6 -> pull/10/merge
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3392949Z ##[endgroup]
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3393454Z ##[group]Determining the checkout info
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3395020Z ##[endgroup]
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3399907Z [command]/usr/bin/git sparse-checkout disable
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3459226Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3479750Z ##[group]Checking out the ref
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3482127Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/10/merge
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3757356Z Note: switching to 'refs/remotes/pull/10/merge'.
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3757685Z 
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3757885Z You are in 'detached HEAD' state. You can look around, make experimental
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3758486Z changes and commit them, and you can discard any commits you make in this
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3758898Z state without impacting any branches by switching back to a branch.
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3759133Z 
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3759371Z If you want to create a new branch to retain commits you create, you may
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3759824Z do so (now or later) by using -c with the switch command. Example:
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3760247Z 
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3760371Z   git switch -c <new-branch-name>
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3760574Z 
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3760672Z Or undo this operation with:
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3760910Z 
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3761004Z   git switch -
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3761152Z 
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3761357Z Turn off this advice by setting config variable advice.detachedHead to false
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3761635Z 
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3761962Z HEAD is now at aa83636 Merge 29600a9a8b1b40051ea988c97e81871f423dbcb6 into 923110e60cdb928b41a28ad2994f71bbed4bf730
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3771087Z ##[endgroup]
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3818470Z [command]/usr/bin/git log -1 --format=%H
+test (ubuntu-latest)	Run actions/checkout@v4	2026-11-19T16:45:27.3835281Z aa83636d6cb11eb1faac6656d3004b6e46c2f3b6
+test (ubuntu-latest)	Run actions/setup-node@v4	﻿2026-11-19T16:45:27.4059430Z ##[group]Run actions/setup-node@v4
+test (ubuntu-latest)	Run actions/setup-node@v4	2026-11-19T16:45:27.4059704Z with:
+test (ubuntu-latest)	Run actions/setup-node@v4	2026-11-19T16:45:27.4059905Z   node-version: 20
+test (ubuntu-latest)	Run actions/setup-node@v4	2026-11-19T16:45:27.4060142Z   always-auth: false
+test (ubuntu-latest)	Run actions/setup-node@v4	2026-11-19T16:45:27.4060381Z   check-latest: false
+test (ubuntu-latest)	Run actions/setup-node@v4	2026-11-19T16:45:27.4062146Z   token: ***
+test (ubuntu-latest)	Run actions/setup-node@v4	2026-11-19T16:45:27.4062417Z ##[endgroup]
+test (ubuntu-latest)	Run actions/setup-node@v4	2026-11-19T16:45:27.6567720Z Attempting to download 20...
+test (ubuntu-latest)	Run actions/setup-node@v4	2026-11-19T16:45:27.7127007Z (node:2358) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+test (ubuntu-latest)	Run actions/setup-node@v4	2026-11-19T16:45:27.7128128Z (Use `node --trace-deprecation ...` to show where the warning was created)
+test (ubuntu-latest)	Run actions/setup-node@v4	2026-11-19T16:45:28.4649020Z Acquiring 20.20.2 - x64 from https://github.com/actions/node-versions/releases/download/20.20.2-23521894959/node-20.20.2-linux-x64.tar.gz
+test (ubuntu-latest)	Run actions/setup-node@v4	2026-11-19T16:45:28.9434655Z Extracting ...
+test (ubuntu-latest)	Run actions/setup-node@v4	2026-11-19T16:45:28.9514199Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/291636c6-7d47-4592-9643-cad37dedfdb8 -f /home/runner/work/_temp/5b5a0652-e0b9-4345-a5d8-3f477eaa71e0
+test (ubuntu-latest)	Run actions/setup-node@v4	2026-11-19T16:45:29.4615297Z Adding to the cache ...
+test (ubuntu-latest)	Run actions/setup-node@v4	2026-11-19T16:45:30.3486182Z ##[group]Environment details
+test (ubuntu-latest)	Run actions/setup-node@v4	2026-11-19T16:45:31.0384873Z node: v20.20.2
+test (ubuntu-latest)	Run actions/setup-node@v4	2026-11-19T16:45:31.0385447Z npm: 10.8.2
+test (ubuntu-latest)	Run actions/setup-node@v4	2026-11-19T16:45:31.0385838Z yarn: 1.22.22
+test (ubuntu-latest)	Run actions/setup-node@v4	2026-11-19T16:45:31.0386930Z ##[endgroup]
+test (ubuntu-latest)	Host unit tests	﻿2026-11-19T16:45:31.0519865Z ##[group]Run node tests/test_host_unit.js
+test (ubuntu-latest)	Host unit tests	2026-11-19T16:45:31.0520270Z ^[[36;1mnode tests/test_host_unit.js^[[0m
+test (ubuntu-latest)	Host unit tests	2026-11-19T16:45:31.0543583Z shell: /usr/bin/bash -e {0}
+test (ubuntu-latest)	Host unit tests	2026-11-19T16:45:31.0543914Z ##[endgroup]
+test (ubuntu-latest)	Host unit tests	2026-11-19T16:45:31.0829763Z PASS exports_present
+test (ubuntu-latest)	Host unit tests	2026-11-19T16:45:31.0831967Z PASS manifest_valid_hello_guard
+test (ubuntu-latest)	Host unit tests	2026-11-19T16:45:31.0832599Z PASS manifest_valid_fault_probe
+test (ubuntu-latest)	Host unit tests	2026-11-19T16:45:31.0833711Z PASS manifest_bad_non_object_and_version
+test (ubuntu-latest)	Host unit tests	2026-11-19T16:45:31.0835036Z PASS manifest_bad_id_and_dir_mismatch
+test (ubuntu-latest)	Host unit tests	2026-11-19T16:45:31.0837437Z PASS manifest_bad_entry_traversal_and_ext
+test (ubuntu-latest)	Host unit tests	2026-11-19T16:45:31.0839342Z PASS manifest_bad_meta_permissions_actions_schema
+test (ubuntu-latest)	Host unit tests	2026-11-19T16:45:31.0842341Z PASS compat_valid_and_ranges
+test (ubuntu-latest)	Host unit tests	2026-11-19T16:45:31.0842866Z PASS compat_incompatible_app_and_host
+test (ubuntu-latest)	Host unit tests	2026-11-19T16:45:31.0848301Z PASS defaults_from_schema_explicit_and_fallback
+test (ubuntu-latest)	Host unit tests	2026-11-19T16:45:31.0849909Z PASS schema_boolean_valid_and_invalid
+test (ubuntu-latest)	Host unit tests	2026-11-19T16:45:31.0851240Z PASS schema_string_boundaries_required_pattern
+test (ubuntu-latest)	Host unit tests	2026-11-19T16:45:31.0853298Z PASS schema_number_boundaries_integer_and_float
+test (ubuntu-latest)	Host unit tests	2026-11-19T16:45:31.0854016Z PASS schema_enum_valid_and_invalid
+test (ubuntu-latest)	Host unit tests	2026-11-19T16:45:31.0855635Z PASS permission_map_all_capabilities
+test (ubuntu-latest)	Host unit tests	2026-11-19T16:45:31.0855965Z UNIT_SUMMARY passed=15 failed=0
+test (ubuntu-latest)	Host unit tests	2026-11-19T16:45:31.0857146Z RESULT PASS
+test (ubuntu-latest)	Reaper unit tests	﻿2026-11-19T16:45:31.0897832Z ##[group]Run node tests/test_reaper_unit.js
+test (ubuntu-latest)	Reaper unit tests	2026-11-19T16:45:31.0898160Z ^[[36;1mnode tests/test_reaper_unit.js^[[0m
+test (ubuntu-latest)	Reaper unit tests	2026-11-19T16:45:31.0913580Z shell: /usr/bin/bash -e {0}
+test (ubuntu-latest)	Reaper unit tests	2026-11-19T16:45:31.0913845Z ##[endgroup]
+test (ubuntu-latest)	Reaper unit tests	2026-11-19T16:45:31.1176529Z PASS RU1 C: root enabled; D: root disabled and never calls killPid
+test (ubuntu-latest)	Reaper unit tests	2026-11-19T16:45:31.1182742Z PASS RU2 snapshot(100) records exactly 101 and 102 (excludes 100, 103 conhost, 200 D:, 300/301)
+test (ubuntu-latest)	Reaper unit tests	2026-11-19T16:45:31.1232319Z PASS RU3 obedient sidecars: exitedGracefully=[101,102], killed empty, no force kill issued
+test (ubuntu-latest)	Reaper unit tests	2026-11-19T16:45:31.1643984Z PASS RU4 stubborn sidecars: force-kills 101 and 102 only, single-PID killArgs without /T
+test (ubuntu-latest)	Reaper unit tests	2026-11-19T16:45:31.2061395Z PASS RU5 PID reuse (CreationDate changed) => pid 102 skipped, not force-killed
+test (ubuntu-latest)	Reaper unit tests	2026-11-19T16:45:31.2478118Z PASS RU6 exe path changed for recorded pid 102 => skipped, not force-killed
+test (ubuntu-latest)	Reaper unit tests	2026-11-19T16:45:31.2893551Z PASS RU7 command line changed for recorded pid 102 => skipped, not force-killed
+test (ubuntu-latest)	Reaper unit tests	2026-11-19T16:45:31.3305240Z PASS RU8 detectHistorical returns [300, 301] and killPid is never called for them (before or after reap)
+test (ubuntu-latest)	Reaper unit tests	2026-11-19T16:45:31.3306347Z PASS RU9 D: process 200 is never passed to killPid in any test
+test (ubuntu-latest)	Reaper unit tests	2026-11-19T16:45:31.3307240Z PASS RU10 descendantsOf ignores child whose CreationDate is older than parent (PID-reuse guard)
+test (ubuntu-latest)	Reaper unit tests	2026-11-19T16:45:31.3609489Z PASS RU11 PID reused between two forced kills => second target skipped (fresh check before every kill)
+test (ubuntu-latest)	Reaper unit tests	2026-11-19T16:45:31.3610271Z PASS RU12 iso7 normalisation: 12:00:00.5009999Z >= 12:00:00.500Z
+test (ubuntu-latest)	Reaper unit tests	2026-11-19T16:45:31.3610791Z PASS RU13 WQL LIKE escaping: backslash, quote, [, %, _
+test (ubuntu-latest)	Reaper unit tests	2026-11-19T16:45:31.3612285Z PASS RU14 killArgs throws for pid 0/4/-1/NaN/1.5/"x"
+test (ubuntu-latest)	Reaper unit tests	2026-11-19T16:45:31.3614833Z PASS RU15 process with empty CreationDate is not recorded
+test (ubuntu-latest)	Reaper unit tests	2026-11-19T16:45:31.3615633Z PASS RU16 LS pid reused before snapshot => snapshot records nothing
+test (ubuntu-latest)	Reaper unit tests	2026-11-19T16:45:31.3616156Z SUMMARY pass=16 fail=0
+test (ubuntu-latest)	Update lock tests	﻿2026-11-19T16:45:31.3670576Z ##[group]Run node tests/test_update_lock.js
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.3670902Z ^[[36;1mnode tests/test_update_lock.js^[[0m
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.3689774Z shell: /usr/bin/bash -e {0}
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.3690088Z ##[endgroup]
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.3952687Z [Patch][AGM] dist/updater.js: injected U1 require electron-updater
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.3955374Z [Patch][AGM] dist/updater.js: injected U2 initAutoUpdater autoDownload/autoInstallOnAppQuit
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.3956187Z [Patch][AGM] dist/updater.js: injected U3 setAutoUpdateChecking (timer entry)
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.3956848Z [Patch][AGM] dist/updater.js: injected U4 checkForUpdates (menu / IPC check entry)
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.3957395Z [Patch][AGM] dist/updater.js: injected U5 quitAndInstall (menu Restart to Update)
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.3957916Z [Patch][AGM] dist/updater.js: injected U6 applyHostUpdate (language server / host bridge entry)
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.3958452Z [Patch][AGM] dist/updater.js: injected U7 headlessQuitAndInstall (headless install path)
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.3959156Z [Patch][AGM] dist/ipcHandlers.js: injected I1 IPC updater:quit-and-install
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.3959674Z [Patch][AGM] dist/ipcHandlers.js: injected I2 IPC updater:apply
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.3960143Z [Patch][AGM] dist/ipcHandlers.js: injected I3 IPC updater:check-for-updates
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.3963583Z [Patch][AGM] dist/languageServer.js: injected R1 module state (_lsProcess declaration)
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.3965228Z [Patch][AGM] dist/languageServer.js: injected R2 LS spawn
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.3966103Z [Patch][AGM] dist/languageServer.js: injected R3 killLanguageServer pre-SIGTERM snapshot (after exit listener)
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.3966926Z [Patch][AGM] dist/languageServer.js: injected R4 killLanguageServer post-exit reap
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.3970639Z [Patch][AGM] app-update.yml: already locked (no-op, unchanged)
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.3979558Z [AGM][UpdateLock] updater locked
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.4283921Z [AGM][UpdateLock] blocked checkForUpdates manual=false
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.4787459Z [AGM][UpdateLock] blocked periodic update checks
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.4787973Z [AGM][UpdateLock] blocked periodic update checks
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5092627Z PASS UL1 timer entry (initial delayed check + setting toggles) never reaches autoUpdater
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5093397Z [AGM][UpdateLock] blocked checkForUpdates manual=true
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5093808Z [AGM][UpdateLock] blocked quitAndInstall
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5296294Z PASS UL2 menu entries (Check for Updates / Restart to Update) blocked
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5297173Z [AGM][UpdateLock] blocked IPC updater:check-for-updates
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5297620Z PASS UL3a IPC updater:check-for-updates blocked
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5298353Z [AGM][UpdateLock] blocked IPC updater:apply
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5298811Z PASS UL3b IPC updater:apply blocked (state stays non-ready)
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5299372Z [AGM][UpdateLock] blocked IPC updater:quit-and-install
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5299823Z PASS UL3c IPC updater:quit-and-install blocked
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5300406Z [AGM][UpdateLock] blocked applyHostUpdate
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5300798Z [AGM][UpdateLock] blocked applyHostUpdate
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5301105Z [AGM][UpdateLock] blocked applyHostUpdate
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5301572Z PASS UL4 host bridge applyHostUpdate returns false and never reaches autoUpdater
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5302042Z [AGM][UpdateLock] blocked quitAndInstall
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5302328Z [AGM][UpdateLock] blocked install
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5302657Z [AGM][UpdateLock] blocked headlessQuitAndInstall
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5603302Z PASS UL5 direct autoUpdater.quitAndInstall/install + headless update-downloaded never launch installer
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5604019Z [AGM][UpdateLock] blocked addQuitHandler
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5604495Z PASS UL6 normal app quit (exit 0) does not trigger installer
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5604889Z [AGM][UpdateLock] ignored autoDownload assignment
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5605293Z [AGM][UpdateLock] ignored autoInstallOnAppQuit assignment
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5605809Z PASS UL7 autoDownload / autoInstallOnAppQuit forced false, assignments ignored
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5617694Z [Patch][AGM] app-update.yml: already locked (no-op, unchanged)
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5618965Z PASS UL8 conformant app-update.yml is true no-op (mtime & SHA256 unchanged) and non-default updaterCacheDirName preserves custom keys/comments
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5645956Z [Patch][AGM] dist/updater.js: injected U1 require electron-updater
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5647149Z [Patch][AGM] dist/updater.js: injected U2 initAutoUpdater autoDownload/autoInstallOnAppQuit
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5648290Z [Patch][AGM] dist/updater.js: injected U3 setAutoUpdateChecking (timer entry)
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5648995Z [Patch][AGM] dist/updater.js: injected U4 checkForUpdates (menu / IPC check entry)
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5649649Z [Patch][AGM] dist/updater.js: injected U5 quitAndInstall (menu Restart to Update)
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5650337Z [Patch][AGM] dist/updater.js: injected U6 applyHostUpdate (language server / host bridge entry)
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5651092Z [Patch][AGM] dist/updater.js: injected U7 headlessQuitAndInstall (headless install path)
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5651719Z [Patch][AGM] dist/ipcHandlers.js: injected I1 IPC updater:quit-and-install
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5652328Z [Patch][AGM] dist/ipcHandlers.js: injected I2 IPC updater:apply
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5652920Z [Patch][AGM] dist/ipcHandlers.js: injected I3 IPC updater:check-for-updates
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5653584Z [Patch][AGM] dist/languageServer.js: injected R1 module state (_lsProcess declaration)
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5654219Z [Patch][AGM] dist/languageServer.js: injected R2 LS spawn
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5654939Z [Patch][AGM] dist/languageServer.js: injected R3 killLanguageServer pre-SIGTERM snapshot (after exit listener)
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5655671Z [Patch][AGM] dist/languageServer.js: injected R4 killLanguageServer post-exit reap
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5656333Z [Patch][AGM] app-update.yml: staged to /tmp/agm_ul9_hB5lYF/staged.yml (changed=true)
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5657270Z PASS UL9 --update-yml-out writes updated YAML to staging path without altering active source YAML
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5659736Z SUMMARY pass=11 fail=0
+test (ubuntu-latest)	Repatch unit tests	﻿2026-11-19T16:45:31.5707712Z ##[group]Run node tests/test_repatch_unit.js
+test (ubuntu-latest)	Repatch unit tests	2026-11-19T16:45:31.5708107Z ^[[36;1mnode tests/test_repatch_unit.js^[[0m
+test (ubuntu-latest)	Repatch unit tests	2026-11-19T16:45:31.5724631Z shell: /usr/bin/bash -e {0}
+test (ubuntu-latest)	Repatch unit tests	2026-11-19T16:45:31.5724899Z ##[endgroup]
+test (ubuntu-latest)	Repatch unit tests	2026-11-19T16:45:31.5990127Z PASS RP6 repatch.ps1 & restore-official.ps1 contain atomic replace + official backup whitelist primitives without Move-Item
+test (ubuntu-latest)	Repatch unit tests	2026-11-19T16:45:31.5993764Z PASS RP6b default official whitelist is clean 5B493943... and does not include prepatched ZH hash 98A4308C...
+test (ubuntu-latest)	Repatch unit tests	2026-11-19T16:45:31.5995032Z INFO Non-Windows host detected; skipping Windows PowerShell execution cases RP1-RP5, RP7-RP13.
+test (ubuntu-latest)	Repatch unit tests	2026-11-19T16:45:31.5995868Z SUMMARY pass=2 fail=0
+test (ubuntu-latest)	Fault injection tests	﻿2026-11-19T16:45:31.6043522Z ##[group]Run node tests/test_fault_injection.js
+test (ubuntu-latest)	Fault injection tests	2026-11-19T16:45:31.6043919Z ^[[36;1mnode tests/test_fault_injection.js^[[0m
+test (ubuntu-latest)	Fault injection tests	2026-11-19T16:45:31.6059213Z shell: /usr/bin/bash -e {0}
+test (ubuntu-latest)	Fault injection tests	2026-11-19T16:45:31.6059482Z ##[endgroup]
+test (ubuntu-latest)	Fault injection tests	2026-11-19T16:45:31.6316113Z PASS FI-S1 R3 recovery state machine, truthful exit-3 states, physical retain guards, .NET SHA256, and zero Move-Item/Get-FileHash tokens present across scripts
+test (ubuntu-latest)	Fault injection tests	2026-11-19T16:45:31.6330558Z [Patch][AGM] app-update.yml: already locked (no-op, unchanged)
+test (ubuntu-latest)	Fault injection tests	2026-11-19T16:45:31.6335238Z [Patch][AGM] app-update.yml: staged to /tmp/agm_fi_s2_c3JdMV/staged.yml (changed=true)
+test (ubuntu-latest)	Fault injection tests	2026-11-19T16:45:31.6335944Z PASS FI-S2 agm_locks.js performs no-op on conformant YAML and stages updates without mutating active YAML
+test (ubuntu-latest)	Fault injection tests	2026-11-19T16:45:31.6342108Z INFO Non-Windows host detected; skipping Windows PowerShell/Win32 File.Replace fault injection scenarios FI-R1..FI-R8b, FI-U1..FI-U5b, FI-Y1..FI-Y6, FI-P1..FI-P3.
+test (ubuntu-latest)	Fault injection tests	2026-11-19T16:45:31.6342752Z SUMMARY pass=2 fail=0
+test (ubuntu-latest)	Manifest raw-byte integrity tests	﻿2026-11-19T16:45:31.6389808Z ##[group]Run node tests/test_manifest_integrity.js
+test (ubuntu-latest)	Manifest raw-byte integrity tests	2026-11-19T16:45:31.6390154Z ^[[36;1mnode tests/test_manifest_integrity.js^[[0m
+test (ubuntu-latest)	Manifest raw-byte integrity tests	2026-11-19T16:45:31.6404126Z shell: /usr/bin/bash -e {0}
+test (ubuntu-latest)	Manifest raw-byte integrity tests	2026-11-19T16:45:31.6404548Z ##[endgroup]
+test (ubuntu-latest)	Manifest raw-byte integrity tests	2026-11-19T16:45:31.6657173Z PASS MF1 manifest.repo.json files[] (61 entries) structure valid, unique, and present on disk
+test (ubuntu-latest)	Manifest raw-byte integrity tests	2026-11-19T16:45:31.8009650Z PASS MF2 raw Git blob bytes (HEAD:<path>) match manifest.repo.json size & SHA256 for all 61 files + plugin entries
+test (ubuntu-latest)	Manifest raw-byte integrity tests	2026-11-19T16:45:31.8010713Z PASS MF3 all manifest Git blobs are pure LF (including app-update.template.yml & rollback.bat)
+test (ubuntu-latest)	Manifest raw-byte integrity tests	2026-11-19T16:45:31.8378520Z PASS MF4 release archive (git archive --format=tar HEAD) bytes match all 61 manifest entries + Linux checkout bytes match
+test (ubuntu-latest)	Manifest raw-byte integrity tests	2026-11-19T16:45:31.8379896Z PASS MF5 all offline test suites (incl. test_repatch_unit.js, test_fault_injection.js, test_manifest_integrity.js) and WINDOWS_TEST_EVIDENCE.md included in manifest
+test (ubuntu-latest)	Manifest raw-byte integrity tests	2026-11-19T16:45:31.8380908Z SUMMARY pass=5 fail=0
+test (ubuntu-latest)	i18n teardown unit tests	﻿2026-11-19T16:45:31.8440530Z ##[group]Run node tests/test_i18n_teardown_unit.js
+test (ubuntu-latest)	i18n teardown unit tests	2026-11-19T16:45:31.8440876Z ^[[36;1mnode tests/test_i18n_teardown_unit.js^[[0m
+test (ubuntu-latest)	i18n teardown unit tests	2026-11-19T16:45:31.8457107Z shell: /usr/bin/bash -e {0}
+test (ubuntu-latest)	i18n teardown unit tests	2026-11-19T16:45:31.8457422Z ##[endgroup]
+test (ubuntu-latest)	i18n teardown unit tests	2026-11-19T16:45:31.9056535Z PASS IT1 build.js and hakimi-i18n.js stay in sync and include restoreEnglish + config.enabled logs
+test (ubuntu-latest)	i18n teardown unit tests	2026-11-19T16:45:31.9962601Z PASS IT2 init with i18n.enabled=true translates fake DOM and logs config.enabled=true
+test (ubuntu-latest)	i18n teardown unit tests	2026-11-19T16:45:32.0711305Z PASS IT3 teardown invokes restoreEnglish before stop, restores English DOM, and cleans resources
+test (ubuntu-latest)	i18n teardown unit tests	2026-11-19T16:45:32.2087833Z PASS IT4 hot reload after switching i18n.enabled=false restores English UI and does not restart translation
+test (ubuntu-latest)	i18n teardown unit tests	2026-11-19T16:45:32.2768251Z PASS IT5 fresh init with i18n.enabled=false skips domAdapter.start() and logs config.enabled=false
+test (ubuntu-latest)	i18n teardown unit tests	2026-11-19T16:45:32.3486890Z PASS IT6 teardown catches restoreEnglish errors and still stops adapter and destroys UI
+test (ubuntu-latest)	i18n teardown unit tests	2026-11-19T16:45:32.3487758Z SUMMARY pass=6 fail=0
+test (ubuntu-latest)	Compat 2.33.0 unit tests	﻿2026-11-19T16:45:32.3755566Z ##[group]Run node tests/test_compat_233_unit.js
+test (ubuntu-latest)	Compat 2.33.0 unit tests	2026-11-19T16:45:32.3755927Z ^[[36;1mnode tests/test_compat_233_unit.js^[[0m
+test (ubuntu-latest)	Compat 2.33.0 unit tests	2026-11-19T16:45:32.3774532Z shell: /usr/bin/bash -e {0}
+test (ubuntu-latest)	Compat 2.33.0 unit tests	2026-11-19T16:45:32.3774790Z ##[endgroup]
+test (ubuntu-latest)	Compat 2.33.0 unit tests	2026-11-19T16:45:32.4230265Z PASS C233-1 patch.js passes node --check syntax validation
+test (ubuntu-latest)	Compat 2.33.0 unit tests	2026-11-19T16:45:32.6708601Z PASS C233-2 2.32.1 synthetic fixture patches cleanly (exit 0) and passes node --check on all 6 files
+test (ubuntu-latest)	Compat 2.33.0 unit tests	2026-11-19T16:45:32.9298515Z PASS C233-3 2.33.0 synthetic fixture preserves const ipc, hostQuestionBusy, openFromRemote, onBeforeAsk in same whenReady scope before createWindow
+test (ubuntu-latest)	Compat 2.33.0 unit tests	2026-11-19T16:45:32.9323270Z PASS C233-4 2.33.0 synthetic main.js executes whenReady in VM without ReferenceError and registers hakimi:* IPC before createWindow
+test (ubuntu-latest)	Compat 2.33.0 unit tests	2026-11-19T16:45:32.9324987Z PASS C233-5 2.32.1 preload.js places hakimiHost strictly inside local else {} block and leaves if(isRemoteWindow) unchanged
+test (ubuntu-latest)	Compat 2.33.0 unit tests	2026-11-19T16:45:32.9327283Z PASS C233-6 2.33.0 preload.js places hakimiHost inside local else {}, preserves agyComputerPreview, and leaves if(isRemoteWindow) unchanged
+test (ubuntu-latest)	Compat 2.33.0 unit tests	2026-11-19T16:45:32.9349133Z PASS C233-7 2.32.1 synthetic preload VM: exposes hakimiHost (13 methods) when local, blocks hakimiHost when isRemoteWindow=true
+test (ubuntu-latest)	Compat 2.33.0 unit tests	2026-11-19T16:45:32.9359662Z PASS C233-8 2.33.0 synthetic preload VM: exposes hakimiHost + agyComputerPreview when local, blocks both when isRemoteWindow=true
+test (ubuntu-latest)	Compat 2.33.0 unit tests	2026-11-19T16:45:33.2574330Z PASS C233-9 idempotency: Hakimi-layer rerun exits 0 byte-identical and full-patched rerun fails cleanly (exit 2) without writing
+test (ubuntu-latest)	Compat 2.33.0 unit tests	2026-11-19T16:45:33.2805636Z PASS C233-10 negative H_MAIN_4 mutation exits non-zero (2), names H_MAIN_4, and writes nothing to disk
+test (ubuntu-latest)	Compat 2.33.0 unit tests	2026-11-19T16:45:33.3042933Z PASS C233-11 negative H_MAIN_4 rejects cross-statement partial syntax (exit 2) without writing
+test (ubuntu-latest)	Compat 2.33.0 unit tests	2026-11-19T16:45:33.3286199Z PASS C233-12 negative H_PRELOAD_1 missing createLocalSshRemoteAPI exits non-zero (2), names H_PRELOAD_1, and writes nothing
+test (ubuntu-latest)	Compat 2.33.0 unit tests	2026-11-19T16:45:33.3529711Z PASS C233-13 negative H_PRELOAD_1 rejects ambiguous duplicate match (matched 2 times) without writing
+test (ubuntu-latest)	Compat 2.33.0 unit tests	2026-11-19T16:45:33.3535008Z PASS C233-14 repatch.ps1 & restore-official.ps1 whitelists contain 2.32.1 & 2.33.0 hashes, CI & manifest include test_compat_233_unit.js
+test (ubuntu-latest)	Compat 2.33.0 unit tests	2026-11-19T16:45:33.3536323Z SKIP C233-15 Windows synthetic 2.33.0 repatch.ps1 repeat & unknown hash rejection :: requires win32 + powershell.exe; process.platform=linux
+test (ubuntu-latest)	Compat 2.33.0 unit tests	2026-11-19T16:45:33.3554552Z SUMMARY pass=14 fail=0 skip=1
+test (ubuntu-latest)	Compat version declaration tests	﻿2026-11-19T16:45:33.3615345Z ##[group]Run node tests/test_compat_versions_unit.js
+test (ubuntu-latest)	Compat version declaration tests	2026-11-19T16:45:33.3615898Z ^[[36;1mnode tests/test_compat_versions_unit.js^[[0m
+test (ubuntu-latest)	Compat version declaration tests	2026-11-19T16:45:33.3642694Z shell: /usr/bin/bash -e {0}
+test (ubuntu-latest)	Compat version declaration tests	2026-11-19T16:45:33.3643104Z ##[endgroup]
+test (ubuntu-latest)	Compat version declaration tests	2026-11-19T16:45:33.3894190Z PASS META-1 manifest platform declares schemaVersion=1, string legacy appVersion=2.32.1, and exactly [2.32.1, 2.33.0] with no range syntax
+test (ubuntu-latest)	Compat version declaration tests	2026-11-19T16:45:33.3897498Z PASS META-2 new version-declaration test is wired into the two-OS CI matrix and registered in manifest.repo.json
+test (ubuntu-latest)	Compat version declaration tests	2026-11-19T16:45:33.3898418Z PASS V1 2.32.1 is allowed when the array is present
+test (ubuntu-latest)	Compat version declaration tests	2026-11-19T16:45:33.3898985Z PASS V2 2.33.0 is allowed when the array is present
+test (ubuntu-latest)	Compat version declaration tests	2026-11-19T16:45:33.3899560Z PASS V3 2.32.2 is rejected (not an exact validated version)
+test (ubuntu-latest)	Compat version declaration tests	2026-11-19T16:45:33.3900169Z PASS V4 2.33.1 is rejected (not an exact validated version)
+test (ubuntu-latest)	Compat version declaration tests	2026-11-19T16:45:33.3900657Z PASS V5 an unknown version (2.34.0) is rejected
+test (ubuntu-latest)	Compat version declaration tests	2026-11-19T16:45:33.3901459Z PASS V6 when the array is absent, the legacy field is used (exact 2.32.1 and historical 2.32.x both allow 2.32.1, reject 2.33.0)
+test (ubuntu-latest)	Compat version declaration tests	2026-11-19T16:45:33.3902576Z PASS V7 an empty array is not treated as allow-all (2.32.1 and 2.33.0 are both rejected, no legacy fallback)
+test (ubuntu-latest)	Compat version declaration tests	2026-11-19T16:45:33.3903557Z PASS V8 an array type error (string instead of array, or a non-string entry) is explicitly rejected with a reason
+test (ubuntu-latest)	Compat version declaration tests	2026-11-19T16:45:33.3904577Z PASS V9 when both fields exist the array wins: 2.33.0 is rejected even though the legacy field names it, 2.32.1 is allowed
+test (ubuntu-latest)	Compat version declaration tests	2026-11-19T16:45:33.3905857Z PASS V10 an old consumer can JSON.parse the new manifest and read the legacy field without exception (2.32.1 allowed, 2.33.0 rejected)
+test (ubuntu-latest)	Compat version declaration tests	2026-11-19T16:45:33.3906925Z PASS V11 v2.33.0 is rejected (no v-prefix normalization)
+test (ubuntu-latest)	Compat version declaration tests	2026-11-19T16:45:33.3907712Z PASS V12 leading/trailing whitespace around 2.33.0 is rejected (no trim normalization)
+test (ubuntu-latest)	Compat version declaration tests	2026-11-19T16:45:33.3908558Z PASS V13 2.33.0 with a build-number suffix is rejected (no build-suffix normalization)
+test (ubuntu-latest)	Compat version declaration tests	2026-11-19T16:45:33.3909103Z SUMMARY pass=15 fail=0 skip=0
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	﻿2026-11-19T16:45:33.3953037Z ##[group]Run node tests/test_ipc_sec_unit.js
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:33.3953369Z ^[[36;1mnode tests/test_ipc_sec_unit.js^[[0m
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:33.3969512Z shell: /usr/bin/bash -e {0}
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:33.3969762Z ##[endgroup]
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:33.4230705Z PASS SEC-01 合法本地主 Frame 允许（真实授权函数）
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:33.4233637Z PASS SEC-02 远程 WebContents 调用被拒绝
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:33.4235352Z PASS SEC-03 远程页面直接调用 hakimi:* 通道被拒绝
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:33.4235718Z PASS SEC-04 未登记的未知 WebContents 被拒绝
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:33.4241025Z PASS SEC-04b 远程 SSH 后端标记的窗口不登记（--agy-backend=ssh）
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:33.4241687Z PASS SEC-05 合法窗口中的非可信子 Frame 被拒绝
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:33.4242354Z PASS SEC-06 senderFrame 为 null/缺失时拒绝
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:33.4242826Z PASS SEC-07 sender 已销毁时拒绝
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:33.4244703Z PASS SEC-08 主帧跨文档导航后旧授权失效
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:33.4245494Z PASS SEC-08b 同文档导航不撤销授权（避免误伤 SPA）
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:33.4247199Z PASS SEC-08c 初始加载即重定向到远程源时撤销授权
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:33.4248544Z PASS SEC-09 窗口关闭后旧授权失效
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:33.4249126Z PASS SEC-10 伪造 renderer 参数（窗口 ID / URL / local 标记）不能获授权
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:33.4250126Z PASS SEC-12a 13 通道未授权调用 handler 执行次数为 0
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:33.4252087Z PASS SEC-18 合法与非法调用交替时授权状态不串扰
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:33.4259389Z PASS SEC-LOG-1 拒绝错误信息与日志不含路径、用户名、Token、Cookie
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:33.5745623Z PASS SEC-11 真实枚举注册结果：13 个 hakimi:* 通道全部经过门禁
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:33.7133699Z PASS SEC-12b 未授权调用无文件/进程/其他特权副作用（13 通道，spy 计数为 0、临时目录零写入）
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:33.7156520Z PASS SEC-13 合法调用保持原参数与原返回行为
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:33.8792970Z PASS SEC-14 重复注册与重复补丁幂等（单 handler、单门禁、二次补丁零差异）
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:33.9250727Z PASS SEC-15 未知锚点或授权插入失败时补丁失败退出且零写盘
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:34.4082875Z PASS SEC-16 2.32.1 与 2.33.0 合成夹具均通过授权门禁与语法检查
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:34.4099471Z PASS SEC-17 preload 远程分支不暴露本地特权桥接（hakimiHost 仅本地）
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:34.4099936Z PASS SEC-00 2.33.0 合成夹具补丁成功（前置条件）
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:34.4100276Z PASS SEC-00b spy 合成夹具补丁成功（前置条件）
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:34.4107445Z PASS SEC-19 A01 实测 Electron 44 场景：additionalArguments 仅在 options 且 getLastWebPreferences 返回 undefined/无该字段时必须拒绝并拦截 13 通道
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:34.4108969Z PASS SEC-20 所有判定来源缺失或不确定时默认拒绝（fail-closed）
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:34.4117857Z PASS SEC-21 任意判定来源抛异常或返回不确定值时必须 fail-closed 拒绝
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:34.4118944Z PASS SEC-22 接入官方 remoteWindowSecurity + windowBackends 后：Electron 44 本地合法放行、远程拦截、动态登记即撤销、运行期异常 fail-closed
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:34.6840792Z PASS SEC-23 2.32.1 与 2.33.0 补丁后 main.js VM 端到端验证：本地放行、SSH 构造窗口 13 通道全拒且零副作用
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:34.6860980Z SUMMARY pass=30 fail=0 skip=0
+test (ubuntu-latest)	Post Run actions/setup-node@v4	﻿2026-11-19T16:45:34.6967370Z Post job cleanup.
+test (ubuntu-latest)	Post Run actions/setup-node@v4	2026-11-19T16:45:34.7858611Z (node:3396) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+test (ubuntu-latest)	Post Run actions/setup-node@v4	2026-11-19T16:45:34.7859718Z (Use `node --trace-deprecation ...` to show where the warning was created)
+test (ubuntu-latest)	Post Run actions/checkout@v4	﻿2026-11-19T16:45:34.8058261Z Post job cleanup.
+test (ubuntu-latest)	Post Run actions/checkout@v4	2026-11-19T16:45:34.8707609Z [command]/usr/bin/git version
+test (ubuntu-latest)	Post Run actions/checkout@v4	2026-11-19T16:45:34.8735178Z git version 2.56.1
+test (ubuntu-latest)	Post Run actions/checkout@v4	2026-11-19T16:45:34.8759425Z Temporarily overriding HOME='/home/runner/work/_temp/114dc383-54d1-4e1b-8d8a-4908e3997ee8' before making global git config changes
+test (ubuntu-latest)	Post Run actions/checkout@v4	2026-11-19T16:45:34.8760820Z Adding repository directory to the temporary git global config as a safe directory
+test (ubuntu-latest)	Post Run actions/checkout@v4	2026-11-19T16:45:34.8762618Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Antigravity_Mod/Antigravity_Mod
+test (ubuntu-latest)	Post Run actions/checkout@v4	2026-11-19T16:45:34.8791745Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+test (ubuntu-latest)	Post Run actions/checkout@v4	2026-11-19T16:45:34.8815982Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+test (ubuntu-latest)	Post Run actions/checkout@v4	2026-11-19T16:45:34.9014801Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test (ubuntu-latest)	Post Run actions/checkout@v4	2026-11-19T16:45:34.9031680Z http.https://github.com/.extraheader
+test (ubuntu-latest)	Post Run actions/checkout@v4	2026-11-19T16:45:34.9039156Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+test (ubuntu-latest)	Post Run actions/checkout@v4	2026-11-19T16:45:34.9061793Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+test (ubuntu-latest)	Post Run actions/checkout@v4	2026-11-19T16:45:34.9303950Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+test (ubuntu-latest)	Post Run actions/checkout@v4	2026-11-19T16:45:34.9333415Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+test (ubuntu-latest)	Complete job	﻿2026-11-19T16:45:34.9640334Z Cleaning up orphan processes
+test (ubuntu-latest)	Complete job	2026-11-19T16:45:34.9908263Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+test (windows-latest)	Set up job	﻿2026-11-19T16:45:18.0533988Z Current runner version: '2.338.2'
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0580699Z ##[group]Runner Image Provisioner
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0581280Z Hosted Compute Agent
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0581619Z Version: 20261111.635
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0581977Z Commit: b8a594ea514ff44cadb5342986c68b1eac6e22ed
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0582410Z Build Date: 2026-11-11T01:49:01Z
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0582832Z Worker ID: {dee41670-e41f-4f5f-aff1-8c4822761a44}
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0583240Z Region: centralus
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0583545Z Cloud: Azure
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0583825Z ##[endgroup]
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0584629Z ##[group]Operating System
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0584981Z Microsoft Windows Server 2025
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0585315Z 10.0.26100
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0585613Z Datacenter
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0585919Z ##[endgroup]
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0586232Z ##[group]Runner Image
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0586563Z Image: windows-2025-vs2026
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0586882Z Version: 20261116.315.1
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0587538Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20261116.315/images/windows/Windows2025-VS2026-Readme.md
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0588989Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20261116.315
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0589532Z ##[endgroup]
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0590210Z ##[group]GITHUB_TOKEN Permissions
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0591452Z Contents: read
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0591752Z Metadata: read
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0592082Z ##[endgroup]
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0593692Z Secret source: Actions
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0594193Z Cache mode: write
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0594667Z Prepare workflow directory
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0884945Z Prepare all required actions
+test (windows-latest)	Set up job	2026-11-19T16:45:18.0932399Z Getting action download info
+test (windows-latest)	Set up job	2026-11-19T16:45:18.3380729Z Download action repository 'actions/checkout@v4' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+test (windows-latest)	Set up job	2026-11-19T16:45:18.4511351Z Download action repository 'actions/setup-node@v4' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+test (windows-latest)	Set up job	2026-11-19T16:45:18.6403080Z Complete job name: test (windows-latest)
+test (windows-latest)	Run actions/checkout@v4	﻿2026-11-19T16:45:18.7478667Z ##[group]Run actions/checkout@v4
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:18.7479387Z with:
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:18.7479618Z   repository: wangxu1428/Antigravity_Mod
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:18.7481997Z   token: ***
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:18.7482217Z   ssh-strict: true
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:18.7482442Z   ssh-user: git
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:18.7482666Z   persist-credentials: true
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:18.7482910Z   clean: true
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:18.7483137Z   sparse-checkout-cone-mode: true
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:18.7483402Z   fetch-depth: 1
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:18.7483613Z   fetch-tags: false
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:18.7483837Z   show-progress: true
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:18.7484057Z   lfs: false
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:18.7484262Z   submodules: false
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:18.7484487Z   set-safe-directory: true
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:18.7484744Z   allow-unsafe-pr-checkout: false
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:18.7485209Z ##[endgroup]
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:18.8427658Z Syncing repository: wangxu1428/Antigravity_Mod
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:18.8428833Z ##[group]Getting Git version info
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:18.8429194Z Working directory is 'D:\a\Antigravity_Mod\Antigravity_Mod'
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:18.8883188Z [command]"C:\Program Files\Git\bin\git.exe" version
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:19.2071784Z git version 2.56.1.windows.1
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:19.2108420Z ##[endgroup]
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:19.2121516Z Temporarily overriding HOME='D:\a\_temp\ef8cf65d-fbdb-4e9e-8242-f5b2b501cf09' before making global git config changes
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:19.2122324Z Adding repository directory to the temporary git global config as a safe directory
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:19.2128490Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\Antigravity_Mod\Antigravity_Mod
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:19.2694575Z Deleting the contents of 'D:\a\Antigravity_Mod\Antigravity_Mod'
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:19.2698445Z ##[group]Initializing the repository
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:19.2704330Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\Antigravity_Mod\Antigravity_Mod
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:19.3439305Z Initialized empty Git repository in D:/a/Antigravity_Mod/Antigravity_Mod/.git/
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:19.3470282Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/wangxu1428/Antigravity_Mod
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:19.3966824Z ##[endgroup]
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:19.3967330Z ##[group]Disabling automatic garbage collection
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:19.3973135Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:19.4208212Z ##[endgroup]
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:19.4208644Z ##[group]Setting up auth
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:19.4216070Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:19.4454126Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:20.7096337Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:20.7345590Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:21.1352724Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:21.1604708Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:21.5312727Z [command]"C:\Program Files\Git\bin\git.exe" config --local http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:21.5564968Z ##[endgroup]
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:21.5565408Z ##[group]Fetching the repository
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:21.5572952Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +aa83636d6cb11eb1faac6656d3004b6e46c2f3b6:refs/remotes/pull/10/merge
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.7941834Z From https://github.com/wangxu1428/Antigravity_Mod
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.7942425Z  * [new ref]         aa83636d6cb11eb1faac6656d3004b6e46c2f3b6 -> pull/10/merge
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.7971145Z ##[endgroup]
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.7971555Z ##[group]Determining the checkout info
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.7972048Z ##[endgroup]
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.7979237Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.8370770Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.8608657Z ##[group]Checking out the ref
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.8614401Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force refs/remotes/pull/10/merge
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.9468049Z Note: switching to 'refs/remotes/pull/10/merge'.
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.9468245Z 
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.9468362Z You are in 'detached HEAD' state. You can look around, make experimental
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.9468688Z changes and commit them, and you can discard any commits you make in this
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.9468932Z state without impacting any branches by switching back to a branch.
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.9469093Z 
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.9469202Z If you want to create a new branch to retain commits you create, you may
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.9469552Z do so (now or later) by using -c with the switch command. Example:
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.9469699Z 
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.9469761Z   git switch -c <new-branch-name>
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.9469852Z 
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.9469926Z Or undo this operation with:
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.9470013Z 
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.9470072Z   git switch -
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.9470147Z 
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.9470261Z Turn off this advice by setting config variable advice.detachedHead to false
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.9470427Z 
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.9473813Z HEAD is now at aa83636 Merge 29600a9a8b1b40051ea988c97e81871f423dbcb6 into 923110e60cdb928b41a28ad2994f71bbed4bf730
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.9516995Z ##[endgroup]
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:22.9825167Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+test (windows-latest)	Run actions/checkout@v4	2026-11-19T16:45:23.0042520Z aa83636d6cb11eb1faac6656d3004b6e46c2f3b6
+test (windows-latest)	Run actions/setup-node@v4	﻿2026-11-19T16:45:23.0411483Z ##[group]Run actions/setup-node@v4
+test (windows-latest)	Run actions/setup-node@v4	2026-11-19T16:45:23.0411688Z with:
+test (windows-latest)	Run actions/setup-node@v4	2026-11-19T16:45:23.0411809Z   node-version: 20
+test (windows-latest)	Run actions/setup-node@v4	2026-11-19T16:45:23.0411922Z   always-auth: false
+test (windows-latest)	Run actions/setup-node@v4	2026-11-19T16:45:23.0412037Z   check-latest: false
+test (windows-latest)	Run actions/setup-node@v4	2026-11-19T16:45:23.0413433Z   token: ***
+test (windows-latest)	Run actions/setup-node@v4	2026-11-19T16:45:23.0413547Z ##[endgroup]
+test (windows-latest)	Run actions/setup-node@v4	2026-11-19T16:45:23.1579453Z Attempting to download 20...
+test (windows-latest)	Run actions/setup-node@v4	2026-11-19T16:45:23.1687929Z (node:6796) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+test (windows-latest)	Run actions/setup-node@v4	2026-11-19T16:45:23.1688557Z (Use `node --trace-deprecation ...` to show where the warning was created)
+test (windows-latest)	Run actions/setup-node@v4	2026-11-19T16:45:23.9511261Z Acquiring 20.20.2 - x64 from https://github.com/actions/node-versions/releases/download/20.20.2-23521894959/node-20.20.2-win32-x64.7z
+test (windows-latest)	Run actions/setup-node@v4	2026-11-19T16:45:24.3451838Z Extracting ...
+test (windows-latest)	Run actions/setup-node@v4	2026-11-19T16:45:25.7136408Z Adding to the cache ...
+test (windows-latest)	Run actions/setup-node@v4	2026-11-19T16:45:28.5601933Z ##[group]Environment details
+test (windows-latest)	Run actions/setup-node@v4	2026-11-19T16:45:29.5847539Z node: v20.20.2
+test (windows-latest)	Run actions/setup-node@v4	2026-11-19T16:45:29.5847757Z npm: 10.8.2
+test (windows-latest)	Run actions/setup-node@v4	2026-11-19T16:45:29.5848009Z yarn: 1.22.22
+test (windows-latest)	Run actions/setup-node@v4	2026-11-19T16:45:29.5848405Z ##[endgroup]
+test (windows-latest)	Host unit tests	﻿2026-11-19T16:45:29.6081208Z ##[group]Run node tests/test_host_unit.js
+test (windows-latest)	Host unit tests	2026-11-19T16:45:29.6081475Z ^[[36;1mnode tests/test_host_unit.js^[[0m
+test (windows-latest)	Host unit tests	2026-11-19T16:45:29.6833837Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+test (windows-latest)	Host unit tests	2026-11-19T16:45:29.6834045Z ##[endgroup]
+test (windows-latest)	Host unit tests	2026-11-19T16:45:29.9280838Z PASS exports_present
+test (windows-latest)	Host unit tests	2026-11-19T16:45:29.9284518Z PASS manifest_valid_hello_guard
+test (windows-latest)	Host unit tests	2026-11-19T16:45:29.9285574Z PASS manifest_valid_fault_probe
+test (windows-latest)	Host unit tests	2026-11-19T16:45:29.9286755Z PASS manifest_bad_non_object_and_version
+test (windows-latest)	Host unit tests	2026-11-19T16:45:29.9287669Z PASS manifest_bad_id_and_dir_mismatch
+test (windows-latest)	Host unit tests	2026-11-19T16:45:29.9290235Z PASS manifest_bad_entry_traversal_and_ext
+test (windows-latest)	Host unit tests	2026-11-19T16:45:29.9292854Z PASS manifest_bad_meta_permissions_actions_schema
+test (windows-latest)	Host unit tests	2026-11-19T16:45:29.9296140Z PASS compat_valid_and_ranges
+test (windows-latest)	Host unit tests	2026-11-19T16:45:29.9297480Z PASS compat_incompatible_app_and_host
+test (windows-latest)	Host unit tests	2026-11-19T16:45:29.9304566Z PASS defaults_from_schema_explicit_and_fallback
+test (windows-latest)	Host unit tests	2026-11-19T16:45:29.9307113Z PASS schema_boolean_valid_and_invalid
+test (windows-latest)	Host unit tests	2026-11-19T16:45:29.9310292Z PASS schema_string_boundaries_required_pattern
+test (windows-latest)	Host unit tests	2026-11-19T16:45:29.9312485Z PASS schema_number_boundaries_integer_and_float
+test (windows-latest)	Host unit tests	2026-11-19T16:45:29.9313497Z PASS schema_enum_valid_and_invalid
+test (windows-latest)	Host unit tests	2026-11-19T16:45:29.9315098Z PASS permission_map_all_capabilities
+test (windows-latest)	Host unit tests	2026-11-19T16:45:29.9315367Z UNIT_SUMMARY passed=15 failed=0
+test (windows-latest)	Host unit tests	2026-11-19T16:45:29.9316088Z RESULT PASS
+test (windows-latest)	Reaper unit tests	﻿2026-11-19T16:45:30.0277341Z ##[group]Run node tests/test_reaper_unit.js
+test (windows-latest)	Reaper unit tests	2026-11-19T16:45:30.0277587Z ^[[36;1mnode tests/test_reaper_unit.js^[[0m
+test (windows-latest)	Reaper unit tests	2026-11-19T16:45:30.0327077Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+test (windows-latest)	Reaper unit tests	2026-11-19T16:45:30.0327285Z ##[endgroup]
+test (windows-latest)	Reaper unit tests	2026-11-19T16:45:30.2288259Z PASS RU1 C: root enabled; D: root disabled and never calls killPid
+test (windows-latest)	Reaper unit tests	2026-11-19T16:45:30.2294186Z PASS RU2 snapshot(100) records exactly 101 and 102 (excludes 100, 103 conhost, 200 D:, 300/301)
+test (windows-latest)	Reaper unit tests	2026-11-19T16:45:30.2460662Z PASS RU3 obedient sidecars: exitedGracefully=[101,102], killed empty, no force kill issued
+test (windows-latest)	Reaper unit tests	2026-11-19T16:45:30.2933230Z PASS RU4 stubborn sidecars: force-kills 101 and 102 only, single-PID killArgs without /T
+test (windows-latest)	Reaper unit tests	2026-11-19T16:45:30.3402659Z PASS RU5 PID reuse (CreationDate changed) => pid 102 skipped, not force-killed
+test (windows-latest)	Reaper unit tests	2026-11-19T16:45:30.3872600Z PASS RU6 exe path changed for recorded pid 102 => skipped, not force-killed
+test (windows-latest)	Reaper unit tests	2026-11-19T16:45:30.4336685Z PASS RU7 command line changed for recorded pid 102 => skipped, not force-killed
+test (windows-latest)	Reaper unit tests	2026-11-19T16:45:30.4807521Z PASS RU8 detectHistorical returns [300, 301] and killPid is never called for them (before or after reap)
+test (windows-latest)	Reaper unit tests	2026-11-19T16:45:30.4808171Z PASS RU9 D: process 200 is never passed to killPid in any test
+test (windows-latest)	Reaper unit tests	2026-11-19T16:45:30.4811027Z PASS RU10 descendantsOf ignores child whose CreationDate is older than parent (PID-reuse guard)
+test (windows-latest)	Reaper unit tests	2026-11-19T16:45:30.5121310Z PASS RU11 PID reused between two forced kills => second target skipped (fresh check before every kill)
+test (windows-latest)	Reaper unit tests	2026-11-19T16:45:30.5122001Z PASS RU12 iso7 normalisation: 12:00:00.5009999Z >= 12:00:00.500Z
+test (windows-latest)	Reaper unit tests	2026-11-19T16:45:30.5123099Z PASS RU13 WQL LIKE escaping: backslash, quote, [, %, _
+test (windows-latest)	Reaper unit tests	2026-11-19T16:45:30.5124800Z PASS RU14 killArgs throws for pid 0/4/-1/NaN/1.5/"x"
+test (windows-latest)	Reaper unit tests	2026-11-19T16:45:30.5127166Z PASS RU15 process with empty CreationDate is not recorded
+test (windows-latest)	Reaper unit tests	2026-11-19T16:45:30.5128061Z PASS RU16 LS pid reused before snapshot => snapshot records nothing
+test (windows-latest)	Reaper unit tests	2026-11-19T16:45:30.5129396Z SUMMARY pass=16 fail=0
+test (windows-latest)	Update lock tests	﻿2026-11-19T16:45:30.5971925Z ##[group]Run node tests/test_update_lock.js
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.5972165Z ^[[36;1mnode tests/test_update_lock.js^[[0m
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.6018460Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.6018679Z ##[endgroup]
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.8072998Z [Patch][AGM] dist/updater.js: injected U1 require electron-updater
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.8078206Z [Patch][AGM] dist/updater.js: injected U2 initAutoUpdater autoDownload/autoInstallOnAppQuit
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.8078826Z [Patch][AGM] dist/updater.js: injected U3 setAutoUpdateChecking (timer entry)
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.8079350Z [Patch][AGM] dist/updater.js: injected U4 checkForUpdates (menu / IPC check entry)
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.8079857Z [Patch][AGM] dist/updater.js: injected U5 quitAndInstall (menu Restart to Update)
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.8080411Z [Patch][AGM] dist/updater.js: injected U6 applyHostUpdate (language server / host bridge entry)
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.8080996Z [Patch][AGM] dist/updater.js: injected U7 headlessQuitAndInstall (headless install path)
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.8083752Z [Patch][AGM] dist/ipcHandlers.js: injected I1 IPC updater:quit-and-install
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.8084757Z [Patch][AGM] dist/ipcHandlers.js: injected I2 IPC updater:apply
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.8085494Z [Patch][AGM] dist/ipcHandlers.js: injected I3 IPC updater:check-for-updates
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.8091073Z [Patch][AGM] dist/languageServer.js: injected R1 module state (_lsProcess declaration)
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.8092990Z [Patch][AGM] dist/languageServer.js: injected R2 LS spawn
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.8093736Z [Patch][AGM] dist/languageServer.js: injected R3 killLanguageServer pre-SIGTERM snapshot (after exit listener)
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.8094391Z [Patch][AGM] dist/languageServer.js: injected R4 killLanguageServer post-exit reap
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.8102441Z [Patch][AGM] app-update.yml: already locked (no-op, unchanged)
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.8115566Z [AGM][UpdateLock] updater locked
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.8430842Z [AGM][UpdateLock] blocked checkForUpdates manual=false
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.8923920Z [AGM][UpdateLock] blocked periodic update checks
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.8925420Z [AGM][UpdateLock] blocked periodic update checks
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9244399Z PASS UL1 timer entry (initial delayed check + setting toggles) never reaches autoUpdater
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9245142Z [AGM][UpdateLock] blocked checkForUpdates manual=true
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9245478Z [AGM][UpdateLock] blocked quitAndInstall
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9529580Z PASS UL2 menu entries (Check for Updates / Restart to Update) blocked
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9530797Z [AGM][UpdateLock] blocked IPC updater:check-for-updates
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9531159Z PASS UL3a IPC updater:check-for-updates blocked
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9531466Z [AGM][UpdateLock] blocked IPC updater:apply
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9531809Z PASS UL3b IPC updater:apply blocked (state stays non-ready)
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9532167Z [AGM][UpdateLock] blocked IPC updater:quit-and-install
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9532436Z PASS UL3c IPC updater:quit-and-install blocked
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9532626Z [AGM][UpdateLock] blocked applyHostUpdate
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9532805Z [AGM][UpdateLock] blocked applyHostUpdate
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9533071Z [AGM][UpdateLock] blocked applyHostUpdate
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9533802Z PASS UL4 host bridge applyHostUpdate returns false and never reaches autoUpdater
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9534048Z [AGM][UpdateLock] blocked quitAndInstall
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9534213Z [AGM][UpdateLock] blocked install
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9534391Z [AGM][UpdateLock] blocked headlessQuitAndInstall
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9830393Z PASS UL5 direct autoUpdater.quitAndInstall/install + headless update-downloaded never launch installer
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9830992Z [AGM][UpdateLock] blocked addQuitHandler
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9831560Z PASS UL6 normal app quit (exit 0) does not trigger installer
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9831930Z [AGM][UpdateLock] ignored autoDownload assignment
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9832220Z [AGM][UpdateLock] ignored autoInstallOnAppQuit assignment
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9834036Z PASS UL7 autoDownload / autoInstallOnAppQuit forced false, assignments ignored
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9867113Z [Patch][AGM] app-update.yml: already locked (no-op, unchanged)
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9868613Z PASS UL8 conformant app-update.yml is true no-op (mtime & SHA256 unchanged) and non-default updaterCacheDirName preserves custom keys/comments
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9894690Z [Patch][AGM] dist/updater.js: injected U1 require electron-updater
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9895269Z [Patch][AGM] dist/updater.js: injected U2 initAutoUpdater autoDownload/autoInstallOnAppQuit
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9895646Z [Patch][AGM] dist/updater.js: injected U3 setAutoUpdateChecking (timer entry)
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9896089Z [Patch][AGM] dist/updater.js: injected U4 checkForUpdates (menu / IPC check entry)
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9896524Z [Patch][AGM] dist/updater.js: injected U5 quitAndInstall (menu Restart to Update)
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9896859Z [Patch][AGM] dist/updater.js: injected U6 applyHostUpdate (language server / host bridge entry)
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9897218Z [Patch][AGM] dist/updater.js: injected U7 headlessQuitAndInstall (headless install path)
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9898946Z [Patch][AGM] dist/ipcHandlers.js: injected I1 IPC updater:quit-and-install
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9899231Z [Patch][AGM] dist/ipcHandlers.js: injected I2 IPC updater:apply
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9899692Z [Patch][AGM] dist/ipcHandlers.js: injected I3 IPC updater:check-for-updates
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9903282Z [Patch][AGM] dist/languageServer.js: injected R1 module state (_lsProcess declaration)
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9904028Z [Patch][AGM] dist/languageServer.js: injected R2 LS spawn
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9905253Z [Patch][AGM] dist/languageServer.js: injected R3 killLanguageServer pre-SIGTERM snapshot (after exit listener)
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9906134Z [Patch][AGM] dist/languageServer.js: injected R4 killLanguageServer post-exit reap
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9913986Z [Patch][AGM] app-update.yml: staged to C:\Users\RUNNER~1\AppData\Local\Temp\agm_ul9_wZquxo\staged.yml (changed=true)
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9916031Z PASS UL9 --update-yml-out writes updated YAML to staging path without altering active source YAML
+test (windows-latest)	Update lock tests	2026-11-19T16:45:30.9944067Z SUMMARY pass=11 fail=0
+test (windows-latest)	Repatch unit tests	﻿2026-11-19T16:45:31.0780862Z ##[group]Run node tests/test_repatch_unit.js
+test (windows-latest)	Repatch unit tests	2026-11-19T16:45:31.0781105Z ^[[36;1mnode tests/test_repatch_unit.js^[[0m
+test (windows-latest)	Repatch unit tests	2026-11-19T16:45:31.0827354Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+test (windows-latest)	Repatch unit tests	2026-11-19T16:45:31.0827688Z ##[endgroup]
+test (windows-latest)	Repatch unit tests	2026-11-19T16:45:31.2883561Z PASS RP6 repatch.ps1 & restore-official.ps1 contain atomic replace + official backup whitelist primitives without Move-Item
+test (windows-latest)	Repatch unit tests	2026-11-19T16:45:31.2887052Z PASS RP6b default official whitelist is clean 5B493943... and does not include prepatched ZH hash 98A4308C...
+test (windows-latest)	Repatch unit tests	2026-11-19T16:45:35.3320376Z PASS RP1 pack failure leaves target app.asar unchanged, exits non-zero, cleans temp dir
+test (windows-latest)	Repatch unit tests	2026-11-19T16:45:36.1262578Z PASS RP2 extract failure leaves target app.asar unchanged, exits non-zero, cleans temp dir
+test (windows-latest)	Repatch unit tests	2026-11-19T16:45:37.4212928Z PASS RP3 0-byte staged archive rejected before replacement
+test (windows-latest)	Repatch unit tests	2026-11-19T16:45:38.8203602Z PASS RP4 staged archive missing dist/updater.js in asar list rejected before replacement
+test (windows-latest)	Repatch unit tests	2026-11-19T16:45:40.2526465Z PASS RP5 valid build creates .bak & .prev_, swaps atomically with verified SHA256, cleans temps
+test (windows-latest)	Repatch unit tests	2026-11-19T16:45:41.6832882Z PASS RP7 stages app.asar.unpacked alongside temp bak copy during extract and cleans staging dirs
+test (windows-latest)	Repatch unit tests	2026-11-19T16:45:43.7802769Z PASS RP8 exclusive lock (FileShare.None) keeps target app.asar present with unchanged SHA256 and exits non-zero
+test (windows-latest)	Repatch unit tests	2026-11-19T16:45:46.7990035Z PASS RP9 read-share lock reaches File.Replace, fails cleanly (exit 10), preserves target app.asar & SHA256
+test (windows-latest)	Repatch unit tests	2026-11-19T16:45:48.7764442Z PASS RP10 locked app.asar.unpacked leaves original unpacked intact and rolls back app.asar automatically
+test (windows-latest)	Repatch unit tests	2026-11-19T16:45:53.0655774Z PASS RP11 repeat repatch preserves official .bak hash & mtime and archives modded target to app.asar.modded_prev_*
+test (windows-latest)	Repatch unit tests	2026-11-19T16:45:53.4742620Z PASS RP12 missing .bak with non-official app.asar refuses to create polluted .bak and exits 4
+test (windows-latest)	Repatch unit tests	2026-11-19T16:45:54.1138173Z PASS RP13 existing polluted .bak triggers ALARM and exit 4 refusal in both repatch.ps1 and restore-official.ps1
+test (windows-latest)	Repatch unit tests	2026-11-19T16:45:54.1335943Z SUMMARY pass=14 fail=0
+test (windows-latest)	Fault injection tests	﻿2026-11-19T16:45:54.2129701Z ##[group]Run node tests/test_fault_injection.js
+test (windows-latest)	Fault injection tests	2026-11-19T16:45:54.2129974Z ^[[36;1mnode tests/test_fault_injection.js^[[0m
+test (windows-latest)	Fault injection tests	2026-11-19T16:45:54.2185574Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+test (windows-latest)	Fault injection tests	2026-11-19T16:45:54.2185896Z ##[endgroup]
+test (windows-latest)	Fault injection tests	2026-11-19T16:45:54.4340869Z PASS FI-S1 R3 recovery state machine, truthful exit-3 states, physical retain guards, .NET SHA256, and zero Move-Item/Get-FileHash tokens present across scripts
+test (windows-latest)	Fault injection tests	2026-11-19T16:45:54.4368731Z [Patch][AGM] app-update.yml: already locked (no-op, unchanged)
+test (windows-latest)	Fault injection tests	2026-11-19T16:45:54.4382741Z [Patch][AGM] app-update.yml: staged to C:\Users\RUNNER~1\AppData\Local\Temp\agm_fi_s2_T3DISH\staged.yml (changed=true)
+test (windows-latest)	Fault injection tests	2026-11-19T16:45:54.4385355Z PASS FI-S2 agm_locks.js performs no-op on conformant YAML and stages updates without mutating active YAML
+test (windows-latest)	Fault injection tests	2026-11-19T16:45:56.0313820Z PASS FI-R1 post-File.Replace exception automatically rolls back app.asar to original SHA256 and cleans temp
+test (windows-latest)	Fault injection tests	2026-11-19T16:45:57.5907693Z PASS FI-R2 partial replace failure (IOException + corrupted target) detects mismatch and rolls back from verified backup
+test (windows-latest)	Fault injection tests	2026-11-19T16:45:59.1238636Z PASS FI-R3 post-replace target lock retains trusted recovery materials and reports UNKNOWN/NEEDS_RECOVERY
+test (windows-latest)	Fault injection tests	2026-11-19T16:46:00.6163771Z PASS FI-R4 secondary rollback failure retains stage & prev backups and reports FAILED_NEEDS_MANUAL_RECOVERY
+test (windows-latest)	Fault injection tests	2026-11-19T16:46:02.0969491Z PASS FI-R5 unconfirmed target state after replace error retains prev backup and reports UNKNOWN/NEEDS_RECOVERY
+test (windows-latest)	Fault injection tests	2026-11-19T16:46:04.0135401Z PASS FI-R6 restore-official.ps1 partial failure rolls back atomically to pre-restore modded SHA256
+test (windows-latest)	Fault injection tests	2026-11-19T16:46:05.8381793Z PASS FI-R7 restore-official.ps1 post-replace hash mismatch rolls back atomically to pre-restore SHA256
+test (windows-latest)	Fault injection tests	2026-11-19T16:46:07.7007738Z PASS FI-R8a restore-official.ps1 target locked after replace retains recovery materials and reports UNKNOWN/NEEDS_RECOVERY
+test (windows-latest)	Fault injection tests	2026-11-19T16:46:09.6377325Z PASS FI-R8b restore-official.ps1 secondary rollback failure retains stage_bak & displaced archive and reports FAILED_NEEDS_MANUAL_RECOVERY
+test (windows-latest)	Fault injection tests	2026-11-19T16:46:11.4074671Z PASS FI-U1 first unpacked directory move failure preserves original unpacked and rolls back app.asar consistently
+test (windows-latest)	Fault injection tests	2026-11-19T16:46:12.9432811Z PASS FI-U2 second unpacked move failure prioritizes restoring original unpacked and rolling back app.asar
+test (windows-latest)	Fault injection tests	2026-11-19T16:46:14.4203155Z PASS FI-U3 unpacked restore failure retains unique old unpacked backup (never deleted by finally) and prints manual recovery instructions
+test (windows-latest)	Fault injection tests	2026-11-19T16:46:15.9097494Z PASS FI-U4 post-swap unpacked verification failure restores original unpacked and rolls back app.asar consistently
+test (windows-latest)	Fault injection tests	2026-11-19T16:46:17.5921644Z PASS FI-U5a real FileStream lock on app.asar.unpacked exits 10, keeps original unpacked, and rolls back app.asar
+test (windows-latest)	Fault injection tests	2026-11-19T16:46:19.1961681Z PASS FI-U5b locked directory during unpacked rollback retains old unpacked backup safely without data loss
+test (windows-latest)	Fault injection tests	2026-11-19T16:46:23.6861079Z PASS FI-Y1 non-default updaterCacheDirName updates preserving custom keys, repeat run is true no-op, missing YAML supported on first install
+test (windows-latest)	Fault injection tests	2026-11-19T16:46:26.6074740Z PASS FI-Y2 pack failure leaves active app-update.yml untouched (non-default & missing YAML cases)
+test (windows-latest)	Fault injection tests	2026-11-19T16:46:28.2550611Z PASS FI-Y3 File.Replace failure under real file lock leaves active app-update.yml and app.asar untouched
+test (windows-latest)	Fault injection tests	2026-11-19T16:46:31.4121583Z PASS FI-Y4 YAML write failure (clean & partial) rolls back YAML, app.asar, and app.asar.unpacked consistently
+test (windows-latest)	Fault injection tests	2026-11-19T16:46:32.9865472Z PASS FI-Y5 YAML restore failure retains app-update.yml.orig_bak and reports FAILED_NEEDS_MANUAL_RECOVERY
+test (windows-latest)	Fault injection tests	2026-11-19T16:46:37.3228483Z PASS FI-Y6 install-or-update.ps1 preserves original/missing YAML on repatch failure and preserves custom conformant YAML on -SkipRepatch
+test (windows-latest)	Fault injection tests	2026-11-19T16:46:37.7682874Z PASS FI-P1 repatch.ps1 exit 3 after creating trusted .bak truthfully reports backup creation and ABORTED_PROCESS_RUNNING_BACKUP_CREATED
+test (windows-latest)	Fault injection tests	2026-11-19T16:46:38.2196312Z PASS FI-P2 repatch.ps1 exit 3 with pre-existing trusted .bak reports retained backup and ABORTED_PROCESS_RUNNING
+test (windows-latest)	Fault injection tests	2026-11-19T16:46:39.5941676Z PASS FI-P3 restore-official.ps1 and install-or-update.ps1 exit 3 report ABORTED_PROCESS_RUNNING and truthful backup state (omitted when absent, retained when present)
+test (windows-latest)	Fault injection tests	2026-11-19T16:46:39.6611354Z SUMMARY pass=26 fail=0
+test (windows-latest)	Manifest raw-byte integrity tests	﻿2026-11-19T16:46:39.7537717Z ##[group]Run node tests/test_manifest_integrity.js
+test (windows-latest)	Manifest raw-byte integrity tests	2026-11-19T16:46:39.7538140Z ^[[36;1mnode tests/test_manifest_integrity.js^[[0m
+test (windows-latest)	Manifest raw-byte integrity tests	2026-11-19T16:46:39.7592713Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+test (windows-latest)	Manifest raw-byte integrity tests	2026-11-19T16:46:39.7592932Z ##[endgroup]
+test (windows-latest)	Manifest raw-byte integrity tests	2026-11-19T16:46:40.0242729Z PASS MF1 manifest.repo.json files[] (61 entries) structure valid, unique, and present on disk
+test (windows-latest)	Manifest raw-byte integrity tests	2026-11-19T16:46:41.9439751Z PASS MF2 raw Git blob bytes (HEAD:<path>) match manifest.repo.json size & SHA256 for all 61 files + plugin entries
+test (windows-latest)	Manifest raw-byte integrity tests	2026-11-19T16:46:41.9440615Z PASS MF3 all manifest Git blobs are pure LF (including app-update.template.yml & rollback.bat)
+test (windows-latest)	Manifest raw-byte integrity tests	2026-11-19T16:46:42.0164954Z PASS MF4 release archive (git archive --format=tar HEAD) bytes match all 61 manifest entries
+test (windows-latest)	Manifest raw-byte integrity tests	2026-11-19T16:46:42.0166007Z PASS MF5 all offline test suites (incl. test_repatch_unit.js, test_fault_injection.js, test_manifest_integrity.js) and WINDOWS_TEST_EVIDENCE.md included in manifest
+test (windows-latest)	Manifest raw-byte integrity tests	2026-11-19T16:46:42.0166632Z SUMMARY pass=5 fail=0
+test (windows-latest)	i18n teardown unit tests	﻿2026-11-19T16:46:42.1257530Z ##[group]Run node tests/test_i18n_teardown_unit.js
+test (windows-latest)	i18n teardown unit tests	2026-11-19T16:46:42.1257930Z ^[[36;1mnode tests/test_i18n_teardown_unit.js^[[0m
+test (windows-latest)	i18n teardown unit tests	2026-11-19T16:46:42.1315796Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+test (windows-latest)	i18n teardown unit tests	2026-11-19T16:46:42.1316124Z ##[endgroup]
+test (windows-latest)	i18n teardown unit tests	2026-11-19T16:46:42.3815501Z PASS IT1 build.js and hakimi-i18n.js stay in sync and include restoreEnglish + config.enabled logs
+test (windows-latest)	i18n teardown unit tests	2026-11-19T16:46:42.4671608Z PASS IT2 init with i18n.enabled=true translates fake DOM and logs config.enabled=true
+test (windows-latest)	i18n teardown unit tests	2026-11-19T16:46:42.5282893Z PASS IT3 teardown invokes restoreEnglish before stop, restores English DOM, and cleans resources
+test (windows-latest)	i18n teardown unit tests	2026-11-19T16:46:42.6648892Z PASS IT4 hot reload after switching i18n.enabled=false restores English UI and does not restart translation
+test (windows-latest)	i18n teardown unit tests	2026-11-19T16:46:42.7270713Z PASS IT5 fresh init with i18n.enabled=false skips domAdapter.start() and logs config.enabled=false
+test (windows-latest)	i18n teardown unit tests	2026-11-19T16:46:42.7921665Z PASS IT6 teardown catches restoreEnglish errors and still stops adapter and destroys UI
+test (windows-latest)	i18n teardown unit tests	2026-11-19T16:46:42.7922377Z SUMMARY pass=6 fail=0
+test (windows-latest)	Compat 2.33.0 unit tests	﻿2026-11-19T16:46:42.9206681Z ##[group]Run node tests/test_compat_233_unit.js
+test (windows-latest)	Compat 2.33.0 unit tests	2026-11-19T16:46:42.9206957Z ^[[36;1mnode tests/test_compat_233_unit.js^[[0m
+test (windows-latest)	Compat 2.33.0 unit tests	2026-11-19T16:46:42.9328399Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+test (windows-latest)	Compat 2.33.0 unit tests	2026-11-19T16:46:42.9328621Z ##[endgroup]
+test (windows-latest)	Compat 2.33.0 unit tests	2026-11-19T16:46:43.1999019Z PASS C233-1 patch.js passes node --check syntax validation
+test (windows-latest)	Compat 2.33.0 unit tests	2026-11-19T16:46:43.7506273Z PASS C233-2 2.32.1 synthetic fixture patches cleanly (exit 0) and passes node --check on all 6 files
+test (windows-latest)	Compat 2.33.0 unit tests	2026-11-19T16:46:44.3013864Z PASS C233-3 2.33.0 synthetic fixture preserves const ipc, hostQuestionBusy, openFromRemote, onBeforeAsk in same whenReady scope before createWindow
+test (windows-latest)	Compat 2.33.0 unit tests	2026-11-19T16:46:44.3039699Z PASS C233-4 2.33.0 synthetic main.js executes whenReady in VM without ReferenceError and registers hakimi:* IPC before createWindow
+test (windows-latest)	Compat 2.33.0 unit tests	2026-11-19T16:46:44.3042635Z PASS C233-5 2.32.1 preload.js places hakimiHost strictly inside local else {} block and leaves if(isRemoteWindow) unchanged
+test (windows-latest)	Compat 2.33.0 unit tests	2026-11-19T16:46:44.3043927Z PASS C233-6 2.33.0 preload.js places hakimiHost inside local else {}, preserves agyComputerPreview, and leaves if(isRemoteWindow) unchanged
+test (windows-latest)	Compat 2.33.0 unit tests	2026-11-19T16:46:44.3139648Z PASS C233-7 2.32.1 synthetic preload VM: exposes hakimiHost (13 methods) when local, blocks hakimiHost when isRemoteWindow=true
+test (windows-latest)	Compat 2.33.0 unit tests	2026-11-19T16:46:44.3202004Z PASS C233-8 2.33.0 synthetic preload VM: exposes hakimiHost + agyComputerPreview when local, blocks both when isRemoteWindow=true
+test (windows-latest)	Compat 2.33.0 unit tests	2026-11-19T16:46:45.0382781Z PASS C233-9 idempotency: Hakimi-layer rerun exits 0 byte-identical and full-patched rerun fails cleanly (exit 2) without writing
+test (windows-latest)	Compat 2.33.0 unit tests	2026-11-19T16:46:45.0890512Z PASS C233-10 negative H_MAIN_4 mutation exits non-zero (2), names H_MAIN_4, and writes nothing to disk
+test (windows-latest)	Compat 2.33.0 unit tests	2026-11-19T16:46:45.1395375Z PASS C233-11 negative H_MAIN_4 rejects cross-statement partial syntax (exit 2) without writing
+test (windows-latest)	Compat 2.33.0 unit tests	2026-11-19T16:46:45.1892137Z PASS C233-12 negative H_PRELOAD_1 missing createLocalSshRemoteAPI exits non-zero (2), names H_PRELOAD_1, and writes nothing
+test (windows-latest)	Compat 2.33.0 unit tests	2026-11-19T16:46:45.2389589Z PASS C233-13 negative H_PRELOAD_1 rejects ambiguous duplicate match (matched 2 times) without writing
+test (windows-latest)	Compat 2.33.0 unit tests	2026-11-19T16:46:45.2396814Z PASS C233-14 repatch.ps1 & restore-official.ps1 whitelists contain 2.32.1 & 2.33.0 hashes, CI & manifest include test_compat_233_unit.js
+test (windows-latest)	Compat 2.33.0 unit tests	2026-11-19T16:46:49.0218783Z PASS C233-15 Windows synthetic 2.33.0 repatch.ps1 succeeds twice (preserving .bak and const ipc) and rejects unknown hashes (exit 4)
+test (windows-latest)	Compat 2.33.0 unit tests	2026-11-19T16:46:49.0336574Z SUMMARY pass=15 fail=0 skip=0
+test (windows-latest)	Compat version declaration tests	﻿2026-11-19T16:46:49.1275207Z ##[group]Run node tests/test_compat_versions_unit.js
+test (windows-latest)	Compat version declaration tests	2026-11-19T16:46:49.1275513Z ^[[36;1mnode tests/test_compat_versions_unit.js^[[0m
+test (windows-latest)	Compat version declaration tests	2026-11-19T16:46:49.1326187Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+test (windows-latest)	Compat version declaration tests	2026-11-19T16:46:49.1326423Z ##[endgroup]
+test (windows-latest)	Compat version declaration tests	2026-11-19T16:46:49.3792956Z PASS META-1 manifest platform declares schemaVersion=1, string legacy appVersion=2.32.1, and exactly [2.32.1, 2.33.0] with no range syntax
+test (windows-latest)	Compat version declaration tests	2026-11-19T16:46:49.3797058Z PASS META-2 new version-declaration test is wired into the two-OS CI matrix and registered in manifest.repo.json
+test (windows-latest)	Compat version declaration tests	2026-11-19T16:46:49.3798272Z PASS V1 2.32.1 is allowed when the array is present
+test (windows-latest)	Compat version declaration tests	2026-11-19T16:46:49.3798601Z PASS V2 2.33.0 is allowed when the array is present
+test (windows-latest)	Compat version declaration tests	2026-11-19T16:46:49.3798955Z PASS V3 2.32.2 is rejected (not an exact validated version)
+test (windows-latest)	Compat version declaration tests	2026-11-19T16:46:49.3799298Z PASS V4 2.33.1 is rejected (not an exact validated version)
+test (windows-latest)	Compat version declaration tests	2026-11-19T16:46:49.3799651Z PASS V5 an unknown version (2.34.0) is rejected
+test (windows-latest)	Compat version declaration tests	2026-11-19T16:46:49.3801370Z PASS V6 when the array is absent, the legacy field is used (exact 2.32.1 and historical 2.32.x both allow 2.32.1, reject 2.33.0)
+test (windows-latest)	Compat version declaration tests	2026-11-19T16:46:49.3802054Z PASS V7 an empty array is not treated as allow-all (2.32.1 and 2.33.0 are both rejected, no legacy fallback)
+test (windows-latest)	Compat version declaration tests	2026-11-19T16:46:49.3802778Z PASS V8 an array type error (string instead of array, or a non-string entry) is explicitly rejected with a reason
+test (windows-latest)	Compat version declaration tests	2026-11-19T16:46:49.3803409Z PASS V9 when both fields exist the array wins: 2.33.0 is rejected even though the legacy field names it, 2.32.1 is allowed
+test (windows-latest)	Compat version declaration tests	2026-11-19T16:46:49.3807782Z PASS V10 an old consumer can JSON.parse the new manifest and read the legacy field without exception (2.32.1 allowed, 2.33.0 rejected)
+test (windows-latest)	Compat version declaration tests	2026-11-19T16:46:49.3808302Z PASS V11 v2.33.0 is rejected (no v-prefix normalization)
+test (windows-latest)	Compat version declaration tests	2026-11-19T16:46:49.3808595Z PASS V12 leading/trailing whitespace around 2.33.0 is rejected (no trim normalization)
+test (windows-latest)	Compat version declaration tests	2026-11-19T16:46:49.3809418Z PASS V13 2.33.0 with a build-number suffix is rejected (no build-suffix normalization)
+test (windows-latest)	Compat version declaration tests	2026-11-19T16:46:49.3809738Z SUMMARY pass=15 fail=0 skip=0
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	﻿2026-11-19T16:46:49.4701811Z ##[group]Run node tests/test_ipc_sec_unit.js
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:49.4702116Z ^[[36;1mnode tests/test_ipc_sec_unit.js^[[0m
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:49.4751582Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:49.4751905Z ##[endgroup]
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:49.7200154Z PASS SEC-01 合法本地主 Frame 允许（真实授权函数）
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:49.7204417Z PASS SEC-02 远程 WebContents 调用被拒绝
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:49.7205936Z PASS SEC-03 远程页面直接调用 hakimi:* 通道被拒绝
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:49.7206541Z PASS SEC-04 未登记的未知 WebContents 被拒绝
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:49.7211520Z PASS SEC-04b 远程 SSH 后端标记的窗口不登记（--agy-backend=ssh）
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:49.7211820Z PASS SEC-05 合法窗口中的非可信子 Frame 被拒绝
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:49.7213239Z PASS SEC-06 senderFrame 为 null/缺失时拒绝
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:49.7213714Z PASS SEC-07 sender 已销毁时拒绝
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:49.7217471Z PASS SEC-08 主帧跨文档导航后旧授权失效
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:49.7218565Z PASS SEC-08b 同文档导航不撤销授权（避免误伤 SPA）
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:49.7219528Z PASS SEC-08c 初始加载即重定向到远程源时撤销授权
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:49.7220945Z PASS SEC-09 窗口关闭后旧授权失效
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:49.7221549Z PASS SEC-10 伪造 renderer 参数（窗口 ID / URL / local 标记）不能获授权
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:49.7222946Z PASS SEC-12a 13 通道未授权调用 handler 执行次数为 0
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:49.7224963Z PASS SEC-18 合法与非法调用交替时授权状态不串扰
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:49.7258815Z PASS SEC-LOG-1 拒绝错误信息与日志不含路径、用户名、Token、Cookie
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:50.0586211Z PASS SEC-11 真实枚举注册结果：13 个 hakimi:* 通道全部经过门禁
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:50.3932563Z PASS SEC-12b 未授权调用无文件/进程/其他特权副作用（13 通道，spy 计数为 0、临时目录零写入）
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:50.4035624Z PASS SEC-13 合法调用保持原参数与原返回行为
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:50.7800735Z PASS SEC-14 重复注册与重复补丁幂等（单 handler、单门禁、二次补丁零差异）
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:50.8863648Z PASS SEC-15 未知锚点或授权插入失败时补丁失败退出且零写盘
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:51.9020258Z PASS SEC-16 2.32.1 与 2.33.0 合成夹具均通过授权门禁与语法检查
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:51.9089586Z PASS SEC-17 preload 远程分支不暴露本地特权桥接（hakimiHost 仅本地）
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:51.9089984Z PASS SEC-00 2.33.0 合成夹具补丁成功（前置条件）
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:51.9090435Z PASS SEC-00b spy 合成夹具补丁成功（前置条件）
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:51.9100137Z PASS SEC-19 A01 实测 Electron 44 场景：additionalArguments 仅在 options 且 getLastWebPreferences 返回 undefined/无该字段时必须拒绝并拦截 13 通道
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:51.9101794Z PASS SEC-20 所有判定来源缺失或不确定时默认拒绝（fail-closed）
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:51.9106321Z PASS SEC-21 任意判定来源抛异常或返回不确定值时必须 fail-closed 拒绝
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:51.9109176Z PASS SEC-22 接入官方 remoteWindowSecurity + windowBackends 后：Electron 44 本地合法放行、远程拦截、动态登记即撤销、运行期异常 fail-closed
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:52.4964427Z PASS SEC-23 2.32.1 与 2.33.0 补丁后 main.js VM 端到端验证：本地放行、SSH 构造窗口 13 通道全拒且零副作用
+test (windows-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:46:52.5075808Z SUMMARY pass=30 fail=0 skip=0
+test (windows-latest)	Post Run actions/setup-node@v4	﻿2026-11-19T16:46:52.6069324Z Post job cleanup.
+test (windows-latest)	Post Run actions/setup-node@v4	2026-11-19T16:46:52.7050738Z (node:4920) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+test (windows-latest)	Post Run actions/setup-node@v4	2026-11-19T16:46:52.7051369Z (Use `node --trace-deprecation ...` to show where the warning was created)
+test (windows-latest)	Post Run actions/checkout@v4	﻿2026-11-19T16:46:52.7301317Z Post job cleanup.
+test (windows-latest)	Post Run actions/checkout@v4	2026-11-19T16:46:52.8374444Z [command]"C:\Program Files\Git\bin\git.exe" version
+test (windows-latest)	Post Run actions/checkout@v4	2026-11-19T16:46:52.8630314Z git version 2.56.1.windows.1
+test (windows-latest)	Post Run actions/checkout@v4	2026-11-19T16:46:52.8682804Z Temporarily overriding HOME='D:\a\_temp\a663b8d8-e5a4-4d81-8961-a964316133ca' before making global git config changes
+test (windows-latest)	Post Run actions/checkout@v4	2026-11-19T16:46:52.8683583Z Adding repository directory to the temporary git global config as a safe directory
+test (windows-latest)	Post Run actions/checkout@v4	2026-11-19T16:46:52.8690541Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\Antigravity_Mod\Antigravity_Mod
+test (windows-latest)	Post Run actions/checkout@v4	2026-11-19T16:46:52.8980870Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+test (windows-latest)	Post Run actions/checkout@v4	2026-11-19T16:46:52.9304836Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+test (windows-latest)	Post Run actions/checkout@v4	2026-11-19T16:46:53.3329175Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+test (windows-latest)	Post Run actions/checkout@v4	2026-11-19T16:46:53.3558364Z http.https://github.com/.extraheader
+test (windows-latest)	Post Run actions/checkout@v4	2026-11-19T16:46:53.3592607Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all http.https://github.com/.extraheader
+test (windows-latest)	Post Run actions/checkout@v4	2026-11-19T16:46:53.3849210Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+test (windows-latest)	Post Run actions/checkout@v4	2026-11-19T16:46:53.7930841Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+test (windows-latest)	Post Run actions/checkout@v4	2026-11-19T16:46:53.8215370Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+test (windows-latest)	Complete job	﻿2026-11-19T16:46:54.2678567Z Cleaning up orphan processes
+test (windows-latest)	Complete job	2026-11-19T16:46:54.2930015Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
