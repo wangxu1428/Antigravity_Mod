@@ -1,0 +1,167 @@
+Round IPC-C6-FIX-01 | 2026-11-20 00:55
+# 任务 AGM-IPC-C6-FIX-01：修复 C-6 远程窗口越权与 Windows 真机复测报告
+
+- **任务编号**：`AGM-IPC-C6-FIX-01`
+- **工作根目录**：`C:\AGM_TestLab\IPC_SEC_A02\`
+- **执行环境**：`agy` / Windows 实机 `DESKTOP-7RTP0QJ`（`desktop-7rtp0qj\administrator`，Electron `44.9.1`，Node.js `v26.13.1`，Git `2.56.1.windows.1`，Python `3.12.7` / Pillow `11.3.0`，`asar` `v4.3.2`）
+- **总体判定**：**PASS（所有 C-6 修复、本地 10 套单测、GitHub Actions 双平台 CI、双版本冷启动、合法 IPC、31 项回归与 C-6a/b/c/d 实机复测、副本恢复及正式 IDE 零影响均 PASS；真实远程 SSH 主机端到端保持 `NOT RUN`）**
+
+---
+
+## 一、仓库基线、提交状态与 PR 说明
+
+- **远程仓库**：`https://github.com/wangxu1428/Antigravity_Mod`
+- **操作分支**：`dev/compat-233-stage-b`
+- **修复前基线核验**（`evidence/git_baseline.txt`）：
+  - `HEAD`：`84dc8e989b301f387561cceec97617f28612c2a0` — **PASS**
+  - `origin/main`：`923110e60cdb928b41a28ad2994f71bbed4bf730` — **PASS**
+- **本轮提交 SHA（新 `HEAD`）**：`29600a9a8b1b40051ea988c97e81871f423dbcb6`
+- **提交说明**：`fix(ipc-auth): 修复 Electron 44 下远程 SSH 窗口越权并接入官方后端判定（fail-closed）`
+- **推送方式**：普通 `git push origin dev/compat-233-stage-b`（`84dc8e9..29600a9`），未执行 force / rebase / amend。
+- **Draft PR #10**：本机未安装 `gh` CLI（命令行检测 `gh` 不存在），按任务规范跳过 `gh pr edit 10`；未开新 PR，未修改 Draft 状态，未合并 `main`，未打 Tag，未发 Release。
+- **修改前备份**：已先行备份修改前的 4 个文件至 `W\backups\repo\` 并生成 `W\backups\repo\SHA256SUMS.txt` 与 `evidence/repo_backup_sha256.txt`。
+
+---
+
+## 二、修复方案、精确代码位置与 Git Blob 前后对比
+
+### 2.1 修复方案概述
+针对 A01 发现的根因（Electron `44.9.1` 中 `wc.getLastWebPreferences()` 返回对象缺失 `additionalArguments`，而原 `hasRemoteBackendFlag` 仅读取该属性且在读不到时默认放行），在不引入新权限框架、新 Token、后台服务且不改动 `updater:*` 的前提下，实施三层 fail-closed 加固：
+
+1. **直接检查 `createWindow` 传入参数（`options` / `webPreferences` / `additionalArguments`）**：
+   - `platform/mod_kit/agm_ipc_auth.js`：
+     - `isExplicitLocalUrl(url)`（L49–L55，基于 `extractHttpHost` L22–L34、`isLoopbackHost` L36–L41）：仅承认 `file://` 与 loopback（`localhost`、`*.localhost`、`127.0.0.1`、`[::1]`、`::1`）为显式本地 URL，排除 `about:blank`、远程域名等。
+     - `inspectAdditionalArgs(rawArgs)`（L57–L115）：拦截 `--agy-backend=ssh` / `--agy-backend <非 local>` / `--backend=<非 local>` / `--remote` / `--remote=<非 false/0>` / `--ssh`；非数组或含非字符串项一律 fail-closed 拒绝。
+     - `inspectOptionsObject(obj)`（L117–L225）：同时检查 `options` 顶层与 `options.webPreferences` 中的 `additionalArguments`、`backend`/`backendType`/`windowBackend`、`remote`/`isRemote`/`isRemoteWindow`/`remoteBackend`/`ssh`/`isSsh`/`sshHost`/`remoteHost`/`remoteSession`/`hostId`、`isLocal`/`local`/`localBackend`、非空 `partition`、`titleSuffix`（`\bssh\b`）、`url`/`initialUrl`；任何字段读取/getter 抛异常立即拒绝（`options-inspection-error`）。
+2. **接入官方 2.32.1 & 2.33.0 后端判定模块（只读确认后接入）**：
+   - 只读解包确认官方 2.32.1 与 2.33.0 的 `dist/remote/windowBackends.js`（2279 B，两版一致）与 `dist/remote/remoteWindowSecurity.js` 均提供一致接口：`remoteWindowSecurity.isRemoteContents(wc)`、`remoteWindowSecurity.isRemoteSession(ses)`、`windowBackends.remoteBackendOf(wc)`、`windowBackends.remoteBackendOfWindow(win)`、`windowBackends.isLocalAppWindow(win)`。
+   - `platform/mod_kit/patch.js`（L146–L162）：在嵌入 `__agmIpcGate` 初始化时直接引用已加载或通过 `require` 获取的 `./remote/remoteWindowSecurity`（`__agmRemoteWindowSecurity`）与 `./remote/windowBackends`（`__agmWindowBackends`）并传入 `createIpcAuthorizer`。
+   - `platform/mod_kit/agm_ipc_auth.js` `checkOfficialBackend(wc, win)`（L244–L335）：在创建登记阶段（`evaluateCreatedWindow`）、显式 `register(wc)`（L454–L471）以及运行时每次 IPC 调用的 `denyReason(event)`（L473–L503）均执行校验：只要 `isRemoteContents(wc) !== false`、`isRemoteSession(wc.session) !== false`、`remoteBackendOf(wc)` 非空、`isLocalAppWindow(win) !== true` 或任意判定抛异常，立即拒绝并撤销已有登记（`remote-sender` / `remote-check-failed` / `remote-check-uncertain` / `non-local-window` / `backend-check-failed`）。
+3. **默认拒绝（Fail-Closed）与 Electron 44.9.1 兜底**：
+   - `inspectWebPreferences(wc)`（L337–L373）：当 `getLastWebPreferences` 为函数但返回 `undefined`/`null`/非对象或抛出异常时直接拒绝（`webprefs-missing` / `webprefs-error`）。
+   - `evaluateCreatedWindow(args, win, hookSource)`（L562–L614）与 `installCreateWindowHook(utilsModule, source)`（L616–L645）：
+     - 若 `getLastWebPreferences()` 返回对象但不含 `additionalArguments`（Electron 44.9.1 实测行为），必须由官方后端检查确认本地（`officialCheck.confirmedLocal`）或参数中有显式本地标记（`hasExplicitLocalOption`）方允许登记，否则拒绝；
+     - 若所有判定来源均缺失或不确定，默认拒绝不登记。
+
+### 2.2 修改文件与 Git 原始 Blob 前后 SHA256 对照表
+
+> 校验来源：`evidence/repo_before_blobs_sha256.txt`（`84dc8e9`）、`evidence/repo_after_blobs_sha256.txt`（`29600a9`），全部按 Git 原始 LF blob 字节计算，无 CRLF。
+
+| 文件路径 | 修改前 Size (B) | 修改前 Git Blob SHA256 | 修改后 Size (B) | 修改后 Git Blob SHA256 |
+| --- | --- | --- | --- | --- |
+| `platform/mod_kit/agm_ipc_auth.js` | `12,751` | `F26B973C6642D1387C19FBD98D85260870C4A695C50EFF6D40BCE481F6613301` | `27,838` | `09DF8F21AFEF879FAF1C609788C70C41C29D77E9B861B122A9DD0B75EAD87E49` |
+| `platform/mod_kit/patch.js` | `40,584` | `3C7B98183061441A223F502949BBEB609F5039397FBF94C5F502771C5A8D3023` | `41,159` | `8630BC8F465E382F66305FAEB68019E63CAF7F1AE36BF184D8B933FCDD4BE034` |
+| `tests/test_ipc_sec_unit.js` | `40,118` | `5599D894A2BFF842901460C915DFD392D1250C83FE985AFA1922A29B105CB645` | `55,935` | `BD8B8B7A89EDC5D7DC699D1AE3A4DEBA8530B14E8716ABAED452EF0EBE25276C` |
+| `manifest.repo.json` | `14,957` | `6E9AFA5AB0668F1E950A022F036C5C58013C6D4FBF30FCECAE66741C650D9D2F` | `14,957` | `B3A2F3987C9FF985C749AEC5EA17FD82696531B149322D73D077DFC085594F48` |
+
+---
+
+## 三、本地单元测试与 GitHub Actions CI 结果
+
+### 3.1 本地全部 10 套测试（提交 `29600a9` 后实测，见 `evidence/local_unit_tests.log`）— **PASS**
+
+| 测试套件 | PASS | FAIL | SKIP | 退出码 | 单项判定 |
+| --- | --- | --- | --- | --- | --- |
+| `tests/test_host_unit.js` | `15` | `0` | `0` | `0` | **PASS** |
+| `tests/test_reaper_unit.js` | `16` | `0` | `0` | `0` | **PASS** |
+| `tests/test_update_lock.js` | `11` | `0` | `0` | `0` | **PASS** |
+| `tests/test_repatch_unit.js` | `14` | `0` | `0` | `0` | **PASS** |
+| `tests/test_fault_injection.js` | `26` | `0` | `0` | `0` | **PASS** |
+| `tests/test_manifest_integrity.js` | `5` | `0` | `0` | `0` | **PASS** |
+| `tests/test_i18n_teardown_unit.js` | `6` | `0` | `0` | `0` | **PASS** |
+| `tests/test_compat_233_unit.js` | `15` | `0` | `0` | `0` | **PASS** |
+| `tests/test_compat_versions_unit.js` | `15` | `0` | `0` | `0` | **PASS** |
+| `tests/test_ipc_sec_unit.js`（新增 `SEC-19`–`SEC-23`，未改旧断言） | `30` | `0` | `0` | `0` | **PASS** |
+| **本地总计（10 套）** | **153** | **0** | **0** | **0** | **PASS** |
+
+### 3.2 GitHub Actions CI 结果（见 `evidence/ci_run_summary.json`）— **PASS**
+- **Workflow**：`offline-tests` | **CI Run ID**：`44569636560`（`run_number: 67`）| **Head SHA**：`29600a9a8b1b40051ea988c97e81871f423dbcb6` | **总结论**：`success`
+- 说明：公开 REST API `/actions/runs/44569636560/jobs` 返回步骤级结果（完整 Job 日志下载需鉴权且本机未装 `gh` CLI）；两平台均完成全部 10 个测试步骤并全部 `success`：
+
+| Runner 平台 | Job ID | 总步骤 (PASS/FAIL/SKIP) | 测试套步骤 (PASS/FAIL/SKIP) | Conclusion |
+| --- | --- | --- | --- | --- |
+| `test (ubuntu-latest)` | `135699184600` | `16 PASS / 0 FAIL / 0 SKIP` | `10 PASS / 0 FAIL / 0 SKIP` | **success (PASS)** |
+| `test (windows-latest)` | `135699184591` | `16 PASS / 0 FAIL / 0 SKIP` | `10 PASS / 0 FAIL / 0 SKIP` | **success (PASS)** |
+
+---
+
+## 四、Windows 真机双版本复测与 A01 对比
+
+### 4.1 产品代码与测试探针严格区分声明
+1. **产品代码（已入库 `29600a9`）**：`W\repo\platform\mod_kit\agm_ipc_auth.js` 与 `patch.js` 注入两版隔离副本 `app.asar`；冷启动 `cold_1` / `cold_2` 全程运行零探针纯净产品补丁版。
+2. **测试探针（仅存于 `W\tools\`，未进入 `W\repo`）**：`W\tools\ipc_security_probe.js`、`W\tools\probe_attacker_preload.js`、`W\tools\inject_probe_hooks.js`，仅在 Run 3（`run_ipc_probes.ps1`）由环境变量 `AGM_TEST_PROBE_FILE` 临时门控加载；Run 3 结束后立即撤回并最终恢复官方备份。
+
+### 4.2 双版本复测指标汇总表（2.32.1 与 2.33.0）
+
+| 验收项目 | Antigravity 2.32.1 | Antigravity 2.33.0 | 单项判定 |
+| --- | --- | --- | --- |
+| 原始纯净 `app.asar` SHA256 核验 | `5B493943E67E500638555315594D5B1ACBC7A02E6DAC3C786651921C1EE8519F` | `B33C81600E82E65593AA8430EF01B37D6B28D9D98F0FAF45E25957783B71E64B` | **PASS** |
+| `patch.js` 退出码 & 补丁后 SHA256 | 退出码 `0` / `FFD4CB6F...921C` (`5,719,230 B`) | 退出码 `0` / `9A440A69...87BA` (`6,535,738 B`) | **PASS** |
+| 锚点检查 & `node --check` | 24/24 锚点全绿（含 `__agmRemoteWindowSecurity`、`__agmWindowBackends`、`13` `secureHandle`、`0` 裸 `handle`）；6/6 `exit 0` | 同左，6/6 `exit 0` | **PASS** |
+| 真实冷启动成功次数 / 测试次数 | **2 / 2**（`cold_1`、`cold_2`，纯净产品版） | **2 / 2**（`cold_1`、`cold_2`，纯净产品版） | **PASS** |
+| 主窗口显示与 UIA 交互验证 | 可见、`1416x908`、`UIA IsEnabled=true`、实机截图已落盘 | 可见、`1416x908`、`UIA IsEnabled=true`、实机截图已落盘 | **PASS** |
+| 冷启动耗时 & >=60s 稳定性观测 | `1117 ms` / `1120 ms`；观测 `67.7s` / `67.7s`（0 崩溃） | `1154 ms` / `1123 ms`；观测 `67.8s` / `67.8s`（0 崩溃） | **PASS** |
+| 峰值工作集内存（主进程 / 进程树） | `129.80 MB / 1031.16 MB`；`129.93 MB / 1018.93 MB` | `132.78 MB / 1024.27 MB`；`135.18 MB / 1027.06 MB` | **PASS** |
+| 合法 IPC 功能与误拒计数 | `wc#2` 已登记；合法 IPC **11 / 11** 成功，误拒 **0** 次（`launch-desktop-gpt` 按策略仅测非法面） | 合法 IPC **11 / 11** 成功，误拒 **0** 次 | **PASS** |
+| 回归 A01 31 项非法调用 | **31 / 31** 拒绝（C-1 13 + C-2b 13 + C-3 2 + C-4 3），0 副作用 | **31 / 31** 拒绝（C-1 13 + C-2b 13 + C-3 2 + C-4 3），0 副作用 | **PASS** |
+| C-1 远程未登记 & C-2 跨源 iframe | C-1 `13/13` 拒；C-2a 无 preload、C-2b `13/13` 拒（`not-main-frame`） | 同左 | **PASS** |
+| C-3 导航撤销、C-4 重定向、C-5 销毁 | C-3 `wc.reload` 与跨文档撤销；C-4 `gapObserved=false`；C-5 `sender-destroyed` | 同左 | **PASS** |
+| **C-6a 构造 SSH 窗口 (`BrowserWindow`)** | `isRegistered=false`，**13 / 13 拒绝**，`plugins/` 变更 `0`，未写 `config.json`/未建 `probe` | `isRegistered=false`，**13 / 13 拒绝**，`plugins/` 变更 `0`，未写 `config.json`/未建 `probe` | **PASS** |
+| **C-6b 构造 SSH 窗口 (`WebContentsView`)** | `isRegistered=false`，**13 / 13 拒绝**，`plugins/` 变更 `0`，未写 `config.json`/未建 `probe` | `isRegistered=false`，**13 / 13 拒绝**，`plugins/` 变更 `0`，未写 `config.json`/未建 `probe` | **PASS** |
+| **C-6c 补充验证 (`defaultSession` 仅 `options` args)** | `isRegistered=false`，**13 / 13 拒绝**，0 副作用 | `isRegistered=false`，**13 / 13 拒绝**，0 副作用 | **PASS** |
+| **C-6d 补充验证 (动态 `registerRemoteWindow`)** | 创建后标记 SSH，下一次 IPC 立即 `remote-sender` 撤销并 **13 / 13 拒绝** | 同左 | **PASS** |
+| 真实远程 SSH 主机端到端测试 | 未执行（无真实 SSH 远端主机环境） | 未执行（无真实 SSH 远端主机环境） | **NOT RUN** |
+| 拒绝日志脱敏检查 | `99 / 99` 条均严格匹配 `^\[Hakimi IPC\] denied channel=hakimi:[a-z-]+ reason=[a-z-]+$` | `99 / 99` 条均严格匹配枚举格式 | **PASS** |
+| 更新器锁 `AGM_UPDATE_LOCK` 状态 | 锁锚点全注入；冷启动 `UpdateLockLogHits=2`；`updater:*` 未改 | 同左 | **PASS** |
+| 副本恢复与残留进程核验 | `app.asar` 与 `app-update.yml` SHA256 与备份 100% 一致，残留进程 `0` | `app.asar` 与 `app-update.yml` SHA256 与备份 100% 一致，残留进程 `0` | **PASS** |
+
+### 4.3 与 A01 结果直接对比（`0/13 -> 13/13`）
+
+| 对比维度 | A01 修复前（`84dc8e9`） | A02 修复后（`29600a9`） | 变化说明 |
+| --- | --- | --- | --- |
+| **C-6a（`BrowserWindow`，`--agy-backend=ssh`）拦截率** | **0 / 13** 拒绝（`isRegistered=true`）— FAIL | **13 / 13** 拒绝（`isRegistered=false`）— **PASS** | 两版均由 0/13 修复为 13/13 |
+| **C-6b（`WebContentsView`，`--agy-backend=ssh`）拦截率** | **0 / 13** 拒绝（`isRegistered=true`）— FAIL | **13 / 13** 拒绝（`isRegistered=false`）— **PASS** | 两版均由 0/13 修复为 13/13 |
+| **C-6 未授权副作用（`config.json` 改写 / `agm_evil_probe.json` 创建）** | 两版合计 **4 次越权写盘** — FAIL | 两版（含 C-6c/d）合计 **0 次写盘 / 0 变更** — **PASS** | 彻底消除越权副作用 |
+| **合法本地主 Hub 窗口 IPC** | 11 / 11 成功（0 误拒） | 11 / 11 成功（0 误拒） | 合法功能零退化 |
+| **回归 A01 31 项非法调用** | 31 / 31 拒绝 | 31 / 31 拒绝 | 既有安全防御面保持 100% |
+| **真实远程 SSH 主机端到端** | NOT RUN | NOT RUN | 仍受无远端主机环境限制 |
+
+---
+
+## 五、正式 IDE 前后快照对比与隔离恢复结论
+
+- **正式 IDE 前后快照对比**（`evidence/formal_ide_snapshot_before.json` / `_after.json` / `formal_ide_snapshot_diff.txt`）— **PASS**：
+  - `D:\AI_Studio\Apps\Antigravity\` 全部 **8 个关键文件**（`Antigravity.exe`、`version`、`app.asar`、`app.asar.bak`、`app-update.yml`、`app-update.yml.bak_20261118_233907`、`language_server.exe`、`webm_encoder.exe`）**SHA256 与 mtime `0 / 8` 变动（100% UNCHANGED）**。
+  - 测试前存在的 **13 个正式 Antigravity 进程 PID**（`14512` 等）测试后 **13 / 13 全部存活**，无异常退出或新增正式进程。
+  - `%USERPROFILE%\.gemini\` 元数据条数前后均为 `639` 条（`Added=0`、`Removed=0`），仅 20 条运行中会话与正式 IDE 自身状态的时间戳自然更新，无任何测试污染。
+- **副本恢复与收尾清理**（`evidence/restore_and_isolation_check.json`）— **PASS**：
+  - `2.32.1` 与 `2.33.0` 副本的 `app.asar`、`app-update.yml`、`app.asar.unpacked` 已全部还原，SHA256 与 `W\backups\SHA256SUMS.txt` 逐字节一致（`AsarRestoredMatch=true`、`YmlRestoredMatch=true`）。
+  - `W\bases\` 下残留进程为 `0`；`W\tmp\` 临时目录已彻底删除（`TmpDirRemoved=true`）；`W\` 根目录保留；`C:\AGM_TestLab\IPC_SEC_A01\` 与 `D:\` 保持全程只读零改动。
+- **证据与交付脱敏扫描**：`W\evidence\` 与 `W\deliver\` 中 `.exe`/`.asar`/`.dll` 数量为 **0**，敏感凭证/密钥正则命中为 **0**。
+
+---
+
+## 六、残余风险清单
+
+1. **【未执行项 — NOT RUN】真实远程 SSH 主机端到端验证**：本机缺少可连通的真实远程 SSH 主机，无法实机走通远端连接下 `remoteManager`、`hardenRemoteSession`、`windowBackends` 与 `agm_ipc_auth` 的全链路交互；当前仅通过真实 Electron 44.9.1 下与 `remoteManager.js` 参数同构的构造窗口（C-6a/b/c）以及运行时 `registerRemoteWindow` 联动（C-6d）验证。
+2. **【范围外残余风险】`updater:*` 三条特权通道**：`updater:quit-and-install`、`updater:apply`、`updater:check-for-updates`（`dist/ipcHandlers.js`）按要求未做修改，仍未纳入 `agm_ipc_auth.js` 统一门禁，当前继续依赖官方 `localOnly`（内部调用 `isRemoteContents`）与 `AGM_UPDATE_LOCK` 短路阻断。
+3. **【架构限制 — Fail-Closed】`dist/utils.js` 内部词法调用 `createWindow`**：`showOrCreateWindow` 与 `createNewWindow` 在模块内部直接词法调用 `createWindow(...)` 而不走 `exports.createWindow`，不会自动登记（fail-closed，不会引入越权风险，但托盘新建窗口可能缺少 `hakimiHost` 能力）。
+4. **【可用性取舍 — Fail-Closed】整页跨文档刷新**：`wc.reload()`（如 `Ctrl+Shift+R`）会触发主帧跨文档导航从而撤销窗口授权直至窗口重建（`HakimiPluginHost` 插件热重载 `F5`/`Ctrl+R` 与 SPA 同文档导航不受影响）。
+5. **【PR 状态同步】Draft PR #10 描述**：因本机缺少 `gh` CLI 工具，未自动向 PR #10 描述追加本轮修复说明，待有 `gh` 环境或人工在网页端按需补充。
+
+---
+
+## 七、交付与证据索引
+
+- **交付件**：
+  - `C:\AGM_TestLab\IPC_SEC_A02\deliver\AGM_IPC_C6_FIX_01_report.md`
+  - `C:\AGM_TestLab\IPC_SEC_A02\deliver\AGM_IPC_C6_FIX_01_preview.png`（`451,185` 字节 / `440.6 KB`）
+- **核心证据（`C:\AGM_TestLab\IPC_SEC_A02\evidence\`）**：
+  - `git_baseline.txt`、`repo_backup_sha256.txt`、`repo_before_blobs_sha256.txt`、`repo_after_blobs_sha256.txt`
+  - `local_unit_tests.log`、`ci_run_summary.json`
+  - `bases_and_backups_sha256.{json,txt}`、`patch_{2.32.1,2.33.0}.log`、`patch_verify_{2.32.1,2.33.0}.json`、`updater_lock_check.json`
+  - `cold_start_{2.32.1,2.33.0}.json`、`launch_{2.32.1,2.33.0}_cold{1,2}.log`、`screenshot_{2.32.1,2.33.0}_cold{1,2}.png`
+  - `ipc_results_{2.32.1,2.33.0}.json`、`probe_{2.32.1,2.33.0}.log`
+  - `formal_ide_snapshot_{before,after}.json`、`formal_ide_snapshot_diff.txt`、`restore_and_isolation_check.json`
+
+DONE

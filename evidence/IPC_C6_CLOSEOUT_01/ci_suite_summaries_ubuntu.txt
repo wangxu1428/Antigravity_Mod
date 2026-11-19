@@ -1,0 +1,11 @@
+test (ubuntu-latest)	Host unit tests	2026-11-19T16:45:31.0855965Z UNIT_SUMMARY passed=15 failed=0
+test (ubuntu-latest)	Reaper unit tests	2026-11-19T16:45:31.3616156Z SUMMARY pass=16 fail=0
+test (ubuntu-latest)	Update lock tests	2026-11-19T16:45:31.5659736Z SUMMARY pass=11 fail=0
+test (ubuntu-latest)	Repatch unit tests	2026-11-19T16:45:31.5995868Z SUMMARY pass=2 fail=0
+test (ubuntu-latest)	Fault injection tests	2026-11-19T16:45:31.6342752Z SUMMARY pass=2 fail=0
+test (ubuntu-latest)	Manifest raw-byte integrity tests	2026-11-19T16:45:31.8380908Z SUMMARY pass=5 fail=0
+test (ubuntu-latest)	i18n teardown unit tests	2026-11-19T16:45:32.3487758Z SUMMARY pass=6 fail=0
+test (ubuntu-latest)	Compat 2.33.0 unit tests	2026-11-19T16:45:33.3536323Z SKIP C233-15 Windows synthetic 2.33.0 repatch.ps1 repeat & unknown hash rejection :: requires win32 + powershell.exe; process.platform=linux
+test (ubuntu-latest)	Compat 2.33.0 unit tests	2026-11-19T16:45:33.3554552Z SUMMARY pass=14 fail=0 skip=1
+test (ubuntu-latest)	Compat version declaration tests	2026-11-19T16:45:33.3909103Z SUMMARY pass=15 fail=0 skip=0
+test (ubuntu-latest)	IPC authorization security tests (SEC-01..18)	2026-11-19T16:45:34.6860980Z SUMMARY pass=30 fail=0 skip=0

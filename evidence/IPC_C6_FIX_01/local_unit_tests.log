@@ -1,0 +1,239 @@
+=== AGM-IPC-C6-FIX-01 Local Full Unit Tests (10 suites) ===
+Timestamp: 2026-11-20 00:43:36 +08:00
+HEAD: 29600a9a8b1b40051ea988c97e81871f423dbcb6
+=== RUN tests/test_host_unit.js ===
+PASS exports_present
+PASS manifest_valid_hello_guard
+PASS manifest_valid_fault_probe
+PASS manifest_bad_non_object_and_version
+PASS manifest_bad_id_and_dir_mismatch
+PASS manifest_bad_entry_traversal_and_ext
+PASS manifest_bad_meta_permissions_actions_schema
+PASS compat_valid_and_ranges
+PASS compat_incompatible_app_and_host
+PASS defaults_from_schema_explicit_and_fallback
+PASS schema_boolean_valid_and_invalid
+PASS schema_string_boundaries_required_pattern
+PASS schema_number_boundaries_integer_and_float
+PASS schema_enum_valid_and_invalid
+PASS permission_map_all_capabilities
+UNIT_SUMMARY passed=15 failed=0
+RESULT PASS
+EXIT_CODE=0
+=== RUN tests/test_reaper_unit.js ===
+PASS RU1 C: root enabled; D: root disabled and never calls killPid
+PASS RU2 snapshot(100) records exactly 101 and 102 (excludes 100, 103 conhost, 200 D:, 300/301)
+PASS RU3 obedient sidecars: exitedGracefully=[101,102], killed empty, no force kill issued
+PASS RU4 stubborn sidecars: force-kills 101 and 102 only, single-PID killArgs without /T
+PASS RU5 PID reuse (CreationDate changed) => pid 102 skipped, not force-killed
+PASS RU6 exe path changed for recorded pid 102 => skipped, not force-killed
+PASS RU7 command line changed for recorded pid 102 => skipped, not force-killed
+PASS RU8 detectHistorical returns [300, 301] and killPid is never called for them (before or after reap)
+PASS RU9 D: process 200 is never passed to killPid in any test
+PASS RU10 descendantsOf ignores child whose CreationDate is older than parent (PID-reuse guard)
+PASS RU11 PID reused between two forced kills => second target skipped (fresh check before every kill)
+PASS RU12 iso7 normalisation: 12:00:00.5009999Z >= 12:00:00.500Z
+PASS RU13 WQL LIKE escaping: backslash, quote, [, %, _
+PASS RU14 killArgs throws for pid 0/4/-1/NaN/1.5/"x"
+PASS RU15 process with empty CreationDate is not recorded
+PASS RU16 LS pid reused before snapshot => snapshot records nothing
+SUMMARY pass=16 fail=0
+EXIT_CODE=0
+=== RUN tests/test_update_lock.js ===
+[Patch][AGM] dist/updater.js: injected U1 require electron-updater
+[Patch][AGM] dist/updater.js: injected U2 initAutoUpdater autoDownload/autoInstallOnAppQuit
+[Patch][AGM] dist/updater.js: injected U3 setAutoUpdateChecking (timer entry)
+[Patch][AGM] dist/updater.js: injected U4 checkForUpdates (menu / IPC check entry)
+[Patch][AGM] dist/updater.js: injected U5 quitAndInstall (menu Restart to Update)
+[Patch][AGM] dist/updater.js: injected U6 applyHostUpdate (language server / host bridge entry)
+[Patch][AGM] dist/updater.js: injected U7 headlessQuitAndInstall (headless install path)
+[Patch][AGM] dist/ipcHandlers.js: injected I1 IPC updater:quit-and-install
+[Patch][AGM] dist/ipcHandlers.js: injected I2 IPC updater:apply
+[Patch][AGM] dist/ipcHandlers.js: injected I3 IPC updater:check-for-updates
+[Patch][AGM] dist/languageServer.js: injected R1 module state (_lsProcess declaration)
+[Patch][AGM] dist/languageServer.js: injected R2 LS spawn
+[Patch][AGM] dist/languageServer.js: injected R3 killLanguageServer pre-SIGTERM snapshot (after exit listener)
+[Patch][AGM] dist/languageServer.js: injected R4 killLanguageServer post-exit reap
+[Patch][AGM] app-update.yml: already locked (no-op, unchanged)
+[AGM][UpdateLock] updater locked
+[AGM][UpdateLock] blocked checkForUpdates manual=false
+[AGM][UpdateLock] blocked periodic update checks
+[AGM][UpdateLock] blocked periodic update checks
+PASS UL1 timer entry (initial delayed check + setting toggles) never reaches autoUpdater
+[AGM][UpdateLock] blocked checkForUpdates manual=true
+[AGM][UpdateLock] blocked quitAndInstall
+PASS UL2 menu entries (Check for Updates / Restart to Update) blocked
+[AGM][UpdateLock] blocked IPC updater:check-for-updates
+PASS UL3a IPC updater:check-for-updates blocked
+[AGM][UpdateLock] blocked IPC updater:apply
+PASS UL3b IPC updater:apply blocked (state stays non-ready)
+[AGM][UpdateLock] blocked IPC updater:quit-and-install
+PASS UL3c IPC updater:quit-and-install blocked
+[AGM][UpdateLock] blocked applyHostUpdate
+[AGM][UpdateLock] blocked applyHostUpdate
+[AGM][UpdateLock] blocked applyHostUpdate
+PASS UL4 host bridge applyHostUpdate returns false and never reaches autoUpdater
+[AGM][UpdateLock] blocked quitAndInstall
+[AGM][UpdateLock] blocked install
+[AGM][UpdateLock] blocked headlessQuitAndInstall
+PASS UL5 direct autoUpdater.quitAndInstall/install + headless update-downloaded never launch installer
+[AGM][UpdateLock] blocked addQuitHandler
+PASS UL6 normal app quit (exit 0) does not trigger installer
+[AGM][UpdateLock] ignored autoDownload assignment
+[AGM][UpdateLock] ignored autoInstallOnAppQuit assignment
+PASS UL7 autoDownload / autoInstallOnAppQuit forced false, assignments ignored
+[Patch][AGM] app-update.yml: already locked (no-op, unchanged)
+PASS UL8 conformant app-update.yml is true no-op (mtime & SHA256 unchanged) and non-default updaterCacheDirName preserves custom keys/comments
+[Patch][AGM] dist/updater.js: injected U1 require electron-updater
+[Patch][AGM] dist/updater.js: injected U2 initAutoUpdater autoDownload/autoInstallOnAppQuit
+[Patch][AGM] dist/updater.js: injected U3 setAutoUpdateChecking (timer entry)
+[Patch][AGM] dist/updater.js: injected U4 checkForUpdates (menu / IPC check entry)
+[Patch][AGM] dist/updater.js: injected U5 quitAndInstall (menu Restart to Update)
+[Patch][AGM] dist/updater.js: injected U6 applyHostUpdate (language server / host bridge entry)
+[Patch][AGM] dist/updater.js: injected U7 headlessQuitAndInstall (headless install path)
+[Patch][AGM] dist/ipcHandlers.js: injected I1 IPC updater:quit-and-install
+[Patch][AGM] dist/ipcHandlers.js: injected I2 IPC updater:apply
+[Patch][AGM] dist/ipcHandlers.js: injected I3 IPC updater:check-for-updates
+[Patch][AGM] dist/languageServer.js: injected R1 module state (_lsProcess declaration)
+[Patch][AGM] dist/languageServer.js: injected R2 LS spawn
+[Patch][AGM] dist/languageServer.js: injected R3 killLanguageServer pre-SIGTERM snapshot (after exit listener)
+[Patch][AGM] dist/languageServer.js: injected R4 killLanguageServer post-exit reap
+[Patch][AGM] app-update.yml: staged to C:\Users\ADMINI~1\AppData\Local\Temp\agm_ul9_f0b0O3\staged.yml (changed=true)
+PASS UL9 --update-yml-out writes updated YAML to staging path without altering active source YAML
+SUMMARY pass=11 fail=0
+EXIT_CODE=0
+=== RUN tests/test_repatch_unit.js ===
+PASS RP6 repatch.ps1 & restore-official.ps1 contain atomic replace + official backup whitelist primitives without Move-Item
+PASS RP6b default official whitelist is clean 5B493943... and does not include prepatched ZH hash 98A4308C...
+PASS RP1 pack failure leaves target app.asar unchanged, exits non-zero, cleans temp dir
+PASS RP2 extract failure leaves target app.asar unchanged, exits non-zero, cleans temp dir
+PASS RP3 0-byte staged archive rejected before replacement
+PASS RP4 staged archive missing dist/updater.js in asar list rejected before replacement
+PASS RP5 valid build creates .bak & .prev_, swaps atomically with verified SHA256, cleans temps
+PASS RP7 stages app.asar.unpacked alongside temp bak copy during extract and cleans staging dirs
+PASS RP8 exclusive lock (FileShare.None) keeps target app.asar present with unchanged SHA256 and exits non-zero
+PASS RP9 read-share lock reaches File.Replace, fails cleanly (exit 10), preserves target app.asar & SHA256
+PASS RP10 locked app.asar.unpacked leaves original unpacked intact and rolls back app.asar automatically
+PASS RP11 repeat repatch preserves official .bak hash & mtime and archives modded target to app.asar.modded_prev_*
+PASS RP12 missing .bak with non-official app.asar refuses to create polluted .bak and exits 4
+PASS RP13 existing polluted .bak triggers ALARM and exit 4 refusal in both repatch.ps1 and restore-official.ps1
+SUMMARY pass=14 fail=0
+EXIT_CODE=0
+=== RUN tests/test_fault_injection.js ===
+PASS FI-S1 R3 recovery state machine, truthful exit-3 states, physical retain guards, .NET SHA256, and zero Move-Item/Get-FileHash tokens present across scripts
+[Patch][AGM] app-update.yml: already locked (no-op, unchanged)
+[Patch][AGM] app-update.yml: staged to C:\Users\ADMINI~1\AppData\Local\Temp\agm_fi_s2_bEodZX\staged.yml (changed=true)
+PASS FI-S2 agm_locks.js performs no-op on conformant YAML and stages updates without mutating active YAML
+PASS FI-R1 post-File.Replace exception automatically rolls back app.asar to original SHA256 and cleans temp
+PASS FI-R2 partial replace failure (IOException + corrupted target) detects mismatch and rolls back from verified backup
+PASS FI-R3 post-replace target lock retains trusted recovery materials and reports UNKNOWN/NEEDS_RECOVERY
+PASS FI-R4 secondary rollback failure retains stage & prev backups and reports FAILED_NEEDS_MANUAL_RECOVERY
+PASS FI-R5 unconfirmed target state after replace error retains prev backup and reports UNKNOWN/NEEDS_RECOVERY
+PASS FI-R6 restore-official.ps1 partial failure rolls back atomically to pre-restore modded SHA256
+PASS FI-R7 restore-official.ps1 post-replace hash mismatch rolls back atomically to pre-restore SHA256
+PASS FI-R8a restore-official.ps1 target locked after replace retains recovery materials and reports UNKNOWN/NEEDS_RECOVERY
+PASS FI-R8b restore-official.ps1 secondary rollback failure retains stage_bak & displaced archive and reports FAILED_NEEDS_MANUAL_RECOVERY
+PASS FI-U1 first unpacked directory move failure preserves original unpacked and rolls back app.asar consistently
+PASS FI-U2 second unpacked move failure prioritizes restoring original unpacked and rolling back app.asar
+PASS FI-U3 unpacked restore failure retains unique old unpacked backup (never deleted by finally) and prints manual recovery instructions
+PASS FI-U4 post-swap unpacked verification failure restores original unpacked and rolls back app.asar consistently
+PASS FI-U5a real FileStream lock on app.asar.unpacked exits 10, keeps original unpacked, and rolls back app.asar
+PASS FI-U5b locked directory during unpacked rollback retains old unpacked backup safely without data loss
+PASS FI-Y1 non-default updaterCacheDirName updates preserving custom keys, repeat run is true no-op, missing YAML supported on first install
+PASS FI-Y2 pack failure leaves active app-update.yml untouched (non-default & missing YAML cases)
+PASS FI-Y3 File.Replace failure under real file lock leaves active app-update.yml and app.asar untouched
+PASS FI-Y4 YAML write failure (clean & partial) rolls back YAML, app.asar, and app.asar.unpacked consistently
+PASS FI-Y5 YAML restore failure retains app-update.yml.orig_bak and reports FAILED_NEEDS_MANUAL_RECOVERY
+PASS FI-Y6 install-or-update.ps1 preserves original/missing YAML on repatch failure and preserves custom conformant YAML on -SkipRepatch
+PASS FI-P1 repatch.ps1 exit 3 after creating trusted .bak truthfully reports backup creation and ABORTED_PROCESS_RUNNING_BACKUP_CREATED
+PASS FI-P2 repatch.ps1 exit 3 with pre-existing trusted .bak reports retained backup and ABORTED_PROCESS_RUNNING
+PASS FI-P3 restore-official.ps1 and install-or-update.ps1 exit 3 report ABORTED_PROCESS_RUNNING and truthful backup state (omitted when absent, retained when present)
+SUMMARY pass=26 fail=0
+EXIT_CODE=0
+=== RUN tests/test_manifest_integrity.js ===
+PASS MF1 manifest.repo.json files[] (61 entries) structure valid, unique, and present on disk
+PASS MF2 raw Git blob bytes (HEAD:<path>) match manifest.repo.json size & SHA256 for all 61 files + plugin entries
+PASS MF3 all manifest Git blobs are pure LF (including app-update.template.yml & rollback.bat)
+PASS MF4 release archive (git archive --format=tar HEAD) bytes match all 61 manifest entries
+PASS MF5 all offline test suites (incl. test_repatch_unit.js, test_fault_injection.js, test_manifest_integrity.js) and WINDOWS_TEST_EVIDENCE.md included in manifest
+SUMMARY pass=5 fail=0
+EXIT_CODE=0
+=== RUN tests/test_i18n_teardown_unit.js ===
+PASS IT1 build.js and hakimi-i18n.js stay in sync and include restoreEnglish + config.enabled logs
+PASS IT2 init with i18n.enabled=true translates fake DOM and logs config.enabled=true
+PASS IT3 teardown invokes restoreEnglish before stop, restores English DOM, and cleans resources
+PASS IT4 hot reload after switching i18n.enabled=false restores English UI and does not restart translation
+PASS IT5 fresh init with i18n.enabled=false skips domAdapter.start() and logs config.enabled=false
+PASS IT6 teardown catches restoreEnglish errors and still stops adapter and destroys UI
+SUMMARY pass=6 fail=0
+EXIT_CODE=0
+=== RUN tests/test_compat_233_unit.js ===
+PASS C233-1 patch.js passes node --check syntax validation
+PASS C233-2 2.32.1 synthetic fixture patches cleanly (exit 0) and passes node --check on all 6 files
+PASS C233-3 2.33.0 synthetic fixture preserves const ipc, hostQuestionBusy, openFromRemote, onBeforeAsk in same whenReady scope before createWindow
+PASS C233-4 2.33.0 synthetic main.js executes whenReady in VM without ReferenceError and registers hakimi:* IPC before createWindow
+PASS C233-5 2.32.1 preload.js places hakimiHost strictly inside local else {} block and leaves if(isRemoteWindow) unchanged
+PASS C233-6 2.33.0 preload.js places hakimiHost inside local else {}, preserves agyComputerPreview, and leaves if(isRemoteWindow) unchanged
+PASS C233-7 2.32.1 synthetic preload VM: exposes hakimiHost (13 methods) when local, blocks hakimiHost when isRemoteWindow=true
+PASS C233-8 2.33.0 synthetic preload VM: exposes hakimiHost + agyComputerPreview when local, blocks both when isRemoteWindow=true
+PASS C233-9 idempotency: Hakimi-layer rerun exits 0 byte-identical and full-patched rerun fails cleanly (exit 2) without writing
+PASS C233-10 negative H_MAIN_4 mutation exits non-zero (2), names H_MAIN_4, and writes nothing to disk
+PASS C233-11 negative H_MAIN_4 rejects cross-statement partial syntax (exit 2) without writing
+PASS C233-12 negative H_PRELOAD_1 missing createLocalSshRemoteAPI exits non-zero (2), names H_PRELOAD_1, and writes nothing
+PASS C233-13 negative H_PRELOAD_1 rejects ambiguous duplicate match (matched 2 times) without writing
+PASS C233-14 repatch.ps1 & restore-official.ps1 whitelists contain 2.32.1 & 2.33.0 hashes, CI & manifest include test_compat_233_unit.js
+PASS C233-15 Windows synthetic 2.33.0 repatch.ps1 succeeds twice (preserving .bak and const ipc) and rejects unknown hashes (exit 4)
+SUMMARY pass=15 fail=0 skip=0
+EXIT_CODE=0
+=== RUN tests/test_compat_versions_unit.js ===
+PASS META-1 manifest platform declares schemaVersion=1, string legacy appVersion=2.32.1, and exactly [2.32.1, 2.33.0] with no range syntax
+PASS META-2 new version-declaration test is wired into the two-OS CI matrix and registered in manifest.repo.json
+PASS V1 2.32.1 is allowed when the array is present
+PASS V2 2.33.0 is allowed when the array is present
+PASS V3 2.32.2 is rejected (not an exact validated version)
+PASS V4 2.33.1 is rejected (not an exact validated version)
+PASS V5 an unknown version (2.34.0) is rejected
+PASS V6 when the array is absent, the legacy field is used (exact 2.32.1 and historical 2.32.x both allow 2.32.1, reject 2.33.0)
+PASS V7 an empty array is not treated as allow-all (2.32.1 and 2.33.0 are both rejected, no legacy fallback)
+PASS V8 an array type error (string instead of array, or a non-string entry) is explicitly rejected with a reason
+PASS V9 when both fields exist the array wins: 2.33.0 is rejected even though the legacy field names it, 2.32.1 is allowed
+PASS V10 an old consumer can JSON.parse the new manifest and read the legacy field without exception (2.32.1 allowed, 2.33.0 rejected)
+PASS V11 v2.33.0 is rejected (no v-prefix normalization)
+PASS V12 leading/trailing whitespace around 2.33.0 is rejected (no trim normalization)
+PASS V13 2.33.0 with a build-number suffix is rejected (no build-suffix normalization)
+SUMMARY pass=15 fail=0 skip=0
+EXIT_CODE=0
+=== RUN tests/test_ipc_sec_unit.js ===
+PASS SEC-01 合法本地主 Frame 允许（真实授权函数）
+PASS SEC-02 远程 WebContents 调用被拒绝
+PASS SEC-03 远程页面直接调用 hakimi:* 通道被拒绝
+PASS SEC-04 未登记的未知 WebContents 被拒绝
+PASS SEC-04b 远程 SSH 后端标记的窗口不登记（--agy-backend=ssh）
+PASS SEC-05 合法窗口中的非可信子 Frame 被拒绝
+PASS SEC-06 senderFrame 为 null/缺失时拒绝
+PASS SEC-07 sender 已销毁时拒绝
+PASS SEC-08 主帧跨文档导航后旧授权失效
+PASS SEC-08b 同文档导航不撤销授权（避免误伤 SPA）
+PASS SEC-08c 初始加载即重定向到远程源时撤销授权
+PASS SEC-09 窗口关闭后旧授权失效
+PASS SEC-10 伪造 renderer 参数（窗口 ID / URL / local 标记）不能获授权
+PASS SEC-12a 13 通道未授权调用 handler 执行次数为 0
+PASS SEC-18 合法与非法调用交替时授权状态不串扰
+PASS SEC-LOG-1 拒绝错误信息与日志不含路径、用户名、Token、Cookie
+PASS SEC-11 真实枚举注册结果：13 个 hakimi:* 通道全部经过门禁
+PASS SEC-12b 未授权调用无文件/进程/其他特权副作用（13 通道，spy 计数为 0、临时目录零写入）
+PASS SEC-13 合法调用保持原参数与原返回行为
+PASS SEC-14 重复注册与重复补丁幂等（单 handler、单门禁、二次补丁零差异）
+PASS SEC-15 未知锚点或授权插入失败时补丁失败退出且零写盘
+PASS SEC-16 2.32.1 与 2.33.0 合成夹具均通过授权门禁与语法检查
+PASS SEC-17 preload 远程分支不暴露本地特权桥接（hakimiHost 仅本地）
+PASS SEC-00 2.33.0 合成夹具补丁成功（前置条件）
+PASS SEC-00b spy 合成夹具补丁成功（前置条件）
+PASS SEC-19 A01 实测 Electron 44 场景：additionalArguments 仅在 options 且 getLastWebPreferences 返回 undefined/无该字段时必须拒绝并拦截 13 通道
+PASS SEC-20 所有判定来源缺失或不确定时默认拒绝（fail-closed）
+PASS SEC-21 任意判定来源抛异常或返回不确定值时必须 fail-closed 拒绝
+PASS SEC-22 接入官方 remoteWindowSecurity + windowBackends 后：Electron 44 本地合法放行、远程拦截、动态登记即撤销、运行期异常 fail-closed
+PASS SEC-23 2.32.1 与 2.33.0 补丁后 main.js VM 端到端验证：本地放行、SSH 构造窗口 13 通道全拒且零副作用
+SUMMARY pass=30 fail=0 skip=0
+EXIT_CODE=0
+=== ALL 10 TEST SUITES PASSED (EXIT=0) ===

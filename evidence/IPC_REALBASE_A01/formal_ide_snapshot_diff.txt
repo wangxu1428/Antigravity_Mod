@@ -1,0 +1,46 @@
+=== Formal IDE Snapshot Comparison (Before vs After) ===
+Before: 2026-11-19T23:49:20.5539577+08:00
+After : 2026-11-20T00:07:26.0291342+08:00
+
+--- 1. D:\AI_Studio\Apps\Antigravity Key Files ---
+  [UNCHANGED] Antigravity.exe | SHA256=AEAF47C28AC1B7406F27AE610DDED0E4C8E2F972F553D8840CDEE7DB767BF1E8 | mtime=2026-11-13T22:20:30.0000000Z
+  [UNCHANGED] version | SHA256=092757B5CE6C0196120820F0661C92F660748495FAEEF3F43049C33EA65FAB4C | mtime=2026-11-13T22:20:30.0000000Z
+  [UNCHANGED] resources\app.asar | SHA256=98A4308C8820A4A73F157B036FCCAA37F642B4C6F916BFA855F44A34A14F5C46 | mtime=2026-11-15T20:01:07.3504210Z
+  [UNCHANGED] resources\app.asar.bak | SHA256=5B493943E67E500638555315594D5B1ACBC7A02E6DAC3C786651921C1EE8519F | mtime=2026-11-13T22:20:30.0000000Z
+  [UNCHANGED] resources\app-update.yml | SHA256=7F3B079E89C70A097B209348EA1133A4B28401D72BB83CEAE42105DF7B3B8EA1 | mtime=2026-11-18T15:39:07.9699117Z
+  [UNCHANGED] resources\app-update.yml.bak_20261118_233907 | SHA256=7F5E7ECAE74C2A2483979D085B39F59DF66A908988D46D73DEA8EEFC038DE2BA | mtime=2026-11-13T22:20:30.0000000Z
+  [UNCHANGED] resources\bin\language_server.exe | SHA256=33BEEF9814027CD5ED2ECBBCD0126645252C4B2516C0296E15091CA7E113B76F | mtime=2026-11-15T19:30:53.9147472Z
+  [UNCHANGED] resources\bin\webm_encoder.exe | SHA256=0D38F4C9FE6B64D93282914D4148690D0D495472FD20FA6AE7E4B481BEB42E60 | mtime=2026-11-13T22:20:30.0000000Z
+
+--- 2. Formal Antigravity Processes (D:\AI_Studio\Apps\Antigravity\) ---
+Before PID count: 13 (14512, 16720, 16768, 17140, 17256, 17288, 17368, 19404, 19420, 19428, 19444, 19496, 23656)
+After  PID count: 13 (14512, 16720, 16768, 17140, 17256, 17288, 17368, 19404, 19420, 19428, 19444, 19496, 23656)
+Missing initial PIDs: NONE (all survived)
+New formal PIDs     : NONE
+
+--- 3. %USERPROFILE%\.gemini\ Metadata Diff (Read-only metadata check) ---
+Before items: 630 | After items: 628
+Added   : 0
+Removed : 2
+  - antigravity\conversation_summaries.db-shm
+  - antigravity\conversation_summaries.db-wal
+Modified: 17
+  ~ antigravity (2026-11-19T15:49:18.4753590Z -> 2026-11-19T16:06:45.4807460Z)
+  ~ antigravity\agyhub_summaries_proto.pb (2026-11-19T15:49:18.4753590Z -> 2026-11-19T16:06:15.4758297Z)
+  ~ antigravity\annotations (2026-11-19T15:18:57.7804238Z -> 2026-11-19T16:01:03.9452328Z)
+  ~ antigravity\conversations\adc1203d-4f79-49da-a795-28107c06bd51.db (2026-11-19T15:49:19.5215721Z -> 2026-11-19T16:06:14.4603909Z)
+  ~ antigravity-cli\conversation_summaries.db (2026-11-19T15:40:06.6767442Z -> 2026-11-19T16:05:00.6790024Z)
+  ~ antigravity\conversations (2026-11-19T15:48:37.1344213Z -> 2026-11-19T16:01:48.6982778Z)
+  ~ antigravity-cli\conversation_summaries.db-shm (2026-11-19T15:48:52.6757470Z -> 2026-11-19T16:05:45.6772611Z)
+  ~ antigravity-cli\bin\agentapi.bat (2026-11-19T15:49:19.5048131Z -> 2026-11-19T16:07:22.7307766Z)
+  ~ antigravity\annotations\5971dc03-85ae-477b-82f8-405321be6f1e.pbtxt (2026-11-19T15:18:57.7804238Z -> 2026-11-19T16:01:03.9441287Z)
+  ~ antigravity\conversations\adc1203d-4f79-49da-a795-28107c06bd51.db-shm (2026-11-19T15:48:37.1344213Z -> 2026-11-19T15:57:22.9941560Z)
+  ~ antigravity\conversation_summaries.db (2026-11-19T15:48:07.4778365Z -> 2026-11-19T16:06:45.4787526Z)
+  ~ antigravity-cli\jetbox_summaries_proto.pb (2026-11-19T15:49:09.6746347Z -> 2026-11-19T16:07:04.6746660Z)
+  ~ antigravity-cli (2026-11-19T15:49:09.6746347Z -> 2026-11-19T16:07:04.6746660Z)
+  ~ antigravity\conversations\adc1203d-4f79-49da-a795-28107c06bd51.db-wal (2026-11-19T15:49:19.5225700Z -> 2026-11-19T16:06:14.4623842Z)
+  ~ antigravity\antigravity_state.pbtxt (2026-11-19T15:02:39.9487051Z -> 2026-11-19T15:56:56.4378895Z)
+  ~ antigravity\plugin_data\gdrive (2026-11-19T14:30:28.6057659Z -> 2026-11-19T15:53:45.5727277Z)
+  ~ antigravity-cli\conversation_summaries.db-wal (2026-11-19T15:48:52.6767437Z -> 2026-11-19T16:05:45.6772611Z)
+
+--- Summary: KeyFileChanges=0, MissingFormalPids=0 ---

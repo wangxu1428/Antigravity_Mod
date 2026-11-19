@@ -1,0 +1,17 @@
+923110e60cdb928b41a28ad2994f71bbed4bf730	HEAD
+29600a9a8b1b40051ea988c97e81871f423dbcb6	refs/heads/dev/compat-233-stage-b
+6c2ad61bee3fb2bbfd3213610c0fcc89458dbd35	refs/heads/dev/hardening-followup-01
+46531b14dc854c9b816bd16d1c116aa0cecdcccf	refs/heads/dev/release-hardening-01
+923110e60cdb928b41a28ad2994f71bbed4bf730	refs/heads/main
+a95100bcf6fee9ee3f31ab568d040c99b0e1b587	refs/pull/1/head
+29600a9a8b1b40051ea988c97e81871f423dbcb6	refs/pull/10/head
+aa83636d6cb11eb1faac6656d3004b6e46c2f3b6	refs/pull/10/merge
+b2eb54e3fe6e28fbb47a6da615380e3a51efc96d	refs/pull/2/head
+504038759d7a91af6dc0bd658add8c7fc525878c	refs/pull/3/head
+39a37a55652e396bf98666250aa77c7b211504d7	refs/pull/4/head
+c34c29fc294401f21cfec847755ce2fa69ff2395	refs/pull/5/head
+db2ccd26bfead3a6c83e48b99130966e3547da7b	refs/pull/6/head
+0f611ce34826b7f74cb174ae7c951e030b62a21d	refs/pull/7/head
+46531b14dc854c9b816bd16d1c116aa0cecdcccf	refs/pull/8/head
+6c2ad61bee3fb2bbfd3213610c0fcc89458dbd35	refs/pull/9/head
+d9dad3f03a3abd53a3888cbf0dd52bbb798f082e	refs/tags/platform-v2.1.0

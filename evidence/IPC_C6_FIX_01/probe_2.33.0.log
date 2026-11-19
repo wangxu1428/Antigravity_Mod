@@ -1,0 +1,792 @@
+=== 2.33.0 IPC Security Probe Run 3 log ===
+RootPID=25228 | ElapsedSec=12.16 | TimedOut=False
+--- electron.log (43 lines) ---
+[25228:1120/005243.176:WARNING:electron\shell\browser\ui\win\notify_icon.cc:60] Unable to create status tray icon.
+[25228:1120/005243.182:WARNING:electron\shell\browser\ui\win\notify_icon.cc:139] Error setting status tray icon image
+[25228:1120/005243.183:WARNING:electron\shell\browser\ui\win\notify_icon.cc:167] Unable to set tooltip for status tray icon
+[25228:1120/005243.900:INFO:CONSOLE:911] "[HakimiPluginHost] Found plugins: agm-plugin-host.js,ai-sidedock.js,hakimi-i18n.js", source: C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\preload.js (911)
+[25228:1120/005243.901:INFO:CONSOLE:957] "[HakimiPluginHost] Injecting plugin: agm-plugin-host.js", source: C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\preload.js (957)
+[25228:1120/005243.905:INFO:CONSOLE:957] "[HakimiPluginHost] Injecting plugin: ai-sidedock.js", source: C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\preload.js (957)
+[25228:1120/005243.906:INFO:CONSOLE:23620] "[SideDock] Initializing Hakimi Side-Dock Plugin...", source: https://127.0.0.1:63644/main.js (23620)
+[25228:1120/005243.907:INFO:CONSOLE:23620] "[HakimiPluginHost] Registered plugin: ai-sidedock", source: https://127.0.0.1:63644/main.js (23620)
+[25228:1120/005243.939:INFO:CONSOLE:957] "[HakimiPluginHost] Injecting plugin: hakimi-i18n.js", source: C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\preload.js (957)
+[25228:1120/005243.954:INFO:CONSOLE:23620] "[Hakimi i18n] Loading Hakimi i18n v1.1...", source: https://127.0.0.1:63644/main.js (23620)
+[25228:1120/005243.956:INFO:CONSOLE:23620] "[HakimiPluginHost] Registered plugin: hakimi-i18n", source: https://127.0.0.1:63644/main.js (23620)
+[25228:1120/005243.956:INFO:CONSOLE:23620] "[Hakimi i18n] Initializing engine with host config...", source: https://127.0.0.1:63644/main.js (23620)
+[25228:1120/005244.001:INFO:CONSOLE:23620] "[Hakimi i18n] config.enabled=true language=zh-CN", source: https://127.0.0.1:63644/main.js (23620)
+[25228:1120/005244.003:INFO:CONSOLE:23620] "[Hakimi i18n] Plugin initialized successfully! Ready for duty 🐾", source: https://127.0.0.1:63644/main.js (23620)
+[25228:1120/005245.637:INFO:CONSOLE:23620] "[auth-login-ui] auth_startup_result outcome=signed_in has_token=yes attempts=1 last_error_code=none durationMs=626", source: https://127.0.0.1:63644/main.js (23620)
+[25228:1120/005248.222:INFO:CONSOLE:911] "[HakimiPluginHost] Found plugins: agm-plugin-host.js,ai-sidedock.js,hakimi-i18n.js", source: C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\preload.js (911)
+[25228:1120/005248.223:INFO:CONSOLE:957] "[HakimiPluginHost] Injecting plugin: agm-plugin-host.js", source: C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\preload.js (957)
+[25228:1120/005248.229:INFO:CONSOLE:957] "[HakimiPluginHost] Injecting plugin: ai-sidedock.js", source: C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\preload.js (957)
+[25228:1120/005248.230:INFO:CONSOLE:9] "[SideDock] Initializing Hakimi Side-Dock Plugin...", source:  (9)
+[25228:1120/005248.230:INFO:CONSOLE:3424] "[HakimiPluginHost] Registered plugin: ai-sidedock", source:  (3424)
+[25228:1120/005248.252:INFO:CONSOLE:957] "[HakimiPluginHost] Injecting plugin: hakimi-i18n.js", source: C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\preload.js (957)
+[25228:1120/005248.286:INFO:CONSOLE:10] "[Hakimi i18n] Loading Hakimi i18n v1.1...", source:  (10)
+[25228:1120/005248.289:INFO:CONSOLE:3424] "[HakimiPluginHost] Registered plugin: hakimi-i18n", source:  (3424)
+[25228:1120/005248.290:INFO:CONSOLE:3345] "[Hakimi i18n] Initializing engine with host config...", source:  (3345)
+[25228:1120/005248.348:INFO:CONSOLE:3371] "[Hakimi i18n] config.enabled=true language=zh-CN", source:  (3371)
+[25228:1120/005248.384:INFO:CONSOLE:3507] "[Hakimi i18n] Plugin initialized successfully! Ready for duty 🐾", source:  (3507)
+[25228:1120/005248.663:INFO:CONSOLE:911] "[HakimiPluginHost] Found plugins: agm-plugin-host.js,ai-sidedock.js,hakimi-i18n.js", source: C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\preload.js (911)
+[25228:1120/005248.666:INFO:CONSOLE:957] "[HakimiPluginHost] Injecting plugin: agm-plugin-host.js", source: C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\preload.js (957)
+[25228:1120/005248.670:INFO:CONSOLE:957] "[HakimiPluginHost] Injecting plugin: ai-sidedock.js", source: C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\preload.js (957)
+[25228:1120/005248.670:INFO:CONSOLE:9] "[SideDock] Initializing Hakimi Side-Dock Plugin...", source:  (9)
+[25228:1120/005248.670:INFO:CONSOLE:3424] "[HakimiPluginHost] Registered plugin: ai-sidedock", source:  (3424)
+[25228:1120/005248.672:INFO:CONSOLE:0] "Uncaught (in promise) Error: Error invoking remote method 'hakimi:list-packages': Error: unauthorized", source: http://127.0.0.1:63670/nav-page1.html#same-doc (0)
+[25228:1120/005248.672:INFO:CONSOLE:534] "[AGMPluginHost] writeState log failed: Error: Error invoking remote method 'hakimi:write-state': Error: unauthorized", source:  (534)
+[25228:1120/005248.672:INFO:CONSOLE:963] "[HakimiPluginHost] Failed to load plugin hakimi-i18n.js Error: Error invoking remote method 'hakimi:read-plugin': Error: unauthorized", source: C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\preload.js (963)
+[25228:1120/005248.681:INFO:CONSOLE:968] "[HakimiPluginHost] Error in initHakimiHost: Error: Error invoking remote method 'hakimi:read-config': Error: unauthorized", source: C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\preload.js (968)
+[25228:1120/005248.802:INFO:CONSOLE:911] "[HakimiPluginHost] Found plugins: agm-plugin-host.js,ai-sidedock.js,hakimi-i18n.js", source: C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\preload.js (911)
+[25228:1120/005248.802:INFO:CONSOLE:963] "[HakimiPluginHost] Failed to load plugin agm-plugin-host.js Error: Error invoking remote method 'hakimi:read-plugin': Error: unauthorized", source: C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\preload.js (963)
+[25228:1120/005248.803:INFO:CONSOLE:963] "[HakimiPluginHost] Failed to load plugin ai-sidedock.js Error: Error invoking remote method 'hakimi:read-plugin': Error: unauthorized", source: C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\preload.js (963)
+[25228:1120/005248.804:INFO:CONSOLE:963] "[HakimiPluginHost] Failed to load plugin hakimi-i18n.js Error: Error invoking remote method 'hakimi:read-plugin': Error: unauthorized", source: C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\preload.js (963)
+[25228:1120/005248.811:INFO:CONSOLE:968] "[HakimiPluginHost] Error in initHakimiHost: Error: Error invoking remote method 'hakimi:read-config': Error: unauthorized", source: C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\preload.js (968)
+[25228:1120/005248.929:INFO:CONSOLE:968] "[HakimiPluginHost] Error in initHakimiHost: Error: Error invoking remote method 'hakimi:read-config': Error: unauthorized", source: C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\preload.js (968)
+[25228:1120/005249.041:INFO:CONSOLE:968] "[HakimiPluginHost] Error in initHakimiHost: Error: Error invoking remote method 'hakimi:read-config': Error: unauthorized", source: C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\preload.js (968)
+[25228:1120/005249.636:INFO:CONSOLE:968] "[HakimiPluginHost] Error in initHakimiHost: Error: Error invoking remote method 'hakimi:list-plugins': Error: unauthorized", source: C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\preload.js (968)
+--- main/app logs (745 lines) ---
+=== crash_6412_376777ef-4c93-4a07-b76f-d95ff9eca0ce.log (crashes) ===
+=== sidecar.log (logs) ===
+=== sidecar "swarm/swarm_board" started at 2026-11-20T00:52:45+08:00 ===
+[swarm_board] app data dirs: C:\AGM_TestLab\IPC_SEC_A02\run\2.33.0\probe\env\UserProfile\.gemini\antigravity
+[sidecar] listening on 127.0.0.1:63677
+=== 000003.log (leveldb) ===
+��5           VERSION1
+=== language_server.log (logs) ===
+ERROR: logging before google.Init: I1120 00:52:43.114504       1 server.go:2552] Starting language server process with pid 6412
+ERROR: logging before google.Init: I1120 00:52:43.123302       1 workflow_python.go:21] run_workflow Python: interpreter "", embedded true
+ERROR: logging before google.Init: I1120 00:52:43.123302       1 server.go:1156] Setting GOMAXPROCS to 4
+ERROR: logging before google.Init: I1120 00:52:43.123823       1 server.go:2611] Language server version: 2.33.0
+ERROR: logging before google.Init: I1120 00:52:43.123823       1 server.go:1269] Language server will attempt to listen on host localhost
+ERROR: logging before google.Init: I1120 00:52:43.128974       1 server.go:1284] Language server listening on random port at 63644 for HTTPS (gRPC)
+ERROR: logging before google.Init: I1120 00:52:43.128974       1 server.go:1292] Language server listening on random port at 63645 for HTTP
+ERROR: logging before google.Init: I1120 00:52:43.129997       1 auth_provider.go:1173] [AuthProvider] SetWIFProvider called with wifProvider: ""
+ERROR: logging before google.Init: I1120 00:52:43.129997       1 auth_provider.go:1209] [AuthProvider] SetEnableBusinessLogin called with enable: true
+ERROR: logging before google.Init: I1120 00:52:43.129997       1 auth_provider.go:1117] [AuthProvider] SetProjectID called with projectID: ""
+ERROR: logging before google.Init: I1120 00:52:43.129997       1 auth_provider.go:1125] [AuthProvider] SetLocation called with location: ""
+ERROR: logging before google.Init: I1120 00:52:43.130499       1 auth_provider.go:1133] [AuthProvider] SetUserTier called with userTier: "", tierDisplayName: ""
+ERROR: logging before google.Init: I1120 00:52:43.139471     112 store_client.go:714] summary store: starting background reconciliation (trigger=empty_on_open)
+ERROR: logging before google.Init: I1120 00:52:43.139471     112 store_client.go:743] summary store: reconcile func returned 0 records, skipping
+ERROR: logging before google.Init: I1120 00:52:43.142461       1 server.go:3034] Generated and saved persistent installation UUID: cc673a57-3a9a-4eeb-8c86-0f6fab33cfed
+ERROR: logging before google.Init: I1120 00:52:43.144454       1 remote_control_naming.go:130] Generated and saved default remote control hostname: desktop-7rtp0qj-solar-plume
+ERROR: logging before google.Init: W1120 00:52:43.145451       1 defaults.go:717] failed to get cs path: cs path /usr/bin/cs invalid
+ERROR: logging before google.Init: I1120 00:52:43.146448       1 manager.go:140] Creating trajectory store manager with proto store and SQLite store
+ERROR: logging before google.Init: I1120 00:52:43.147445     148 migrate.go:49] Migration marker C:\AGM_TestLab\IPC_SEC_A02\run\2.33.0\probe\env\UserProfile\.gemini\config\.migrated does not exist. Attempting migration from AppDataDir C:\AGM_TestLab\IPC_SEC_A02\run\2.33.0\probe\env\UserProfile\.gemini\antigravity.
+ERROR: logging before google.Init: I1120 00:52:43.147445     148 migrate.go:157] Migration complete, marked with C:\AGM_TestLab\IPC_SEC_A02\run\2.33.0\probe\env\UserProfile\.gemini\config\.migrated
+ERROR: logging before google.Init: I1120 00:52:43.210235       1 sidecar_sdk.go:29] Using bundled agy-node
+ERROR: logging before google.Init: I1120 00:52:43.211231     166 manager.go:98] Migration [MIGRATION_ID_SANITY_CHECK_PROJECT_URIS] is enabled
+ERROR: logging before google.Init: I1120 00:52:43.211231     166 manager.go:113] Migration [MIGRATION_ID_SANITY_CHECK_PROJECT_URIS] starting
+ERROR: logging before google.Init: I1120 00:52:43.214221     166 project_uris_migration.go:42] Starting ProjectUrisMigration
+ERROR: logging before google.Init: I1120 00:52:43.215218     166 manager.go:133] Migration [MIGRATION_ID_SANITY_CHECK_PROJECT_URIS] completed successfully in 562.7µs
+ERROR: logging before google.Init: I1120 00:52:43.216215     166 manager.go:98] Migration [MIGRATION_ID_PLUGIN_ENABLEMENT] is enabled
+ERROR: logging before google.Init: I1120 00:52:43.217212     166 manager.go:113] Migration [MIGRATION_ID_PLUGIN_ENABLEMENT] starting
+ERROR: logging before google.Init: I1120 00:52:43.221198     166 plugin_enablement_migration.go:64] Seeded plugin enablement for 1 plugin(s) into config.json
+ERROR: logging before google.Init: I1120 00:52:43.221198     166 manager.go:133] Migration [MIGRATION_ID_PLUGIN_ENABLEMENT] completed successfully in 2.9664ms
+ERROR: logging before google.Init: I1120 00:52:43.222194     166 manager.go:98] Migration [MIGRATION_ID_BUILTIN_SIDECARS_TO_PLUGINS] is enabled
+ERROR: logging before google.Init: I1120 00:52:43.222194     166 manager.go:113] Migration [MIGRATION_ID_BUILTIN_SIDECARS_TO_PLUGINS] starting
+ERROR: logging before google.Init: I1120 00:52:43.224188     166 manager.go:133] Migration [MIGRATION_ID_BUILTIN_SIDECARS_TO_PLUGINS] completed successfully in 720.5µs
+ERROR: logging before google.Init: I1120 00:52:43.227926     166 manager.go:95] Migration [MIGRATION_ID_LIN_BUILTIN_TO_MARKETPLACE] is disabled, skipping entirely
+ERROR: logging before google.Init: I1120 00:52:43.249747       1 server.go:2165] Serving UI bundle from embedded assets
+ERROR: logging before google.Init: I1120 00:52:43.250258     250 server.go:4695] Auth succeeded, refreshing features and managers
+ERROR: logging before google.Init: I1120 00:52:43.251798       1 server.go:4226] Wrote hub discovery file: C:\AGM_TestLab\IPC_SEC_A02\run\2.33.0\probe\env\UserProfile\.gemini\antigravity\daemon\hub_63645.json
+ERROR: logging before google.Init: I1120 00:52:43.251798       1 server.go:3951] initialized server successfully in 130.1229ms
+ERROR: logging before google.Init: I1120 00:52:43.950148      98 auth_provider.go:1117] [AuthProvider] SetProjectID called with projectID: ""
+ERROR: logging before google.Init: I1120 00:52:43.950655      98 auth_provider.go:1125] [AuthProvider] SetLocation called with location: ""
+ERROR: logging before google.Init: I1120 00:52:43.950655      98 auth_provider.go:1133] [AuthProvider] SetUserTier called with userTier: "", tierDisplayName: ""
+ERROR: logging before google.Init: I1120 00:52:44.180165     114 http_helpers.go:709] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:loadCodeAssist Trace: 0xc7daa0a5a5cbf990
+ERROR: logging before google.Init: I1120 00:52:44.819581      98 http_helpers.go:709] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:loadCodeAssist Trace: 0x31122c09bbc96340
+ERROR: logging before google.Init: I1120 00:52:44.932001     104 http_helpers.go:709] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:fetchAvailableModels Trace: 0x6e0dea3d10d7a5e9
+ERROR: logging before google.Init: I1120 00:52:44.999775     104 http_helpers.go:108] UseAICodeMendel routing switch changed: false -> true
+ERROR: logging before google.Init: I1120 00:52:44.999775     250 server.go:4714] State refresh took 1749ms
+ERROR: logging before google.Init: I1120 00:52:45.000772     250 server.go:4729] [RemoteControl] Subscription callback triggered.
+ERROR: logging before google.Init: I1120 00:52:44.999775     166 manager.go:98] Migration [MIGRATION_ID_ADOPT_BWG_INSTALLS] is enabled
+ERROR: logging before google.Init: I1120 00:52:45.011735     250 server.go:4732] [RemoteControl] RemoteControlEnabled value: false
+ERROR: logging before google.Init: I1120 00:52:45.012731     166 manager.go:113] Migration [MIGRATION_ID_ADOPT_BWG_INSTALLS] starting
+ERROR: logging before google.Init: I1120 00:52:45.012731     250 auth_status_telemetry.go:58] [auth-status] rpc=has_auth_token has_token=true
+ERROR: logging before google.Init: I1120 00:52:45.012731     250 server.go:5878] [RemoteControl] Staying disconnected: Remote Control user setting is off
+ERROR: logging before google.Init: I1120 00:52:45.012731     250 server.go:5513] [RemoteControl] Resolved proxyServerURL: ""
+ERROR: logging before google.Init: I1120 00:52:45.012731     250 server.go:4758] Retroactive projects migration enabled: true
+ERROR: logging before google.Init: I1120 00:52:45.013728     631 server.go:4729] [RemoteControl] Subscription callback triggered.
+ERROR: logging before google.Init: I1120 00:52:45.013728     631 server.go:4732] [RemoteControl] RemoteControlEnabled value: false
+ERROR: logging before google.Init: I1120 00:52:45.013728     166 manager.go:133] Migration [MIGRATION_ID_ADOPT_BWG_INSTALLS] completed successfully in 107.7µs
+ERROR: logging before google.Init: I1120 00:52:45.013728     631 server.go:5878] [RemoteControl] Staying disconnected: Remote Control user setting is off
+ERROR: logging before google.Init: I1120 00:52:45.013728     631 server.go:5513] [RemoteControl] Resolved proxyServerURL: ""
+ERROR: logging before google.Init: I1120 00:52:45.015722     631 server.go:4729] [RemoteControl] Subscription callback triggered.
+ERROR: logging before google.Init: I1120 00:52:45.015722     631 server.go:4732] [RemoteControl] RemoteControlEnabled value: false
+ERROR: logging before google.Init: I1120 00:52:45.015722     166 manager.go:95] Migration [MIGRATION_ID_GDRIVE_BUILTIN_PLUGIN] is disabled, skipping entirely
+ERROR: logging before google.Init: I1120 00:52:45.016718     631 server.go:5878] [RemoteControl] Staying disconnected: Remote Control user setting is off
+ERROR: logging before google.Init: I1120 00:52:45.016718     631 server.go:5513] [RemoteControl] Resolved proxyServerURL: ""
+ERROR: logging before google.Init: I1120 00:52:45.016718     166 manager.go:95] Migration [MIGRATION_ID_SPLIT_SCIENCE_PLUGIN] is disabled, skipping entirely
+ERROR: logging before google.Init: I1120 00:52:45.017715     166 manager.go:95] Migration [MIGRATION_ID_PERMISSION_GRANTS_V2] is disabled, skipping entirely
+ERROR: logging before google.Init: I1120 00:52:45.260152     854 actuator.go:263] Browser actuator #1 (actuator_type="browser", profile="hub", actuator_id="a2813cae-3f8c-4239-ab08-fc97affc8a06", client="hub-renderer" "agent_ui_toolkit", supports_isolated_world=true, supports_scripts=true, url_policy_enforcement=URL_POLICY_ENFORCEMENT_NONE, conversations=[]) connected
+ERROR: logging before google.Init: I1120 00:52:45.346614      98 http_helpers.go:709] URL: https://daily-cloudcode-pa.googleapis.com/v1internal:loadCodeAssist Trace: 0xcb9ca70025d6db8
+ERROR: logging before google.Init: I1120 00:52:45.597745     250 retroactive_migration.go:133] [Retroactive Migration] Initial projects migration is not completed yet (status: MIGRATION_STATUS_UNSPECIFIED). Marking retroactive projects migration as COMPLETED_UNNECESSARY and skipping.
+ERROR: logging before google.Init: I1120 00:52:45.601732     631 server.go:4729] [RemoteControl] Subscription callback triggered.
+ERROR: logging before google.Init: I1120 00:52:45.603726     631 server.go:4732] [RemoteControl] RemoteControlEnabled value: false
+ERROR: logging before google.Init: I1120 00:52:45.602729     250 projects_migration.go:597] No conversations found, marking projects migration as complete
+ERROR: logging before google.Init: I1120 00:52:45.604722     631 server.go:5878] [RemoteControl] Staying disconnected: Remote Control user setting is off
+ERROR: logging before google.Init: I1120 00:52:45.610702     631 server.go:5513] [RemoteControl] Resolved proxyServerURL: ""
+ERROR: logging before google.Init: I1120 00:52:45.611699     631 server.go:4729] [RemoteControl] Subscription callback triggered.
+ERROR: logging before google.Init: I1120 00:52:45.611699     631 server.go:4732] [RemoteControl] RemoteControlEnabled value: false
+ERROR: logging before google.Init: I1120 00:52:45.611699     250 profiler.go:231] Continuous pprof profiling is disabled.
+ERROR: logging before google.Init: I1120 00:52:45.611699    1030 gateway.go:200] Sidecar swarm/swarm_board gateway listening on 127.0.0.1:63679, proxying to loopback port 63677
+ERROR: logging before google.Init: I1120 00:52:45.611699     913 reconcile_summaries.go:94] [Summaries] reconcile checked 0 conversations, restored 0, cached 0, skipped 0, dropped 0, cancelled false in 0ms (resident: 0 -> 0)
+ERROR: logging before google.Init: I1120 00:52:45.611699     631 server.go:5878] [RemoteControl] Staying disconnected: Remote Control user setting is off
+ERROR: logging before google.Init: I1120 00:52:45.612695     631 server.go:5513] [RemoteControl] Resolved proxyServerURL: ""
+ERROR: logging before google.Init: I1120 00:52:45.612695     631 server.go:4729] [RemoteControl] Subscription callback triggered.
+ERROR: logging before google.Init: I1120 00:52:45.613692     631 server.go:4732] [RemoteControl] RemoteControlEnabled value: false
+ERROR: logging before google.Init: I1120 00:52:45.612695    1067 manager.go:98] Migration [MIGRATION_ID_SANITY_CHECK_PROJECT_URIS] is enabled
+ERROR: logging before google.Init: I1120 00:52:45.613692    1067 manager.go:107] Migration [MIGRATION_ID_SANITY_CHECK_PROJECT_URIS] already has status MIGRATION_STATUS_COMPLETED, skipping
+ERROR: logging before google.Init: I1120 00:52:45.613692    1067 manager.go:98] Migration [MIGRATION_ID_PLUGIN_ENABLEMENT] is enabled
+ERROR: logging before google.Init: I1120 00:52:45.613692     631 server.go:5878] [RemoteControl] Staying disconnected: Remote Control user setting is off
+ERROR: logging before google.Init: I1120 00:52:45.613692     631 server.go:5513] [RemoteControl] Resolved proxyServerURL: ""
+ERROR: logging before google.Init: I1120 00:52:45.613692    1067 manager.go:107] Migration [MIGRATION_ID_PLUGIN_ENABLEMENT] already has status MIGRATION_STATUS_COMPLETED, skipping
+ERROR: logging before google.Init: I1120 00:52:45.613692    1067 manager.go:98] Migration [MIGRATION_ID_BUILTIN_SIDECARS_TO_PLUGINS] is enabled
+ERROR: logging before google.Init: I1120 00:52:45.613692    1067 manager.go:107] Migration [MIGRATION_ID_BUILTIN_SIDECARS_TO_PLUGINS] already has status MIGRATION_STATUS_COMPLETED, skipping
+ERROR: logging before google.Init: I1120 00:52:45.613692    1067 manager.go:95] Migration [MIGRATION_ID_LIN_BUILTIN_TO_MARKETPLACE] is disabled, skipping entirely
+ERROR: logging before google.Init: I1120 00:52:45.613692    1067 manager.go:98] Migration [MIGRATION_ID_ADOPT_BWG_INSTALLS] is enabled
+ERROR: logging before google.Init: I1120 00:52:45.614688    1067 manager.go:107] Migration [MIGRATION_ID_ADOPT_BWG_INSTALLS] already has status MIGRATION_STATUS_COMPLETED, skipping
+ERROR: logging before google.Init: I1120 00:52:45.614688    1067 manager.go:95] Migration [MIGRATION_ID_GDRIVE_BUILTIN_PLUGIN] is disabled, skipping entirely
+ERROR: logging before google.Init: I1120 00:52:45.614688    1067 manager.go:95] Migration [MIGRATION_ID_SPLIT_SCIENCE_PLUGIN] is disabled, skipping entirely
+ERROR: logging before google.Init: I1120 00:52:45.614688    1067 manager.go:98] Migration [MIGRATION_ID_PERMISSION_GRANTS_V2] is enabled
+ERROR: logging before google.Init: I1120 00:52:45.614688    1067 manager.go:113] Migration [MIGRATION_ID_PERMISSION_GRANTS_V2] starting
+ERROR: logging before google.Init: I1120 00:52:45.616682     631 server.go:4729] [RemoteControl] Subscription callback triggered.
+ERROR: logging before google.Init: I1120 00:52:45.617678    1067 manager.go:133] Migration [MIGRATION_ID_PERMISSION_GRANTS_V2] completed successfully in 2.0575ms
+ERROR: logging before google.Init: I1120 00:52:45.619672     631 server.go:4732] [RemoteControl] RemoteControlEnabled value: false
+ERROR: logging before google.Init: I1120 00:52:45.619672     631 server.go:5878] [RemoteControl] Staying disconnected: Remote Control user setting is off
+ERROR: logging before google.Init: I1120 00:52:45.619672     631 server.go:5513] [RemoteControl] Resolved proxyServerURL: ""
+ERROR: logging before google.Init: I1120 00:52:45.619672     631 server.go:4729] [RemoteControl] Subscription callback triggered.
+ERROR: logging before google.Init: I1120 00:52:45.619672     631 server.go:4732] [RemoteControl] RemoteControlEnabled value: false
+ERROR: logging before google.Init: I1120 00:52:45.620668     631 server.go:5878] [RemoteControl] Staying disconnected: Remote Control user setting is off
+ERROR: logging before google.Init: I1120 00:52:45.620668     631 server.go:5513] [RemoteControl] Resolved proxyServerURL: ""
+ERROR: logging before google.Init: I1120 00:52:45.620668     631 server.go:4729] [RemoteControl] Subscription callback triggered.
+ERROR: logging before google.Init: I1120 00:52:45.621665     631 server.go:4732] [RemoteControl] RemoteControlEnabled value: false
+ERROR: logging before google.Init: I1120 00:52:45.621665     631 server.go:5878] [RemoteControl] Staying disconnected: Remote Control user setting is off
+ERROR: logging before google.Init: I1120 00:52:45.621665     631 server.go:5513] [RemoteControl] Resolved proxyServerURL: ""
+ERROR: logging before google.Init: I1120 00:52:45.635619     921 auth_status_telemetry.go:81] [auth-status] rpc=get_auth_status valid=true
+ERROR: logging before google.Init: I1120 00:52:49.967592     854 actuator.go:274] Browser actuator #1 (actuator_type="browser", profile="hub", actuator_id="a2813cae-3f8c-4239-ab08-fc97affc8a06") disconnected
+=== main.log (logs) ===
+[2026-11-20 00:52:42.955] [info]  [IDE Wizard] C:\AGM_TestLab\IPC_SEC_A02\run\2.33.0\probe\env\UserProfile\.gemini\antigravity not found — user was not migrated, skipping.
+[2026-11-20 00:52:42.960] [info]  [BeyondCorpPAC] No local BeyondCorp PAC file found; skipping webview proxy configuration.
+[2026-11-20 00:52:42.961] [info]  Starting app (v2.33.0) with dynamic port…
+[2026-11-20 00:52:42.968] [info]  Host bridge server listening on http://127.0.0.1:63629
+[2026-11-20 00:52:43.129] [info]  [Auto-Restart] Port changed! Reloading all windows with URL: https://127.0.0.1:63644/
+[2026-11-20 00:52:43.132] [info]  
+============================================================
+[2026-11-20 00:52:43.133] [info]    Local:       https://127.0.0.1:63644/
+[2026-11-20 00:52:43.133] [info]    LS Logs:     C:\AGM_TestLab\IPC_SEC_A02\run\2.33.0\probe\userdata\logs\language_server.log
+[2026-11-20 00:52:43.134] [info]    Electron Logs: C:\AGM_TestLab\IPC_SEC_A02\run\2.33.0\probe\userdata\logs\main.log
+[2026-11-20 00:52:43.134] [info]  ============================================================
+
+[2026-11-20 00:52:43.190] [info]  [AGM][UpdateLock] updater locked
+[2026-11-20 00:52:43.199] [error] Failed to list WSL distros: Error: wsl.exe --list --verbose failed: Command failed: C:\Windows\System32\wsl.exe --list --verbose
+
+
+    at execWsl (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\wsl.js:123:15)
+    at async listWslDistros (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\wsl.js:128:20)
+    at async wslConnectMenuTemplate (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\menu.js:196:19)
+    at async addWslConnectMenu (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\menu.js:223:22)
+[2026-11-20 00:52:43.231] [error] Failed to list WSL distros: Error: wsl.exe --list --verbose failed: Command failed: C:\Windows\System32\wsl.exe --list --verbose
+
+
+    at execWsl (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\wsl.js:123:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async listWslDistros (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\wsl.js:128:20)
+    at async wslConnectMenuTemplate (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\menu.js:196:19)
+[2026-11-20 00:52:43.514] [info]  [AGM][Reaper] session LS recorded pid=6412 created=2026-11-19T16:52:42.9720120Z
+[2026-11-20 00:52:47.563] [warn]  [Hakimi IPC] denied channel=hakimi:get-plugins-dir reason=untrusted-sender
+[2026-11-20 00:52:47.564] [error] Error occurred in handler for 'hakimi:get-plugins-dir': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:47.565] [warn]  [Hakimi IPC] denied channel=hakimi:list-plugins reason=untrusted-sender
+[2026-11-20 00:52:47.566] [error] Error occurred in handler for 'hakimi:list-plugins': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:47.566] [warn]  [Hakimi IPC] denied channel=hakimi:read-plugin reason=untrusted-sender
+[2026-11-20 00:52:47.566] [error] Error occurred in handler for 'hakimi:read-plugin': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:47.567] [warn]  [Hakimi IPC] denied channel=hakimi:read-config reason=untrusted-sender
+[2026-11-20 00:52:47.567] [error] Error occurred in handler for 'hakimi:read-config': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:47.568] [warn]  [Hakimi IPC] denied channel=hakimi:save-config reason=untrusted-sender
+[2026-11-20 00:52:47.568] [error] Error occurred in handler for 'hakimi:save-config': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:47.568] [warn]  [Hakimi IPC] denied channel=hakimi:launch-desktop-gpt reason=untrusted-sender
+[2026-11-20 00:52:47.569] [error] Error occurred in handler for 'hakimi:launch-desktop-gpt': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:47.569] [warn]  [Hakimi IPC] denied channel=hakimi:get-host-info reason=untrusted-sender
+[2026-11-20 00:52:47.570] [error] Error occurred in handler for 'hakimi:get-host-info': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:47.570] [warn]  [Hakimi IPC] denied channel=hakimi:list-packages reason=untrusted-sender
+[2026-11-20 00:52:47.570] [error] Error occurred in handler for 'hakimi:list-packages': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:47.571] [warn]  [Hakimi IPC] denied channel=hakimi:read-package-entry reason=untrusted-sender
+[2026-11-20 00:52:47.571] [error] Error occurred in handler for 'hakimi:read-package-entry': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:47.572] [warn]  [Hakimi IPC] denied channel=hakimi:install-package reason=untrusted-sender
+[2026-11-20 00:52:47.572] [error] Error occurred in handler for 'hakimi:install-package': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:47.572] [warn]  [Hakimi IPC] denied channel=hakimi:uninstall-package reason=untrusted-sender
+[2026-11-20 00:52:47.572] [error] Error occurred in handler for 'hakimi:uninstall-package': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:47.574] [warn]  [Hakimi IPC] denied channel=hakimi:read-state reason=untrusted-sender
+[2026-11-20 00:52:47.575] [error] Error occurred in handler for 'hakimi:read-state': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:47.575] [warn]  [Hakimi IPC] denied channel=hakimi:write-state reason=untrusted-sender
+[2026-11-20 00:52:47.576] [error] Error occurred in handler for 'hakimi:write-state': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.537] [warn]  [Hakimi IPC] denied channel=hakimi:get-plugins-dir reason=not-main-frame
+[2026-11-20 00:52:48.538] [error] Error occurred in handler for 'hakimi:get-plugins-dir': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.538] [warn]  [Hakimi IPC] denied channel=hakimi:list-plugins reason=not-main-frame
+[2026-11-20 00:52:48.539] [error] Error occurred in handler for 'hakimi:list-plugins': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.539] [warn]  [Hakimi IPC] denied channel=hakimi:read-plugin reason=not-main-frame
+[2026-11-20 00:52:48.539] [error] Error occurred in handler for 'hakimi:read-plugin': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.540] [warn]  [Hakimi IPC] denied channel=hakimi:read-config reason=not-main-frame
+[2026-11-20 00:52:48.540] [error] Error occurred in handler for 'hakimi:read-config': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.541] [warn]  [Hakimi IPC] denied channel=hakimi:save-config reason=not-main-frame
+[2026-11-20 00:52:48.541] [error] Error occurred in handler for 'hakimi:save-config': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.542] [warn]  [Hakimi IPC] denied channel=hakimi:launch-desktop-gpt reason=not-main-frame
+[2026-11-20 00:52:48.542] [error] Error occurred in handler for 'hakimi:launch-desktop-gpt': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.542] [warn]  [Hakimi IPC] denied channel=hakimi:get-host-info reason=not-main-frame
+[2026-11-20 00:52:48.543] [error] Error occurred in handler for 'hakimi:get-host-info': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.543] [warn]  [Hakimi IPC] denied channel=hakimi:list-packages reason=not-main-frame
+[2026-11-20 00:52:48.543] [error] Error occurred in handler for 'hakimi:list-packages': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.544] [warn]  [Hakimi IPC] denied channel=hakimi:read-package-entry reason=not-main-frame
+[2026-11-20 00:52:48.544] [error] Error occurred in handler for 'hakimi:read-package-entry': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.544] [warn]  [Hakimi IPC] denied channel=hakimi:install-package reason=not-main-frame
+[2026-11-20 00:52:48.545] [error] Error occurred in handler for 'hakimi:install-package': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.545] [warn]  [Hakimi IPC] denied channel=hakimi:uninstall-package reason=not-main-frame
+[2026-11-20 00:52:48.545] [error] Error occurred in handler for 'hakimi:uninstall-package': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.546] [warn]  [Hakimi IPC] denied channel=hakimi:read-state reason=not-main-frame
+[2026-11-20 00:52:48.546] [error] Error occurred in handler for 'hakimi:read-state': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.546] [warn]  [Hakimi IPC] denied channel=hakimi:write-state reason=not-main-frame
+[2026-11-20 00:52:48.547] [error] Error occurred in handler for 'hakimi:write-state': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.669] [warn]  [Hakimi IPC] denied channel=hakimi:list-packages reason=untrusted-sender
+[2026-11-20 00:52:48.670] [error] Error occurred in handler for 'hakimi:list-packages': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.671] [warn]  [Hakimi IPC] denied channel=hakimi:write-state reason=untrusted-sender
+[2026-11-20 00:52:48.671] [error] Error occurred in handler for 'hakimi:write-state': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.671] [warn]  [Hakimi IPC] denied channel=hakimi:read-plugin reason=untrusted-sender
+[2026-11-20 00:52:48.672] [error] Error occurred in handler for 'hakimi:read-plugin': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.680] [warn]  [Hakimi IPC] denied channel=hakimi:read-config reason=untrusted-sender
+[2026-11-20 00:52:48.680] [error] Error occurred in handler for 'hakimi:read-config': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.681] [warn]  [Hakimi IPC] denied channel=hakimi:get-host-info reason=untrusted-sender
+[2026-11-20 00:52:48.681] [error] Error occurred in handler for 'hakimi:get-host-info': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.682] [warn]  [Hakimi IPC] denied channel=hakimi:save-config reason=untrusted-sender
+[2026-11-20 00:52:48.682] [error] Error occurred in handler for 'hakimi:save-config': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.800] [warn]  [Hakimi IPC] denied channel=hakimi:read-state reason=untrusted-sender
+[2026-11-20 00:52:48.800] [error] Error occurred in handler for 'hakimi:read-state': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.800] [warn]  [Hakimi IPC] denied channel=hakimi:get-host-info reason=untrusted-sender
+[2026-11-20 00:52:48.801] [error] Error occurred in handler for 'hakimi:get-host-info': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.802] [warn]  [Hakimi IPC] denied channel=hakimi:read-plugin reason=untrusted-sender
+[2026-11-20 00:52:48.802] [error] Error occurred in handler for 'hakimi:read-plugin': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.802] [warn]  [Hakimi IPC] denied channel=hakimi:read-plugin reason=untrusted-sender
+[2026-11-20 00:52:48.803] [error] Error occurred in handler for 'hakimi:read-plugin': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.803] [warn]  [Hakimi IPC] denied channel=hakimi:read-plugin reason=untrusted-sender
+[2026-11-20 00:52:48.803] [error] Error occurred in handler for 'hakimi:read-plugin': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.810] [warn]  [Hakimi IPC] denied channel=hakimi:read-config reason=untrusted-sender
+[2026-11-20 00:52:48.810] [error] Error occurred in handler for 'hakimi:read-config': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.812] [warn]  [Hakimi IPC] denied channel=hakimi:get-host-info reason=untrusted-sender
+[2026-11-20 00:52:48.812] [error] Error occurred in handler for 'hakimi:get-host-info': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.912] [warn]  [Hakimi IPC] denied channel=hakimi:get-host-info reason=untrusted-sender
+[2026-11-20 00:52:48.912] [error] Error occurred in handler for 'hakimi:get-host-info': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:48.918] [warn]  [Hakimi IPC] denied channel=hakimi:read-config reason=untrusted-sender
+[2026-11-20 00:52:48.919] [error] Error occurred in handler for 'hakimi:read-config': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.026] [warn]  [Hakimi IPC] denied channel=hakimi:get-host-info reason=untrusted-sender
+[2026-11-20 00:52:49.027] [error] Error occurred in handler for 'hakimi:get-host-info': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.031] [warn]  [Hakimi IPC] denied channel=hakimi:read-config reason=untrusted-sender
+[2026-11-20 00:52:49.032] [error] Error occurred in handler for 'hakimi:read-config': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.041] [warn]  [Hakimi IPC] denied channel=hakimi:get-host-info reason=untrusted-sender
+[2026-11-20 00:52:49.042] [error] Error occurred in handler for 'hakimi:get-host-info': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.158] [warn]  [Hakimi IPC] denied channel=hakimi:get-host-info reason=sender-destroyed
+[2026-11-20 00:52:49.159] [warn]  [Hakimi IPC] denied channel=hakimi:get-host-info reason=untrusted-sender
+[2026-11-20 00:52:49.270] [warn]  [Hakimi IPC] denied channel=hakimi:get-plugins-dir reason=untrusted-sender
+[2026-11-20 00:52:49.270] [error] Error occurred in handler for 'hakimi:get-plugins-dir': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.271] [warn]  [Hakimi IPC] denied channel=hakimi:list-plugins reason=untrusted-sender
+[2026-11-20 00:52:49.271] [error] Error occurred in handler for 'hakimi:list-plugins': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.272] [warn]  [Hakimi IPC] denied channel=hakimi:read-plugin reason=untrusted-sender
+[2026-11-20 00:52:49.272] [error] Error occurred in handler for 'hakimi:read-plugin': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.272] [warn]  [Hakimi IPC] denied channel=hakimi:read-config reason=untrusted-sender
+[2026-11-20 00:52:49.272] [error] Error occurred in handler for 'hakimi:read-config': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.273] [warn]  [Hakimi IPC] denied channel=hakimi:save-config reason=untrusted-sender
+[2026-11-20 00:52:49.274] [error] Error occurred in handler for 'hakimi:save-config': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.274] [warn]  [Hakimi IPC] denied channel=hakimi:launch-desktop-gpt reason=untrusted-sender
+[2026-11-20 00:52:49.275] [error] Error occurred in handler for 'hakimi:launch-desktop-gpt': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.275] [warn]  [Hakimi IPC] denied channel=hakimi:get-host-info reason=untrusted-sender
+[2026-11-20 00:52:49.275] [error] Error occurred in handler for 'hakimi:get-host-info': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.276] [warn]  [Hakimi IPC] denied channel=hakimi:list-packages reason=untrusted-sender
+[2026-11-20 00:52:49.276] [error] Error occurred in handler for 'hakimi:list-packages': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.276] [warn]  [Hakimi IPC] denied channel=hakimi:read-package-entry reason=untrusted-sender
+[2026-11-20 00:52:49.277] [error] Error occurred in handler for 'hakimi:read-package-entry': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.277] [warn]  [Hakimi IPC] denied channel=hakimi:install-package reason=untrusted-sender
+[2026-11-20 00:52:49.277] [error] Error occurred in handler for 'hakimi:install-package': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.278] [warn]  [Hakimi IPC] denied channel=hakimi:uninstall-package reason=untrusted-sender
+[2026-11-20 00:52:49.278] [error] Error occurred in handler for 'hakimi:uninstall-package': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.278] [warn]  [Hakimi IPC] denied channel=hakimi:read-state reason=untrusted-sender
+[2026-11-20 00:52:49.279] [error] Error occurred in handler for 'hakimi:read-state': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.279] [warn]  [Hakimi IPC] denied channel=hakimi:write-state reason=untrusted-sender
+[2026-11-20 00:52:49.279] [error] Error occurred in handler for 'hakimi:write-state': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.400] [warn]  [Hakimi IPC] denied channel=hakimi:get-plugins-dir reason=untrusted-sender
+[2026-11-20 00:52:49.400] [error] Error occurred in handler for 'hakimi:get-plugins-dir': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.401] [warn]  [Hakimi IPC] denied channel=hakimi:list-plugins reason=untrusted-sender
+[2026-11-20 00:52:49.401] [error] Error occurred in handler for 'hakimi:list-plugins': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.402] [warn]  [Hakimi IPC] denied channel=hakimi:read-plugin reason=untrusted-sender
+[2026-11-20 00:52:49.402] [error] Error occurred in handler for 'hakimi:read-plugin': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.403] [warn]  [Hakimi IPC] denied channel=hakimi:read-config reason=untrusted-sender
+[2026-11-20 00:52:49.403] [error] Error occurred in handler for 'hakimi:read-config': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.403] [warn]  [Hakimi IPC] denied channel=hakimi:save-config reason=untrusted-sender
+[2026-11-20 00:52:49.404] [error] Error occurred in handler for 'hakimi:save-config': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.404] [warn]  [Hakimi IPC] denied channel=hakimi:launch-desktop-gpt reason=untrusted-sender
+[2026-11-20 00:52:49.404] [error] Error occurred in handler for 'hakimi:launch-desktop-gpt': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.405] [warn]  [Hakimi IPC] denied channel=hakimi:get-host-info reason=untrusted-sender
+[2026-11-20 00:52:49.405] [error] Error occurred in handler for 'hakimi:get-host-info': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.405] [warn]  [Hakimi IPC] denied channel=hakimi:list-packages reason=untrusted-sender
+[2026-11-20 00:52:49.405] [error] Error occurred in handler for 'hakimi:list-packages': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.406] [warn]  [Hakimi IPC] denied channel=hakimi:read-package-entry reason=untrusted-sender
+[2026-11-20 00:52:49.406] [error] Error occurred in handler for 'hakimi:read-package-entry': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.407] [warn]  [Hakimi IPC] denied channel=hakimi:install-package reason=untrusted-sender
+[2026-11-20 00:52:49.407] [error] Error occurred in handler for 'hakimi:install-package': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.407] [warn]  [Hakimi IPC] denied channel=hakimi:uninstall-package reason=untrusted-sender
+[2026-11-20 00:52:49.407] [error] Error occurred in handler for 'hakimi:uninstall-package': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.408] [warn]  [Hakimi IPC] denied channel=hakimi:read-state reason=untrusted-sender
+[2026-11-20 00:52:49.408] [error] Error occurred in handler for 'hakimi:read-state': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.408] [warn]  [Hakimi IPC] denied channel=hakimi:write-state reason=untrusted-sender
+[2026-11-20 00:52:49.409] [error] Error occurred in handler for 'hakimi:write-state': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.518] [warn]  [Hakimi IPC] denied channel=hakimi:get-plugins-dir reason=untrusted-sender
+[2026-11-20 00:52:49.518] [error] Error occurred in handler for 'hakimi:get-plugins-dir': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.519] [warn]  [Hakimi IPC] denied channel=hakimi:list-plugins reason=untrusted-sender
+[2026-11-20 00:52:49.519] [error] Error occurred in handler for 'hakimi:list-plugins': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.520] [warn]  [Hakimi IPC] denied channel=hakimi:read-plugin reason=untrusted-sender
+[2026-11-20 00:52:49.520] [error] Error occurred in handler for 'hakimi:read-plugin': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.521] [warn]  [Hakimi IPC] denied channel=hakimi:read-config reason=untrusted-sender
+[2026-11-20 00:52:49.521] [error] Error occurred in handler for 'hakimi:read-config': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.522] [warn]  [Hakimi IPC] denied channel=hakimi:save-config reason=untrusted-sender
+[2026-11-20 00:52:49.522] [error] Error occurred in handler for 'hakimi:save-config': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.522] [warn]  [Hakimi IPC] denied channel=hakimi:launch-desktop-gpt reason=untrusted-sender
+[2026-11-20 00:52:49.522] [error] Error occurred in handler for 'hakimi:launch-desktop-gpt': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.523] [warn]  [Hakimi IPC] denied channel=hakimi:get-host-info reason=untrusted-sender
+[2026-11-20 00:52:49.523] [error] Error occurred in handler for 'hakimi:get-host-info': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.524] [warn]  [Hakimi IPC] denied channel=hakimi:list-packages reason=untrusted-sender
+[2026-11-20 00:52:49.524] [error] Error occurred in handler for 'hakimi:list-packages': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.524] [warn]  [Hakimi IPC] denied channel=hakimi:read-package-entry reason=untrusted-sender
+[2026-11-20 00:52:49.525] [error] Error occurred in handler for 'hakimi:read-package-entry': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.525] [warn]  [Hakimi IPC] denied channel=hakimi:install-package reason=untrusted-sender
+[2026-11-20 00:52:49.525] [error] Error occurred in handler for 'hakimi:install-package': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.526] [warn]  [Hakimi IPC] denied channel=hakimi:uninstall-package reason=untrusted-sender
+[2026-11-20 00:52:49.526] [error] Error occurred in handler for 'hakimi:uninstall-package': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.526] [warn]  [Hakimi IPC] denied channel=hakimi:read-state reason=untrusted-sender
+[2026-11-20 00:52:49.527] [error] Error occurred in handler for 'hakimi:read-state': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.527] [warn]  [Hakimi IPC] denied channel=hakimi:write-state reason=untrusted-sender
+[2026-11-20 00:52:49.528] [error] Error occurred in handler for 'hakimi:write-state': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.634] [warn]  [Hakimi IPC] denied channel=hakimi:list-plugins reason=remote-sender
+[2026-11-20 00:52:49.635] [error] Error occurred in handler for 'hakimi:list-plugins': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.635] [warn]  [Hakimi IPC] denied channel=hakimi:get-plugins-dir reason=untrusted-sender
+[2026-11-20 00:52:49.635] [error] Error occurred in handler for 'hakimi:get-plugins-dir': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.636] [warn]  [Hakimi IPC] denied channel=hakimi:list-plugins reason=untrusted-sender
+[2026-11-20 00:52:49.636] [error] Error occurred in handler for 'hakimi:list-plugins': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.637] [warn]  [Hakimi IPC] denied channel=hakimi:read-plugin reason=untrusted-sender
+[2026-11-20 00:52:49.637] [error] Error occurred in handler for 'hakimi:read-plugin': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.637] [warn]  [Hakimi IPC] denied channel=hakimi:read-config reason=untrusted-sender
+[2026-11-20 00:52:49.637] [error] Error occurred in handler for 'hakimi:read-config': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.638] [warn]  [Hakimi IPC] denied channel=hakimi:save-config reason=untrusted-sender
+[2026-11-20 00:52:49.638] [error] Error occurred in handler for 'hakimi:save-config': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.639] [warn]  [Hakimi IPC] denied channel=hakimi:launch-desktop-gpt reason=untrusted-sender
+[2026-11-20 00:52:49.639] [error] Error occurred in handler for 'hakimi:launch-desktop-gpt': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.639] [warn]  [Hakimi IPC] denied channel=hakimi:get-host-info reason=untrusted-sender
+[2026-11-20 00:52:49.639] [error] Error occurred in handler for 'hakimi:get-host-info': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.640] [warn]  [Hakimi IPC] denied channel=hakimi:list-packages reason=untrusted-sender
+[2026-11-20 00:52:49.640] [error] Error occurred in handler for 'hakimi:list-packages': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.641] [warn]  [Hakimi IPC] denied channel=hakimi:read-package-entry reason=untrusted-sender
+[2026-11-20 00:52:49.641] [error] Error occurred in handler for 'hakimi:read-package-entry': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.642] [warn]  [Hakimi IPC] denied channel=hakimi:install-package reason=untrusted-sender
+[2026-11-20 00:52:49.642] [error] Error occurred in handler for 'hakimi:install-package': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.642] [warn]  [Hakimi IPC] denied channel=hakimi:uninstall-package reason=untrusted-sender
+[2026-11-20 00:52:49.642] [error] Error occurred in handler for 'hakimi:uninstall-package': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.643] [warn]  [Hakimi IPC] denied channel=hakimi:read-state reason=untrusted-sender
+[2026-11-20 00:52:49.643] [error] Error occurred in handler for 'hakimi:read-state': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.643] [warn]  [Hakimi IPC] denied channel=hakimi:write-state reason=untrusted-sender
+[2026-11-20 00:52:49.644] [error] Error occurred in handler for 'hakimi:write-state': Error: unauthorized
+    at unauthorizedError (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:829:21)
+    at wrapped (C:\AGM_TestLab\IPC_SEC_A02\bases\2.33.0\resources\app.asar\dist\main.js:847:54)
+    at Session.<anonymous> (node:electron/js2c/browser_init:1:119048)
+    at Session.emit (node:events:514:28)
+[2026-11-20 00:52:49.966] [info]  Shutting down language server…
+[2026-11-20 00:52:50.441] [info]  [AGM][Reaper] reap: nothing recorded (enabled=true)
+=== 000003.log (leveldb) ===
+��5           VERSION1
+=== 000003.log (leveldb) ===
+��5           VERSION1
+=== 000003.log (leveldb) ===
+��5           VERSION1
+=== 000003.log (leveldb) ===
+��5           VERSION1
+=== 000003.log (Session Storage) ===
+��j+           version1��F            ��F            ��F            ��F            ��F            ��F            ��F            ��F            ��F            ��F            ��F            ��F            ��F            ��F            ��F            ��F            ��F            ��F            ��F            ��F            ��F            ��F            ��F            ��F            ��F            ��F            ��F            ��F            

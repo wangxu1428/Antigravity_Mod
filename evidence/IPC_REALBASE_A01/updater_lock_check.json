@@ -1,0 +1,49 @@
+{
+    "CheckedAtLocal":  "2026-11-19T23:51:24.6958509+08:00",
+    "RealUpdateExecuted":  false,
+    "ResidualRisks":  [
+                          "updater:quit-and-install, updater:apply, updater:check-for-updates are not wrapped by AGM_IPC_SEC_GATE_V1 (agm_ipc_auth.js); they rely on official localOnly and AGM_UPDATE_LOCK short-circuit."
+                      ],
+    "Versions":  {
+                     "2.33.0":  {
+                                    "AppUpdateYmlPath":  "C:\\AGM_TestLab\\IPC_SEC_A01\\bases\\2.33.0\\resources\\app-update.yml",
+                                    "AppUpdateYmlSHA256":  "DE77889AD4DA6C6FB8F1C904711710387C3A3CEF6C901AFE5A25908B37CDA151",
+                                    "AppUpdateYmlContent":  "# AGM: auto-update disabled 2026-11-18 by user decision. Original url: https://antigravity-hub-auto-updater-974169037036.us-central1.run.app/manifest/\r\nprovider: generic\r\nurl: http://127.0.0.1:9/agm-update-disabled/\r\nupdaterCacheDirName: antigravity-mod-updater",
+                                    "UpdaterJsLocks":  {
+                                                           "AGM_UPDATE_LOCK_helper":  true,
+                                                           "U2_autoUpdater_locked":  true,
+                                                           "U3_periodic_checking":  true,
+                                                           "U4_checkForUpdates":  true,
+                                                           "U5_quitAndInstall":  true,
+                                                           "U6_applyHostUpdate":  true,
+                                                           "U7_headlessQuitInstall":  true
+                                                       },
+                                    "IpcHandlersLocks":  {
+                                                             "I1_updater_quit_and_install":  true,
+                                                             "I2_updater_apply":  true,
+                                                             "I3_updater_check_for_updates":  true
+                                                         },
+                                    "UnifiedAuthGateNote":  "updater:* channels are NOT wrapped by agm_ipc_auth.js; guarded by Electron localOnly + AGM_UPDATE_LOCK short-circuit (residual risk)."
+                                },
+                     "2.32.1":  {
+                                    "AppUpdateYmlPath":  "C:\\AGM_TestLab\\IPC_SEC_A01\\bases\\2.32.1\\resources\\app-update.yml",
+                                    "AppUpdateYmlSHA256":  "DE77889AD4DA6C6FB8F1C904711710387C3A3CEF6C901AFE5A25908B37CDA151",
+                                    "AppUpdateYmlContent":  "# AGM: auto-update disabled 2026-11-18 by user decision. Original url: https://antigravity-hub-auto-updater-974169037036.us-central1.run.app/manifest/\r\nprovider: generic\r\nurl: http://127.0.0.1:9/agm-update-disabled/\r\nupdaterCacheDirName: antigravity-mod-updater",
+                                    "UpdaterJsLocks":  {
+                                                           "AGM_UPDATE_LOCK_helper":  true,
+                                                           "U2_autoUpdater_locked":  true,
+                                                           "U3_periodic_checking":  true,
+                                                           "U4_checkForUpdates":  true,
+                                                           "U5_quitAndInstall":  true,
+                                                           "U6_applyHostUpdate":  true,
+                                                           "U7_headlessQuitInstall":  true
+                                                       },
+                                    "IpcHandlersLocks":  {
+                                                             "I1_updater_quit_and_install":  true,
+                                                             "I2_updater_apply":  true,
+                                                             "I3_updater_check_for_updates":  true
+                                                         },
+                                    "UnifiedAuthGateNote":  "updater:* channels are NOT wrapped by agm_ipc_auth.js; guarded by Electron localOnly + AGM_UPDATE_LOCK short-circuit (residual risk)."
+                                }
+                 }
+}

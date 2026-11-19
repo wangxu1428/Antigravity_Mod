@@ -1,0 +1,57 @@
+{
+    "Version":  "2.32.1",
+    "PatchExitCode":  0,
+    "PatchedAsarSHA256":  "DFD091F173C9DCECD391E2263E7C58734E54113CBB65924B66911D048EA9B908",
+    "PatchedAsarSize":  5703891,
+    "Checks":  {
+                   "main_portable_userdata_lock":  true,
+                   "main_agm_ipc_sec_gate_v1":  true,
+                   "main_createIpcAuthorizer":  true,
+                   "main_installCreateWindowHook":  true,
+                   "main_registerHakimiIpcHandlers":  true,
+                   "main_H_MAIN_4_ready_hook":  true,
+                   "main_secureHandle_count":  13,
+                   "main_raw_handle_count":  0,
+                   "utils_webviewTag":  true,
+                   "utils_devTools":  true,
+                   "preload_hakimiHost":  true,
+                   "preload_host_init":  true,
+                   "updater_AGM_UPDATE_LOCK_helper":  true,
+                   "updater_U2_locked":  true,
+                   "updater_U3_blocked_checking":  true,
+                   "updater_U4_blocked_checkForUpdates":  true,
+                   "updater_U5_blocked_quitAndInstall":  true,
+                   "updater_U6_blocked_applyHostUpdate":  true,
+                   "updater_U7_blocked_headlessQuitAndInstall":  true,
+                   "ipc_I1_quit_and_install":  true,
+                   "ipc_I2_apply":  true,
+                   "ipc_I3_check_for_updates":  true,
+                   "ls_AGM_SIDECAR_REAPER":  true
+               },
+    "SyntaxChecks":  {
+                         "dist/main.js":  {
+                                              "ok":  true,
+                                              "exitCode":  0
+                                          },
+                         "dist/utils.js":  {
+                                               "ok":  true,
+                                               "exitCode":  0
+                                           },
+                         "dist/preload.js":  {
+                                                 "ok":  true,
+                                                 "exitCode":  0
+                                             },
+                         "dist/updater.js":  {
+                                                 "ok":  true,
+                                                 "exitCode":  0
+                                             },
+                         "dist/ipcHandlers.js":  {
+                                                     "ok":  true,
+                                                     "exitCode":  0
+                                                 },
+                         "dist/languageServer.js":  {
+                                                        "ok":  true,
+                                                        "exitCode":  0
+                                                    }
+                     }
+}

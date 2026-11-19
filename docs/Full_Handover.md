@@ -150,3 +150,67 @@ Antigravity_Mod/
 10. `.gitignore` 有几条较宽的规则（任意位置的 `config.json`、`resources/`、`*.bin`、`Preferences`），以后新增同名正常文件会被悄悄忽略，提交时需留意。
 11. `main` 保护未对管理员生效（旭已决定维持现状），靠规矩约束不直接推 `main`。
 12. MIGRATION_02 报告的存放位置：UNKNOWN，建议补记。
+
+
+## 8. 最终阶段记录（AGM-GITHUB-HANDOVER-SYNC-01）
+
+- **执行时间**：2026-11-20（dsh，云端 Linux 盒子）。
+- **执行范围**：仅在 PR #10 现有分支新增 `evidence/` 证据文件、在 `docs/` 新增 3 份最终报告与 3 张预览、追加本节、追加 PR #10 描述，并执行普通 commit + 普通 push。未修改产品源码、测试代码、授权模块、`manifest.repo.json` 或正式 IDE；未修改 `main`；未新建 PR；未合并；未取消 Draft；未创建 Tag/Release；未 force push、amend、rebase；未删除任何历史文件。
+- **只读基线**：`main` = `923110e60cdb928b41a28ad2994f71bbed4bf730`；PR #10 = `OPEN` + `Draft` + 未合并 + `mergeable=MERGEABLE`，head 分支 `dev/compat-233-stage-b` @ `29600a9a8b1b40051ea988c97e81871f423dbcb6`；开放 PR 仅 #10；Tag 仅 `platform-v2.1.0`；Release 仅 `platform-v2.1.0（首个公开测试版）` 预发布；远程分支 head 与本地克隆一致。基线证据见 `evidence/baseline_before.json`。
+
+### 8.1 IPC 安全验证
+
+- **IPC-SEC-01**：13 个 `hakimi:*` 通道由 `secureHandle` 默认拒绝；IPC 安全测试 **25 PASS / 0 FAIL / 0 SKIP**；真实 Electron **9 PASS / 0 FAIL**；CI run `44548574146` @ `84dc8e9` 双 job success（Ubuntu 111 PASS / 0 FAIL / 1 SKIP，Windows 148 PASS / 0 FAIL / 0 SKIP）。
+- **REALBASE-A01**：发现 C-6 SSH 窗口越权链路 **0 / 13**（Electron `44.9.1` 下 `additionalArguments` 未定义，原判定在读不到时默认放行）。
+- **C6-FIX-01**：在 `2.32.1` / `2.33.0` 双版本上，C-6a/b/c/d 均 **13 / 13 拒绝**、**0 副作用**；合法 IPC **11 / 11** 成功；A01 非法调用回归 **31 / 31** 拒绝；冷启动 **2 / 2**；正式 IDE 关键文件 **8 / 8 无变化**（KeyFileChanges=0）；本地单测 **153 / 0 / 0**。
+- **最终 CI**：run `44569636560`（`offline-tests`，`run_number: 19`）@ `29600a9` 结论 success；Ubuntu job `135720835573` = **116 PASS / 0 FAIL / 1 SKIP**；Windows job `135720836179` = **153 PASS / 0 FAIL / 0 SKIP**。
+- **CLOSEOUT-01 审计**：交接口径 **8 / 8**。`input` 证据中的 `consistency_audit.txt` 实际列出 **19 条 `[PASS]`** 且全部通过（该文件未单列 8/8 分母），此处按交接口径记录并注明差异。
+- 上述数值以 `input/evidence/` 与 `input/reports/` 原文为准；如与交接说明有出入，以报告原文为准。
+
+### 8.2 真实 UI 回归（USER-CONFIRMED）
+
+以下 4 项为用户本人实机交互测试后提供的人工回归反馈，标记为 **USER-CONFIRMED**，不是自动化 GUI 测试结果：
+
+| # | 人工回归场景 | 用户实测结论 | 状态 |
+| --- | --- | --- | --- |
+| 1 | 关闭应用并完全退出，再启动，插件正常加载 | 正常加载 | **USER-CONFIRMED** |
+| 2 | 强制刷新页面，插件正常恢复 | 正常恢复 | **USER-CONFIRMED** |
+| 3 | 托盘新建窗口，插件功能正常 | 功能正常 | **USER-CONFIRMED** |
+| 4 | 切换不同对话，功能正常 | 功能正常 | **USER-CONFIRMED** |
+
+**UI 回归通过不代表全部安全测试通过。**
+
+### 8.3 证据归档
+
+- **A01**：27 个文件，6,192,511 字节（26 个解包文件 + 1 个原版证据 ZIP）。
+- **C6_FIX**：32 个文件，6,342,714 字节（31 个解包文件 + 1 个原版证据 ZIP）。
+- **CLOSEOUT**：31 个文件，233,849 字节。
+- **合计**：**90 个文件 / 12,769,074 字节**；`input/evidence_SHA256SUMS.txt` 逐文件校验 **90 / 90 OK**；两个 ZIP 容器成员与解包文件交叉核对 **26 / 26、31 / 31 一致**；内部 SHA256 清单交叉比对 **17 MATCH / 33 N/A / 0 MISMATCH**（N/A 为 PC 端文件或 worktree 备份，不在本证据集）。
+- **安全扫描**：96 个文件（90 证据 + 3 报告 + 3 预览）完成密钥/令牌/Cookie/Authorization/UserData/安装包/超大二进制/`02_Personal` 路径扫描，结论 **PASS**，**SECURITY-HOLD = 0**；仅发现 GitHub Actions 日志中被 CI 自身脱敏的 `AUTHORIZATION: basic ***` 一处误报，未改原件。详见 `evidence/security_scan.txt`。
+- **仓库内目录结构**：
+
+```text
+evidence/
+├── IPC_REALBASE_A01/   (27 files, 6,192,511 B)
+├── IPC_C6_FIX_01/      (32 files, 6,342,714 B)
+└── IPC_C6_CLOSEOUT_01/ (31 files, 233,849 B)
+docs/
+├── AGM_EVIDENCE_ARCHIVE_A01_report.md / _preview.png
+├── AGM_CLEANUP_READONLY_AUDIT_01_report.md / _preview.png
+└── AGM_CLEANUP_DELETE_A01_C6_01_report.md / _preview.png
+```
+
+### 8.4 历史清理
+
+- 据 `AGM_CLEANUP_DELETE_A01_C6_01` 报告：`docs/AGM_IPC_REALBASE_A01/IPC_REALBASE_A01_evidence.zip` 与 `docs/AGM_IPC_C6_FIX_01/IPC_C6_FIX_01_evidence.zip` 两份冗余原始 ZIP 已通过 `SHFileOperationW`（`FOF_ALLOWUNDO`）移入回收站 / Drive 垃圾箱。
+- 活跃 `docs/` 目录因此减少 **5,439,056 字节**（约 5.19 MiB，2,713,318 + 2,725,738）。
+- `evidence/` 下 **90 个文件全部保留**，删除前后 SHA256 变化 0；2.33.0 安装包 `Antigravity-x64.exe` 与 `app-64.7z` 保留。
+- `/workspace/agm/` **未清理**，状态 **BLOCKED**（该路径仅存在于云端 Linux 盒子，Windows 实机/WSL 不可达，证据不足）。
+
+### 8.5 未完成事项
+
+1. **真实 SSH E2E：NOT RUN**（本轮仅验证构造的 SSH 窗口拒绝路径与标记逻辑）。
+2. **`updater:*` 统一授权：NOT DONE**。
+3. **`/workspace/agm/`：BLOCKED**（未清理，需在对应 Linux 盒子上另行只读盘点后再决策）。
+4. **2.33.0 正式发布资格：尚未通过**（PR 保持 Draft，未合并、未打 Tag、未发 Release）。
+5. 再次强调：**UI 回归通过不代表全部安全测试通过**；在上述未完成项闭环前，不得把本轮结果表述为 2.33.0 已可正式发布。

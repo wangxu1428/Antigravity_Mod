@@ -1,0 +1,5 @@
+26923e4f4b7a5e6def7ca696a544d299a8cabefd	2026-11-19T12:23:43Z	fix(compat): 适配 Antigravity 2.33.0 补丁锚点、官方白名单与双版本离线测试
+a22f044fef898a93a8faccbb69be9314dc1aceb3	2026-11-19T13:00:37Z	chore(compat): 收尾 2.33.0 兼容声明与测试统计
+5afa3c47c2dfac04832c68afc60ca9357dbbdf8d	2026-11-19T14:50:34Z	fix(security): 为 13 个 hakimi IPC 增加主进程调用方授权门禁
+84dc8e989b301f387561cceec97617f28612c2a0	2026-11-19T14:52:49Z	fix(ci): 补齐 agm_ipc_auth.js 的安装与 Windows 测试夹具
+29600a9a8b1b40051ea988c97e81871f423dbcb6	2026-11-19T16:43:10Z	fix(ipc-auth): 修复 Electron 44 下远程 SSH 窗口越权并接入官方后端判定（fail-closed）

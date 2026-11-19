@@ -1,0 +1,52 @@
+--- input/AGM_IPC_C6_FIX_01_report.md	2026-11-20 01:09:17.335982435 +0800
++++ deliver/AGM_IPC_C6_FIX_01_report.md	2026-11-20 01:53:30.875737407 +0800
+@@ -74,14 +74,17 @@
+ | `tests/test_ipc_sec_unit.js`（新增 `SEC-19`–`SEC-23`，未改旧断言） | `30` | `0` | `0` | `0` | **PASS** |
+ | **本地总计（10 套）** | **153** | **0** | **0** | **0** | **PASS** |
+ 
+-### 3.2 GitHub Actions CI 结果（见 `evidence/ci_run_summary.json`）— **PASS**
+-- **Workflow**：`offline-tests` | **CI Run ID**：`44569636560`（`run_number: 67`）| **Head SHA**：`29600a9a8b1b40051ea988c97e81871f423dbcb6` | **总结论**：`success`
+-- 说明：公开 REST API `/actions/runs/44569636560/jobs` 返回步骤级结果（完整 Job 日志下载需鉴权且本机未装 `gh` CLI）；两平台均完成全部 10 个测试步骤并全部 `success`：
++### 3.2 GitHub Actions CI 结果（见 `W/input/ci_run_summary.json`）— **PASS**
++- **Workflow**：`offline-tests` | **CI Run ID**：`44569636560`（`run_number: 19`）| **Head SHA**：`29600a9a8b1b40051ea988c97e81871f423dbcb6` | **总结论**：`success`
++- 说明：已用 `gh run view 44569636560 --json jobs,headSha,conclusion,number` 实测 `run_number=19`、`headSha=29600a9a8b1b40051ea988c97e81871f423dbcb6`、`conclusion=success`；并通过 `gh api /repos/wangxu1428/Antigravity_Mod/actions/jobs/<id>` 确认两个 Job 均返回 HTTP 200（非 404）。报告旧版所写 `135699184600` / `135699184591` 实测均返回 HTTP 404，已按实测值修正。两平台均完成全部 10 个测试步骤并全部 `success`：
+ 
+-| Runner 平台 | Job ID | 总步骤 (PASS/FAIL/SKIP) | 测试套步骤 (PASS/FAIL/SKIP) | Conclusion |
++| Runner 平台 | Job ID | 总步骤 (PASS/FAIL/SKIP) | 测试断言 (PASS/FAIL/SKIP) | Conclusion |
+ | --- | --- | --- | --- | --- |
+-| `test (ubuntu-latest)` | `135699184600` | `16 PASS / 0 FAIL / 0 SKIP` | `10 PASS / 0 FAIL / 0 SKIP` | **success (PASS)** |
+-| `test (windows-latest)` | `135699184591` | `16 PASS / 0 FAIL / 0 SKIP` | `10 PASS / 0 FAIL / 0 SKIP` | **success (PASS)** |
++| `test (ubuntu-latest)` | `135720835573` | `16 PASS / 0 FAIL / 0 SKIP` | `116 PASS / 0 FAIL / 1 SKIP` | **success (PASS)** |
++| `test (windows-latest)` | `135720836179` | `16 PASS / 0 FAIL / 0 SKIP` | `153 PASS / 0 FAIL / 0 SKIP` | **success (PASS)** |
++
++- **统计方法**：按 10 个测试套件各自输出的汇总行累加——`test_host_unit.js` 取 `UNIT_SUMMARY passed=... failed=...`，其余套件取 `SUMMARY pass=... fail=... skip=...`；Ubuntu 的 1 个 SKIP 为 `C233-15`（需要 `win32 + powershell.exe`，Linux 上按设计跳过），两平台 FAIL 均为 0。
++- **交叉核对**：Windows `153 / 0 / 0` 与 `W/input/local_unit_tests.log` 的本地 `153 / 0 / 0` 一致；两个 Job ID（`135720835573` / `135720836179`）与 `W/input/ci_run_summary.json` 完全一致，且该文件的步骤级记录均为 `success`；两平台计数与期望值（Windows `153 / 0 / 0`、Ubuntu `116 / 0 / 1`）完全一致。
+ 
+ ---
+ 
+@@ -143,6 +146,11 @@
+ 
+ ## 六、残余风险清单
+ 
++- **状态明示（IPC-C6-CLOSEOUT-01 核验）**：
++  - 真实 SSH E2E：NOT RUN
++  - updater:* 统一授权：NOT DONE
++  - 托盘新窗口及整页刷新功能：PENDING INTERACTIVE VALIDATION
++
+ 1. **【未执行项 — NOT RUN】真实远程 SSH 主机端到端验证**：本机缺少可连通的真实远程 SSH 主机，无法实机走通远端连接下 `remoteManager`、`hardenRemoteSession`、`windowBackends` 与 `agm_ipc_auth` 的全链路交互；当前仅通过真实 Electron 44.9.1 下与 `remoteManager.js` 参数同构的构造窗口（C-6a/b/c）以及运行时 `registerRemoteWindow` 联动（C-6d）验证。
+ 2. **【范围外残余风险】`updater:*` 三条特权通道**：`updater:quit-and-install`、`updater:apply`、`updater:check-for-updates`（`dist/ipcHandlers.js`）按要求未做修改，仍未纳入 `agm_ipc_auth.js` 统一门禁，当前继续依赖官方 `localOnly`（内部调用 `isRemoteContents`）与 `AGM_UPDATE_LOCK` 短路阻断。
+ 3. **【架构限制 — Fail-Closed】`dist/utils.js` 内部词法调用 `createWindow`**：`showOrCreateWindow` 与 `createNewWindow` 在模块内部直接词法调用 `createWindow(...)` 而不走 `exports.createWindow`，不会自动登记（fail-closed，不会引入越权风险，但托盘新建窗口可能缺少 `hakimiHost` 能力）。
+@@ -164,4 +172,13 @@
+   - `ipc_results_{2.32.1,2.33.0}.json`、`probe_{2.32.1,2.33.0}.log`
+   - `formal_ide_snapshot_{before,after}.json`、`formal_ide_snapshot_diff.txt`、`restore_and_isolation_check.json`
+ 
++---
++
++## 八、修订记录（IPC-C6-CLOSEOUT-01）
++
++- **修订时间**：2026-11-20 01:42（Asia/Shanghai）
++- **修改行**：第 78 行（`run_number: 67` → `19`）；第 79 行（CI 核验方式与旧 Job ID 404 说明）；第 83–84 行（Job ID 修正为 `135720835573` / `135720836179`，测试计数修正为 Ubuntu `116/0/1`、Windows `153/0/0`，并补统计方法与交叉核对）；第 145 行后（新增真实 SSH E2E、`updater:*` 统一授权、托盘新窗口及整页刷新三项状态明示）；本修订记录为文末新增。
++- **修改原因**：仅修正 CI 元数据（Run `44569636560` 的 `run_number`、两个 Job ID、两平台实测 PASS/FAIL/SKIP 计数）并补齐三项未完成状态，使报告与 GitHub 实际记录一致；原有测试结论、证据与判定均未改动，旧 Job ID `135699184600` / `135699184591` 经 API 实测为 HTTP 404。
++- **原件 SHA256**：`E773032B4D2476A0C61E37EDC9383A3484A81DDAA3FD53A8E370564C7A774D01`
++
+ DONE
