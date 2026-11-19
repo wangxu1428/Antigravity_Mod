@@ -3365,6 +3365,7 @@
             };
 
             engine.updateConfig(mergedConfig);
+            console.log('[Hakimi i18n] config.enabled=' + engine.config.enabled + ' language=' + engine.config.language);
 
             // 3. Initialize DOM Adapter
             domAdapter = new DOMAdapter(engine, Sanitizer);
@@ -3401,13 +3402,25 @@
             // 5. Start translation if enabled
             if (engine.config.enabled && engine.config.language === 'zh-CN') {
                 domAdapter.start();
+            } else {
+                console.log('[Hakimi i18n] Translation inactive (config.enabled=' + engine.config.enabled + ', language=' + engine.config.language + '); skipping domAdapter.start().');
             }
 
             // 6. Register teardown for clean hot-reload (Ctrl+R / F5)
             window.__hakimiI18nTeardown = () => {
-                console.log('[Hakimi i18n] Tearing down Hakimi i18n instance...');
+                const enabledNow = engine && engine.config ? engine.config.enabled : undefined;
+                console.log('[Hakimi i18n] Tearing down Hakimi i18n instance... config.enabled=' + enabledNow);
                 if (domAdapter) {
-                    domAdapter.stop();
+                    try {
+                        if (typeof domAdapter.restoreEnglish === 'function') {
+                            domAdapter.restoreEnglish();
+                        }
+                    } catch (e) {
+                        console.warn('[Hakimi i18n] restoreEnglish error during teardown:', e);
+                    }
+                    if (typeof domAdapter.stop === 'function') {
+                        domAdapter.stop();
+                    }
                 }
                 if (configUI) {
                     configUI.destroy();

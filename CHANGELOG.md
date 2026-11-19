@@ -5,6 +5,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- 修复 `hakimi-i18n` 热重载卸载（`__hakimiI18nTeardown`）未恢复已汉化 DOM 的问题：在 `domAdapter.stop()` 之前调用 `domAdapter.restoreEnglish()` 还原英文原文，并在初始化合并配置、跳过启动与 teardown 时打印 `config.enabled` 状态日志（同步更新源码 [`plugins/builtin/hakimi-i18n/hakimi-i18n/build.js`](plugins/builtin/hakimi-i18n/hakimi-i18n/build.js) 与运行时文件 [`plugins/builtin/hakimi-i18n/hakimi-i18n.js`](plugins/builtin/hakimi-i18n/hakimi-i18n.js)）。
+
 ### Changed
 
 - 加固 `platform/mod_kit/repatch.ps1`：`asar extract`/`asar pack`（含 `npx asar` 回退）显式检查 `$LASTEXITCODE`；解包时若缺失 `app.asar.bak.unpacked` 则在临时区配对 `app.asar.unpacked`（修复原未检错解包静默丢失 `chrome-devtools-mcp` 的隐患）；先打包至 `resources\.agm_repatch_tmp_<时间戳>\app.asar` 并校验大小、6 个注入文件 `asar list` 条目、`node --check` 语法与 SHA256；校验通过后先备份为 `resources\app.asar.prev_<时间戳>` 再以 `Move-Item` 原子替换并复验哈希；任意失败自动清理临时目录、保持目标 `app.asar` 不变、以非 `0` 退出且不打印成功；新增可选 `-TargetAppDir`/`-AppDir` 参数并在成功与失败时输出回滚命令；`platform/mod_kit/repatch.bat` 同步透传 `%*`。
@@ -12,6 +16,7 @@
 
 ### Added
 
+- 新增离线单元测试 [`tests/test_i18n_teardown_unit.js`](tests/test_i18n_teardown_unit.js)（IT1–IT6），并将其接入 [`.github/workflows/test.yml`](.github/workflows/test.yml)（`ubuntu-latest` / `windows-latest` 双矩阵）。[`tests/test_repatch_unit.js`](tests/test_repatch_unit.js) 仅补全非 Windows 跳过提示中的 `RP7`；将该测试接入 CI 的工作改到 PR #8 返工，本分支 `test.yml` 不再添加 `test_repatch_unit.js` 步骤。并在 [`docs/WINDOWS_TEST_EVIDENCE.md`](docs/WINDOWS_TEST_EVIDENCE.md) 追加 `AGM-HARDENING-FOLLOWUP-01` 实测记录。
 - 新增不需要真实 `asar` 的离线单元测试 [`tests/test_repatch_unit.js`](tests/test_repatch_unit.js)（RP1–RP7），覆盖 `pack`/`extract` 失败、0 字节产物、`asar list` 缺项、`.unpacked` 临时配对以及正常原子替换与回滚提示。
 
 ## [2.1.0] - 2026-11-19
