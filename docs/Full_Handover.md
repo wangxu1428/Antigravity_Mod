@@ -8,6 +8,28 @@
 
 ---
 
+## 当前状态（2026-11-19 更新）
+
+> 以下为 `main` @ `d9dad3f` 之后的最新进展摘要；下文第 1–7 节仍**完整原样保留** `RELEASE_AUDIT_01`（`a8e9c19`）的历史审计记录供对照追溯。
+
+- **当前基线与发行状态**：`main` 已合入 PR #5（CI `offline-tests`）、PR #6（本交接文档）与 PR #7（安装/发布文档、脚本去初稿化、`manifest.repo.json` 按 LF 重算），当前基线提交为 `d9dad3f`。标签 **`platform-v2.1.0`** 已指向 `d9dad3f` 并作为首个公开测试版（Pre-release）发布；尚未发布正式稳定版，也尚未发布独立插件版本。
+- **本次发行加固（`AGM-RELEASE-HARDENING-01`，分支 `dev/release-hardening-01`）**：
+  1. **加固 [`platform/mod_kit/repatch.ps1`](../platform/mod_kit/repatch.ps1)**：对 `asar extract`、`asar pack`（含 `npx asar` 回退）、`asar list` 显式校验 `$LASTEXITCODE`；修复原脚本在缺失 `app.asar.bak.unpacked` 时静默忽视 `asar extract` 报错导致丢失 `chrome-devtools-mcp` 的隐患（临时区自动配对 `app.asar.unpacked` 后解包）；先打包至 `resources\.agm_repatch_tmp_<时间戳>\app.asar` 并完成存在性/非零大小、`asar list` 6 个关键注入文件、`node --check` 与 SHA256 校验；校验全部通过后再备份 `resources\app.asar.prev_<时间戳>` 并以 `Move-Item` 原子替换且二次比对 SHA256；任意步骤失败自动清理临时目录、保持原 `app.asar` 不变、非 0 退出且不打印成功；新增可选 `-TargetAppDir`/`-AppDir` 参数，并在成功与失败时输出回滚命令；[`platform/mod_kit/repatch.bat`](../platform/mod_kit/repatch.bat) 同步透传 `%*`。
+  2. **新增离线单元测试 [`tests/test_repatch_unit.js`](../tests/test_repatch_unit.js)**（RP1–RP7，7/7 PASS）：无需真实 `asar`，覆盖 `pack`/`extract` 失败、0 字节产物、`asar list` 缺项、`.unpacked` 临时配对以及正常原子替换与回滚提示。
+  3. **文档对齐与分工边界**：更新 `CHANGELOG.md`（按 `platform-v2.1.0` @ `d9dad3f` 重新划分 `[2.1.0]` 与 `[Unreleased]`）、`docs/versioning.md`、`docs/INSTALL.md`、`docs/ARCHITECTURE.md`、`docs/README.md`，新增 [`docs/WINDOWS_TEST_EVIDENCE.md`](WINDOWS_TEST_EVIDENCE.md)。本次未改动 `manifest.repo.json`（由仓库管理员按 LF 统一重算）、未改动 `plugins/` 代码、未推远端或改 `main`。
+- **最新实测结果（Windows 10 / PS 5.1 / Node v26.13.1 / asar v4.3.2，详见 [`docs/WINDOWS_TEST_EVIDENCE.md`](WINDOWS_TEST_EVIDENCE.md)）**：
+  - **纯离线单元测试**：`test_host_unit.js` 15/15 PASS、`test_reaper_unit.js` 16/16 PASS、`test_update_lock.js` 9/9 PASS、`test_repatch_unit.js` 7/7 PASS（共 47/47 PASS）。
+  - **安装与两轮升级**：重跑隔离副本实测 `20/20 PASS`（30 个平台文件一致、12 个用户文件 SHA256 全程不变、严格幂等）。
+  - **新版 `repatch.ps1` + `restore-official.ps1`**：Case (a) 首次重铸（`exit 0`，产出 `6F60316D...`）、Case (b) 重复重铸（`exit 0`，`.bak` 哈希与修改时间不变）、Case (c) 官方还原（`exit 0`，还原回 `98A4308C...`）、Case (d) 备份污染复现（`exit 2`）、Case (e) 打包失败保护（`exit 19`，原 `app.asar` 哈希不变）全部 **5/5 PASS**。
+  - **隔离客户端实机验证**：更新锁前置门禁 PASS；客户端以 `--user-data-dir` 独立空目录启动并稳定存活 36s+ 出现主窗口（**PASS**）；通过侧边栏「插件中心」入口打开并截屏验证 AGM Hub v2.1.0 界面（**PASS**）；`F5` 热重载已由运行日志与插件日志证实触发重新初始化，但因 `hakimi-i18n` teardown 不还原已汉化 DOM 且不打印 `enabled`/`customOverrides` 新值，无法闭环确认修改配置生效，诚实标为 **UNKNOWN**。
+- **待跟进遗留项**：由仓库管理员合入前按 LF 重算 `manifest.repo.json` 哈希；补充插件中心无障碍/热重载配置生效日志以便非交互式桌面环境可自动化闭环校验；完善 `index/plugins.json` 正式插件与 CI 覆盖 `test_repatch_unit.js`。
+
+---
+
+> 以下为 `RELEASE_AUDIT_01`（基线 `a8e9c19`）历史审计记录原文：
+
+---
+
 ## 1. 项目定位
 
 - **只做插件平台。** 本仓库发行 Antigravity 的外置插件平台（插件宿主、补丁注入工具、安装与还原脚本）和插件源码。**不发行任何官方或修改版 Antigravity 可执行文件**，也不发行 `.exe`、`.dll`、`.pak`、`app.asar`、`node_modules`。

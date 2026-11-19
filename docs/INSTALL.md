@@ -123,14 +123,17 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\platform\scripts\install-o
 
 ### 4.1 工作原理
 
-`mod_kit\repatch.ps1` 完全基于相对路径运行：它把脚本所在目录（`mod_kit\`）的**上一级目录**视作应用根目录 `$RootDir`，定位 `$RootDir\resources\app.asar` 与 `$RootDir\resources\app.asar.bak`。
+`mod_kit\repatch.ps1` 支持默认相对路径运行，也支持可选参数 `-TargetAppDir`（别名 `-AppDir`）显式指定目标应用根目录：未传参时把脚本所在目录（`mod_kit\`）的**上一级目录**视作应用根目录 `$RootDir`，定位 `$RootDir\resources\app.asar` 与 `$RootDir\resources\app.asar.bak`。
 
 标准流程为：
-1. 核验 `resources\` 目录与进程占用（若 `$RootDir\` 下有进程运行，列出 PID 并以 `exit 3` 中止）；
+1. 核验 `resources\` 目录、`mod_kit\patch.js`、`node` 与 `asar`（或回退 `npx asar`）可用性，以及进程占用（若 `$RootDir\` 下有进程运行，列出 PID 并以 `exit 3` 中止）；
 2. 若 `resources\app.asar.bak` 不存在，则把当前的 `resources\app.asar` 复制一份为 `resources\app.asar.bak`；
-3. 将 `resources\app.asar.bak` 解包到 `%TEMP%\antigravity_repatch_src`；
-4. 调用 `node mod_kit\patch.js "<TempSrc>" --update-yml "<RootDir>\resources\app-update.yml"`：先预检 **14 个 AGM 锁锚点**（`AGM_UPDATE_LOCK` + `AGM_SIDECAR_REAPER`）与 **8 个 Hakimi 锚点**，并校验 `app-update.yml` 指向 `127.0.0.1:9`，任一失败则以 `exit 2` 中止且不改写文件；注入后对所有修改过的 JS 文件执行 `node --check`；
-5. 使用 `asar pack ... --unpack "**/chrome-devtools-mcp/**"` 重新生成 `resources\app.asar` 并清理临时解包目录。
+3. 若存在 `resources\app.asar.unpacked` 但缺失 `resources\app.asar.bak.unpacked`，先在临时区把 `.bak` 与 `app.asar.unpacked` 配对，再调用 `asar extract` 解包到 `%TEMP%\agm_rp_src_<时间戳>`，并显式校验 `$LASTEXITCODE`（非 `0` 立即中止）；
+4. 调用 `node mod_kit\patch.js "<TempSrc>" --update-yml "<RootDir>\resources\app-update.yml"`：先预检 **14 个 AGM 锁锚点**（`AGM_UPDATE_LOCK` + `AGM_SIDECAR_REAPER`）与 **8 个 Hakimi 锚点**，并校验 `app-update.yml` 指向 `127.0.0.1:9`，任一失败则以 `exit 2` 中止且不改写文件；随后对 6 个注入 JS 文件显式执行 `node --check`；
+5. 先调用 `asar pack ... --unpack "**/chrome-devtools-mcp/**"` 打包到隔离暂存区 `resources\.agm_repatch_tmp_<时间戳>\app.asar`（绝不直接写入目标 `app.asar`），显式校验 `$LASTEXITCODE`；
+6. 对暂存产物执行严格校验：文件存在且大小大于 `0`、`asar list` 可列出且包含全部 6 个关键注入文件（`dist/main.js`、`dist/utils.js`、`dist/preload.js`、`dist/updater.js`、`dist/ipcHandlers.js`、`dist/languageServer.js`）、记录 SHA256；
+7. 全部校验通过后，先将当前 `resources\app.asar` 备份为 `resources\app.asar.prev_<时间戳>`，再使用 `Move-Item` 原子替换目标 `resources\app.asar`，并再次核对目标 SHA256 等于暂存产物 SHA256；
+8. 任意步骤失败均会在 `finally` 自动清理临时目录、保持原 `resources\app.asar` 不变、以非 `0` 退出且绝不打印成功；成功与失败时均打印回滚命令参考（`restore-official.ps1` 或从 `.bak` / `.prev_` 还原）。
 
 ### 4.2 ⚠️ 重要警示：缺失 `app.asar.bak` 时的备份污染陷阱 (Caveat)
 
@@ -147,10 +150,11 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\platform\scripts\install-o
 
 ### 4.3 `repatch.ps1` 实测验证结果
 
-- **实测日期与环境**：2026-11-19，在一次性隔离测试副本目录中基于官方 Antigravity `2.32.1` 纯净 `resources\app.asar` 执行实测（Windows PowerShell `5.1.19041.3803`、Node `v26.13.1`、`@electron/asar` `v4.3.2`）。
-- **用例 (a) 首次重铸（无 `.bak`）**：`PASS` — 自动创建与官方原始 `app.asar` SHA256 一致的 `app.asar.bak`，`patch.js` 注入并通过 `node --check`，产出哈希不同的改装版 `app.asar`（退出码 `0`）。
-- **用例 (b) 重复重铸（已有 `.bak`）**：`PASS` — 仍从 `app.asar.bak` 解包重铸，`.bak` 的 SHA256 与修改时间均保持不变，输出 `app.asar` 与首轮完全一致（退出码 `0`）。
-- **用例 (d) 备份污染陷阱复现（无 `.bak` 且输入为已改装 `app.asar`）**：`PASS` — `repatch.ps1` 按预期把已改装版复制为 `app.asar.bak`，随后 `agm_locks.js` 预检识别出已打补丁源码并以 `exit 2` 安全中止，原 `app.asar` 未被写坏。
+- **实测日期与环境**：2026-11-19，在一次性隔离测试副本目录中基于官方 Antigravity `2.32.1` 纯净 `resources\app.asar`（SHA256 `98A4308C...`）完成加固版 `repatch.ps1` 5 项闭环实测（Windows PowerShell `5.1.19041.3803`、Node `v26.13.1`、`@electron/asar` `v4.3.2`），完整索引见 [`docs/WINDOWS_TEST_EVIDENCE.md`](WINDOWS_TEST_EVIDENCE.md)。
+- **用例 (a) 首次重铸（无 `.bak`）**：`PASS` — 自动创建与官方原始 `app.asar` SHA256 一致的 `app.asar.bak` 与替换前快照 `app.asar.prev_*`，临时区配对 `.unpacked` 解包成功，`patch.js`、`node --check` 与 `asar list` 6 文件校验通过，原子替换产出 `6F60316D...`（`exit 0`）。
+- **用例 (b) 重复重铸（已有 `.bak`）**：`PASS` — 仍从 `app.asar.bak` 解包重铸，`.bak` 的 SHA256 与修改时间保持不变，产出 `app.asar.prev_*` 并获得与首轮一致的输出哈希 `6F60316D...`（`exit 0`）。
+- **用例 (d) 备份污染陷阱复现（无 `.bak` 且输入为已改装 `app.asar`）**：`PASS` — `repatch.ps1` 按预期把已改装版复制为 `app.asar.bak`，随后 `agm_locks.js` 预检识别出已打补丁源码并以 `exit 2` 安全中止，原 `app.asar` 未被写坏且零临时文件残留。
+- **用例 (e) 打包失败原子保护（真实解包/补丁后模拟 `asar pack` 返回 `19`）**：`PASS` — 模拟打包失败并写入垃圾字节至暂存区，脚本按预期在校验前中止、清理临时目录、打印回滚命令并以 `exit 19` 退出，目标 `app.asar` SHA256 保持 `98A4308C...` 毫发未伤。
 
 ---
 
